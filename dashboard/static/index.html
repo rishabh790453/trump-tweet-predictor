@@ -42,7 +42,7 @@
   <div class="flex items-center gap-3">
     <span class="text-red-500 font-bold tracking-widest text-sm">▲ TRUMPTWEET.LIVE</span>
     <span class="w-2 h-2 bg-red-500 rounded-full blink inline-block"></span>
-    <span class="text-xs text-gray-600">LIVE</span>
+    <span id="live-status" class="text-xs text-gray-500">CONNECTING...</span>
   </div>
   <div class="flex items-center gap-4 text-xs">
     <!-- Model badge -->
@@ -100,7 +100,7 @@
 
     <!-- News list -->
     <div id="news-list" class="flex-1 overflow-y-auto text-xs">
-      <div class="text-center text-gray-700 py-6">Fetching from 12 sources...</div>
+      <div class="text-center text-gray-500 py-6">Fetching from 12 sources...</div>
     </div>
   </div>
 
@@ -119,7 +119,7 @@
 
     <!-- AI Predictions panel -->
     <div id="panel-ai" class="flex-1 overflow-y-auto">
-      <div class="text-center text-gray-700 py-8 text-sm">
+      <div class="text-center text-gray-500 py-8 text-sm">
         Waiting for first prediction...<br/>
         <span class="text-xs text-gray-800">~30s per tweet (Llama 3 on MPS)</span>
       </div>
@@ -127,7 +127,7 @@
 
     <!-- Real Tweets panel (hidden by default) -->
     <div id="panel-real" class="flex-1 overflow-y-auto hidden">
-      <div class="text-center text-gray-700 py-8 text-sm">Loading real tweets...</div>
+      <div class="text-center text-gray-500 py-8 text-sm">Loading real tweets...</div>
     </div>
   </div>
 
@@ -288,7 +288,7 @@ function renderNewsList() {
   const items = activeSourceFilter
     ? allNewsItems.filter(x => x.source === activeSourceFilter)
     : allNewsItems;
-  if (!items.length) { el.innerHTML = '<div class="text-center text-gray-700 py-6 text-xs">No items</div>'; return; }
+  if (!items.length) { el.innerHTML = '<div class="text-center text-gray-500 py-6 text-xs">No items</div>'; return; }
   const relBar = r => {
     const filled = Math.round((r||0)*5);
     return '<span class="text-gray-800">'+('█'.repeat(filled)+'░'.repeat(5-filled))+'</span>';
@@ -352,7 +352,7 @@ function addPredictionCard(news, prediction, market, mode, ts) {
 function renderRealTweets() {
   const panel = document.getElementById('panel-real');
   if (!realTweets.length) {
-    panel.innerHTML = '<div class="text-center text-gray-700 py-8 text-sm">No tweet data loaded</div>';
+    panel.innerHTML = '<div class="text-center text-gray-500 py-8 text-sm">No tweet data loaded</div>';
     return;
   }
   panel.innerHTML = realTweets.slice(0, 60).map(t => {
@@ -561,11 +561,60 @@ document.getElementById('custom-input').addEventListener('keydown', e => {
   if (e.key === 'Enter') predictCustom();
 });
 
+// ── REST fallback: load data immediately on page open ─────────────────────────
+async function restLoad() {
+  try {
+    // Load news immediately
+    const news = await fetch('/api/news').then(r => r.json()).catch(()=>[]);
+    news.forEach(item => addNewsItem(item));
+
+    // Load status + real tweets
+    const status = await fetch('/api/status').then(r => r.json()).catch(()=>({}));
+    if (status.mode) {
+      const labels = {'rag_llm':'🔥 Llama 3 + RAG','rag_retrieve':'🔍 RAG Retrieve','template':'📝 Template','claude_api':'☁ Claude Haiku'};
+      const colors = {'rag_llm':'bg-red-900 text-red-300','rag_retrieve':'bg-blue-900 text-blue-300','template':'bg-gray-800 text-gray-500','claude_api':'bg-purple-900 text-purple-300'};
+      const badge = document.getElementById('model-badge');
+      badge.textContent = labels[status.mode] || status.mode;
+      badge.className = 'model-badge ' + (colors[status.mode]||'bg-gray-800 text-gray-500');
+    }
+
+    const tweets = await fetch('/api/real-tweets').then(r => r.json()).catch(()=>[]);
+    if (tweets.length) {
+      realTweets = tweets;
+      buildHistChart(realTweets);
+      buildTopMovers(realTweets);
+      buildPlatformStats(realTweets);
+    }
+  } catch(e) { console.warn('[REST]', e); }
+}
+
+// Poll for new predictions every 10s as fallback if WS is down
+let lastPredCount = 0;
+async function pollPredictions() {
+  try {
+    const status = await fetch('/api/status').then(r=>r.json()).catch(()=>({}));
+    if (status.predictions_generated > lastPredCount) {
+      // Re-fetch news to get latest
+      const news = await fetch('/api/news').then(r=>r.json()).catch(()=>[]);
+      news.forEach(item => addNewsItem(item));
+      lastPredCount = status.predictions_generated;
+    }
+  } catch(e) {}
+}
+
 // ── WebSocket ─────────────────────────────────────────────────────────────────
+let wsConnected = false;
 function connect() {
   const proto = location.protocol === 'https:' ? 'wss:' : 'ws:';
   const ws = new WebSocket(`${proto}//${location.host}/ws`);
-  ws.onopen = () => console.log('[WS] connected');
+
+  ws.onopen = () => {
+    wsConnected = true;
+    console.log('[WS] connected');
+    document.getElementById('live-status').textContent = 'LIVE';
+    document.getElementById('live-status').className = 'text-xs text-green-500';
+  };
+
   ws.onmessage = msg => {
     const data = JSON.parse(msg.data);
     if (data.type === 'init') {
@@ -580,8 +629,8 @@ function connect() {
       }
       if (data.spy_history) updateSpyChart(data.spy_history);
       if (data.prices) updateTicker(data.prices, {});
-      const labels = {'rag_llm':'🔥 Llama 3 + RAG','rag_retrieve':'🔍 RAG Retrieve','template':'📝 Template'};
-      const colors = {'rag_llm':'bg-red-900 text-red-300','rag_retrieve':'bg-blue-900 text-blue-300','template':'bg-gray-800 text-gray-500'};
+      const labels = {'rag_llm':'🔥 Llama 3 + RAG','rag_retrieve':'🔍 RAG Retrieve','template':'📝 Template','claude_api':'☁ Claude Haiku'};
+      const colors = {'rag_llm':'bg-red-900 text-red-300','rag_retrieve':'bg-blue-900 text-blue-300','template':'bg-gray-800 text-gray-500','claude_api':'bg-purple-900 text-purple-300'};
       const badge = document.getElementById('model-badge');
       badge.textContent = labels[data.mode] || data.mode;
       badge.className = 'model-badge ' + (colors[data.mode]||'bg-gray-800 text-gray-500');
@@ -589,10 +638,20 @@ function connect() {
       handleUpdate(data);
     }
   };
-  ws.onclose = () => setTimeout(connect, 3000);
+
+  ws.onclose = () => {
+    wsConnected = false;
+    document.getElementById('live-status').textContent = 'RECONNECTING';
+    document.getElementById('live-status').className = 'text-xs text-yellow-500';
+    setTimeout(connect, 3000);
+  };
   ws.onerror = e => console.error('[WS]', e);
 }
+
+// Start everything
+restLoad();
 connect();
+setInterval(pollPredictions, 10000);
 </script>
 </body>
 </html>
