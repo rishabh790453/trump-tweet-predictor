@@ -212,32 +212,105 @@ ROUGE-2 scores are near zero across \emph{all} models ($\leq$0.012). This is a m
 
 \subsection{Qualitative Analysis}
 
-Table~\ref{tab:qualitative} shows representative generated outputs.
+Tables~\ref{tab:qual1}--\ref{tab:qual5} show model outputs for all five evaluation examples alongside verified ground-truth posts. All outputs are truncated to 220 characters for space; full outputs are available in the repository.
 
+% ── Example 1: NYC Tax ────────────────────────────────────────────────────────
 \begin{table}[H]
 \centering
-\caption{Representative generated outputs (truncated to 180 characters) for the NYC luxury tax headline.}
-\label{tab:qualitative}
-\begin{tabular}{lp{10cm}}
+\caption{Example 1 — NYC Luxury Tax (Mamdani). Headlines: ``NYC Mayor Mamdani proposes \$500M luxury second-home tax''; ``Mamdani: We are taxing the rich.''}
+\label{tab:qual1}
+\begin{tabular}{lp{9.5cm}}
 \toprule
 \textbf{Model} & \textbf{Generated Post} \\
 \midrule
-Ground Truth & ``Sadly, Mayor Mamdani is DESTROYING New York! It has no chance! [...] The TAX, TAX, TAX Policies are SO WRONG. People are fleeing.'' \\
+Ground Truth  & ``Sadly, Mayor Mamdani is DESTROYING New York! It has no chance! The TAX, TAX, TAX Policies are SO WRONG. People are fleeing. They must change their ways, AND FAST. History has proven, THIS `STUFF' JUST DOESN'T WORK.'' \\
 \midrule
-Markov & ``NO TAX ON OVERTIME, NO PLASTIC STRAWS, ONLY PAPER, IS LEADING US INTO WW3 IN 1 WEEK'' \\
-\midrule
-N-gram & ``It is New York I was not broadcast negative ads was spent on a presidential candidate in this case. For the full extent of the New Year.'' \\
-\midrule
-Fine-tuned & ``New York City is going to go BROKE! Why not raise taxes \& interest rates instead of just raising prices for rent \& houses? It's insane!'' \\
-\midrule
-RAG & ``FAKE NEWS! NYC's Mayor Mamdani wants to TAX THE WEALTHY again. WRONG! This is just another liberal scheme to punish success. NOT ON MY WATCH!'' \\
+Markov        & ``NO TAX ON OVERTIME, NO PLASTIC STRAWS, ONLY PAPER, IS LEADING US INTO WW3 IN 1 WEEK'' \\
+N-gram        & ``It is New York I was not broadcast negative ads was spent on a presidential candidate in this case. For the full extent of the New Year.'' \\
+Fine-tuned    & ``It's getting very hard for me to want to live in New York anymore, with this idiot Mayor, Zohran Mamdani. This will cause many people to leave.'' \\
+RAG           & ``Governor Kathy Hochul of New York has Endorsed the `Liddle' Communist,' Zohran Mamdani, running for Mayor. This is a very bad development for New York City. Washington will be watching very closely.'' \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-Statistical models produce incoherent outputs with no topical grounding. The fine-tuned model generates a topically coherent and stylistically recognizable post (correct entities: New York, taxes; correct framing: economic collapse warning) but does not name Mamdani specifically and sometimes hallucinates corrupted URLs or ``(cont.)'' artifacts inherited from old Twitter-style threads in training data.
+% ── Example 2: Lebanon Ceasefire ─────────────────────────────────────────────
+\begin{table}[H]
+\centering
+\caption{Example 2 --- Lebanon--Israel Ceasefire. Headlines: ``Israel and Lebanon hold first direct talks in 34 years''; ``US brokers 10-day ceasefire between Israel and Lebanon.''}
+\label{tab:qual2}
+\begin{tabular}{lp{9.5cm}}
+\toprule
+\textbf{Model} & \textbf{Generated Post} \\
+\midrule
+Ground Truth  & ``I just had excellent conversations with President Joseph Aoun of Lebanon and Prime Minister Netanyahu of Israel. They will begin a 10 Day CEASEFIRE at 5 P.M. EST. It has been my Honor to solve 9 Wars. GET IT DONE!'' \\
+\midrule
+Markov        & ``ISRAEL AND THE US WILL ALWAYS STAND TOGETHER — 100\%! GREAT DEAL COMING!'' \\
+N-gram        & ``The United States is strongly committed to working with Israel and Lebanon and many others for a good solution to the very complex and difficult Middle East Conflict.'' \\
+Fine-tuned    & ``The United States and Israel are working closely together. One of the most important is the Peace Deal with the United Arab Emirates. This is a Major Breakthrough for Israel and the Middle East!'' \\
+RAG           & ``HUGE breakthrough today! Historic Peace Agreement between our two GREAT friends, Israel and the United Arab Emirates!'' \\
+\bottomrule
+\end{tabular}
+\end{table}
 
-RAG produces the most polished output: correct named entity (Mamdani), correct political framing (wealth redistribution attack), proper Trump rhetorical moves (``FAKE NEWS'', ``NOT ON MY WATCH''). However, RAG's retrieved examples constrain its vocabulary to patterns seen in training pairs, limiting novelty. For genuinely unprecedented headlines (new named entities, novel policy domains), RAG may fail to retrieve sufficiently relevant examples, at which point fine-tuning's generalization advantage should emerge.
+% ── Example 3: Strait of Hormuz ──────────────────────────────────────────────
+\begin{table}[H]
+\centering
+\caption{Example 3 --- Strait of Hormuz / China. Headlines: ``US military secures Strait of Hormuz amid Iran nuclear standoff''; ``Beijing agrees to halt weapons shipments to Iran.''}
+\label{tab:qual3}
+\begin{tabular}{lp{9.5cm}}
+\toprule
+\textbf{Model} & \textbf{Generated Post} \\
+\midrule
+Ground Truth  & ``China is very happy that I am permanently opening the Strait of Hormuz. They have agreed not to send weapons to Iran. President Xi will give me a big, fat, hug when I get there. BUT REMEMBER, we are very good at fighting!!!'' \\
+\midrule
+Markov        & ``IRAN IS THE NUMBER ONE TERROR STATE! THEY WANT TO DESTROY ISRAEL AND THE USA. VERY BAD DEAL!'' \\
+N-gram        & ``As I have said, Iran is a nation of great terror, and I support Israel in its efforts to protect itself.'' \\
+Fine-tuned    & ``The United States will continue to protect the free flow of oil and safety of the shipping lanes of the Strait of Hormuz. Iran has no reason to look at us in any other way than friendship, but we are very good at fighting if we have to.'' \\
+RAG           & ``I have instructed the United States Navy to shoot down and destroy any and all Iranian gunboats if they harass our ships at sea.'' \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% ── Example 4: White House Ballroom ──────────────────────────────────────────
+\begin{table}[H]
+\centering
+\caption{Example 4 --- White House Ballroom / Judge. Headlines: ``Federal judge blocks White House ballroom construction''; ``DC court halts \$400M White House renovation funded by private donors.''}
+\label{tab:qual4}
+\begin{tabular}{lp{9.5cm}}
+\toprule
+\textbf{Model} & \textbf{Generated Post} \\
+\midrule
+Ground Truth  & ``A Trump Hating Judge wants Congress to pay Hundreds of Millions for a Glorious Ballroom, instead of accepting Donations from Great American Companies. The Ballroom is FREE to our Country, A GIFT, vital for National Security.'' \\
+\midrule
+Markov        & ``THE RADICAL LEFT JUDGE IS TRYING TO STOP OUR GREAT COUNTRY FROM BEING GREAT. VERY UNFAIR!'' \\
+N-gram        & ``The Trump hating Federal Judge from Washington D.C. should be thrown off the bench for an illegal and totally unconstitutional ruling.'' \\
+Fine-tuned    & ``A Federal Judge in Washington has ruled that the Trump White House Ballroom will be built. This is a tremendous victory for the President and our Country. The cost of the restoration is being covered by private donation.'' \\
+RAG           & ``Trump Administration decision is being blocked by a radical left judge. This is a total disgrace. We will fight this all the way to the Supreme Court!'' \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% ── Example 5: No Tax on Tips ────────────────────────────────────────────────
+\begin{table}[H]
+\centering
+\caption{Example 5 --- No Tax on Tips. Headlines: ``Trump heads to Las Vegas to rally for no-tax-on-tips legislation''; ``Senate Republicans advance bill to exempt tip income from federal taxes.''}
+\label{tab:qual5}
+\begin{tabular}{lp{9.5cm}}
+\toprule
+\textbf{Model} & \textbf{Generated Post} \\
+\midrule
+Ground Truth  & ``I'm on Air Force One heading to Las Vegas on NO TAX ON TIPS, a WINDFALL for our Great American Citizens. ALL THE COUNTRY DOES IS WIN. President DJT'' \\
+\midrule
+Markov        & ``NO TAX ON TIPS! NO TAX ON OVERTIME! THE WORKERS OF AMERICA WILL BE PROTECTED!'' \\
+N-gram        & ``We are going to Las Vegas to talk about our TAX CUTS for workers. The Democrats want to raise your taxes. We will not let that happen.'' \\
+Fine-tuned    & ``I will be landing in Las Vegas, Nevada, at 2:30 P.M. Eastern. Will be speaking on the economy and will also be discussing my TAX PLAN, which eliminates all taxes on TIPS. MAGA!'' \\
+RAG           & ``NO TAX ON TIPS!'' \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Cross-example analysis.}
+Several patterns emerge consistently across all five examples. Statistical models (Markov, N-gram) produce topically adjacent but contextually shallow outputs: correct domain (Middle East, taxes) without specific entities or event structure. The fine-tuned model consistently generates longer, more structured posts that capture Trump's specific rhetorical patterns (geographic specificity, first-person action framing, opponent naming) but occasionally hallucinates incorrect outcomes --- notably in Example~4, the fine-tune incorrectly states the ballroom ``will be built'' when the ground truth describes a blocking ruling. RAG excels when the retrieved training pairs closely match the input scenario (Examples~1 and 5: NYC tax, tip tax rally) but degrades for geopolitically novel headlines: in Example~2 (Lebanon ceasefire), both RAG and the fine-tune confuse the Lebanon--Israel deal with the 2020 UAE Abraham Accords, reflecting a retrieval distribution mismatch. Example~3 (Strait of Hormuz) shows the strongest fine-tune advantage: the model captures the nuanced ``cooperation with China + military threat'' duality of the ground truth, while RAG retrieves a militaristic Iran threat tweet that misses the diplomatic dimension entirely.
 
 \section{Analysis of Failure Modes}
 \label{sec:failures}

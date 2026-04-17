@@ -1,0 +1,57 @@
+{
+  "nyc_tax": {
+    "label": "NYC Luxury Tax (Mamdani)",
+    "headlines": [
+      "NYC Mayor Mamdani proposes 500 million luxury second-home tax",
+      "Mamdani: We are taxing the rich with new NYC wealth tax plan",
+      "New York City targets luxury real estate owners with annual surcharge"
+    ],
+    "ground_truth": "Sadly, Mayor Mamdani is DESTROYING New York! It has no chance! The United States of America should not contribute to its failure. It will only get WORSE. The TAX, TAX, TAX Policies are SO WRONG. People are fleeing. They must change their ways, AND FAST. History has proven, THIS \"STUFF\" JUST DOES NOT WORK. Thank you for your attention to this matter! President DJT",
+    "rag": "Governor Kathy Hochul of New York has Endorsed the \u201cLiddle\u2019 Communist,\u201d Zohran Mamdani, running for Mayor of New York. This is a rather shocking development, and a very bad one for New York City. How can such a thing happen? Washington will be watching this situation very closely. No reason to be se",
+    "llama": "It's getting very hard for me to want to live in New York anymore, with this idiot Mayor, Zohran Mamdani. This will cause many people to leave."
+  },
+  "lebanon_ceasefire": {
+    "label": "Lebanon--Israel Ceasefire",
+    "headlines": [
+      "Israel and Lebanon hold first direct talks in 34 years in Washington",
+      "Netanyahu and Lebanese President Aoun meet with Secretary Rubio at State Dept",
+      "US brokers 10-day ceasefire between Israel and Lebanon"
+    ],
+    "ground_truth": "I just had excellent conversations with the Highly Respected President Joseph Aoun, of Lebanon, and Prime Minister Bibi Netanyahu, of Israel. These two Leaders have agreed that in order to achieve PEACE between their Countries, they will formally begin a 10 Day CEASEFIRE at 5 P.M. EST. It has been my Honor to solve 9 Wars across the World, and this will be my 10th, so lets, GET IT DONE! President DONALD J. TRUMP",
+    "rag": "HUGE breakthrough today! Historic Peace Agreement between our two GREAT friends, Israel and the United Arab Emirates!",
+    "llama": "The United States and Israel are working closely together on many things, but one of the most important is the Peace Deal with the United Arab Emirates. This is a Major Breakthrough for Israel and the Middle East!"
+  },
+  "hormuz_china": {
+    "label": "Strait of Hormuz / China",
+    "headlines": [
+      "US military secures Strait of Hormuz amid Iran nuclear standoff",
+      "China urges restraint as US threatens to close Persian Gulf shipping lanes",
+      "Beijing agrees to halt weapons shipments to Iran in back-channel deal"
+    ],
+    "ground_truth": "China is very happy that I am permanently opening the Strait of Hormuz. I am doing it for them, also - And the World. This situation will never happen again. They have agreed not to send weapons to Iran. President Xi will give me a big, fat, hug when I get there in a few weeks. We are working together smartly, and very well! Doesnt that beat fighting??? BUT REMEMBER, we are very good at fighting, if we have to - far better than anyone else!!! President DJT",
+    "rag": "I have instructed the United States Navy to shoot down and destroy any and all Iranian gunboats if they harass our ships at sea.",
+    "llama": "The United States will continue to protect the free flow of oil and the safety and security of the shipping lanes of the Strait of Hormuz. Most importantly, there is no reason for Iran to look at us in any other way than friendship, working together with the only thing it wants, which is to take dow"
+  },
+  "ballroom_judge": {
+    "label": "White House Ballroom / Judge",
+    "headlines": [
+      "Federal judge blocks White House ballroom construction citing permit violations",
+      "DC court halts Trump 400 million dollar White House renovation funded by private donors",
+      "Judge rules against Trump White House ballroom gift from American companies"
+    ],
+    "ground_truth": "A Trump Hating Judge, for the first time in History, wants Congress to pay Hundreds of Millions of Dollars for a Glorious Ballroom, instead of accepting Donations from Great American Companies and Citizens. This is a first. The Ballroom is FREE to our Country, A GIFT, and vital for our National Security. This Judge should be ashamed of himself! President DONALD J. TRUMP",
+    "rag": "\u201cTrump Administration Cancels $400 Million in Grants to Columbia\u201d thefp.com/p/exclusive-trump-ad ministration-cancels",
+    "llama": "A Federal Judge in Washington has ruled that the Trump White House Ballroom will be built. This is a tremendous victory for the President, our Country, and the people. We will continue to fight for the restoration of this GREAT ROOM at the @WhiteHouse. The cost of the restoration is being covered by"
+  },
+  "no_tax_tips": {
+    "label": "No Tax on Tips",
+    "headlines": [
+      "Trump heads to Las Vegas to rally support for no-tax-on-tips legislation",
+      "Senate Republicans advance bill to exempt tip income from federal taxes",
+      "Service workers cheer as Trump pushes tip tax elimination ahead of midterms"
+    ],
+    "ground_truth": "I am on Air Force One heading to Las Vegas and Arizona for Greetings and Speeches on NO TAX ON TIPS, a WINDFALL for our Great American Citizens. ALL THE COUNTRY DOES IS WIN. President DJT",
+    "rag": "NO TAX ON TIPS!",
+    "llama": "I will be landing in Las Vegas, Nevada, at 2:30 P.M. Eastern. Will be speaking on the economy, and will also be discussing my TAX PLAN, which eliminates all taxes on TIPS. MAGA!"
+  }
+}
