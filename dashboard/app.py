@@ -15,13 +15,17 @@ from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 
 sys.path.insert(0, str(Path(__file__).parent))
+from live_tweets_etl import fetch_live_tweets
 from market_sim import BASE_PRICES, simulate
 from news_etl import fetch_all_news
 from predictor import TweetPredictor
 
 app = FastAPI(title="Trump Tweet Live Predictor")
 
+# Works both locally (dashboard/ inside repo) and in Docker (dashboard/ is WORKDIR)
 REPO_ROOT = Path(__file__).parent.parent
+if not REPO_ROOT.exists() or not (REPO_ROOT / "trump_tweets_finance_with_market_data.csv").exists():
+    REPO_ROOT = Path(__file__).parent  # Docker: data file copied next to dashboard/
 
 # ── Global state ──────────────────────────────────────────────────────────────
 predictor: TweetPredictor | None = None
@@ -31,14 +35,15 @@ session_prices: dict[str, float] = BASE_PRICES.copy()
 spy_history: list[float] = [0.0]
 connected: list[WebSocket] = []
 
-POLL_INTERVAL = 300
+POLL_INTERVAL = 300       # news poll every 5 min
+TWEET_REFRESH = 900       # live tweet refresh every 15 min
 MAX_NEW_PER_POLL = 3
 
 
 # ── Load historical tweet+market data ────────────────────────────────────────
 
-def load_real_tweets(n: int = 200) -> list[dict]:
-    """Load recent tweets that have market data attached."""
+def load_historical_tweets(n: int = 150) -> list[dict]:
+    """Load CSV tweets that have market impact data — used as historical fallback."""
     path = REPO_ROOT / "trump_tweets_finance_with_market_data.csv"
     if not path.exists():
         return []
@@ -53,31 +58,36 @@ def load_real_tweets(n: int = 200) -> list[dict]:
                 continue
             rows.append({
                 "ts": row.get("timestamp", ""),
-                "platform": row.get("platform", ""),
+                "platform": row.get("platform", "Twitter/TS"),
                 "content": content[:280],
                 "sp500": float(sp) if sp else None,
                 "dow": float(dw) if dw else None,
                 "likes": row.get("likes", "0"),
+                "source": "historical",
             })
     # Most recent first, keep rows with market data near top
     with_data = [r for r in rows if r["sp500"] is not None]
-    without = [r for r in rows if r["sp500"] is None]
-    combined = (with_data + without)[:n]
-    return combined
+    without  = [r for r in rows if r["sp500"] is None]
+    return (with_data + without)[:n]
 
 
 REAL_TWEETS: list[dict] = []
+HISTORICAL_TWEETS: list[dict] = []
 
 
 # ── Lifecycle ─────────────────────────────────────────────────────────────────
 
 @app.on_event("startup")
 async def startup():
-    global predictor, REAL_TWEETS
-    REAL_TWEETS = load_real_tweets(300)
+    global predictor, REAL_TWEETS, HISTORICAL_TWEETS
+    HISTORICAL_TWEETS = load_historical_tweets(150)
     loop = asyncio.get_event_loop()
+    # Fetch live tweets in background so startup isn't blocked
+    live = await loop.run_in_executor(None, fetch_live_tweets, 30)
+    REAL_TWEETS = live if live else HISTORICAL_TWEETS[:50]
     predictor = await loop.run_in_executor(None, TweetPredictor)
     asyncio.create_task(_poll_loop())
+    asyncio.create_task(_tweet_refresh_loop())
 
 
 # ── WebSocket broadcast ───────────────────────────────────────────────────────
@@ -133,6 +143,23 @@ async def _process_item(item) -> dict:
         },
         "mode": predictor.mode,
     }
+
+
+async def _tweet_refresh_loop():
+    """Refresh live tweets every 15 minutes and broadcast to connected clients."""
+    global REAL_TWEETS
+    await asyncio.sleep(TWEET_REFRESH)
+    while True:
+        try:
+            loop = asyncio.get_event_loop()
+            live = await loop.run_in_executor(None, fetch_live_tweets, 30)
+            if live:
+                REAL_TWEETS = live
+                print(f"[App] Live tweets refreshed: {len(live)} posts")
+                await broadcast({"type": "tweets_update", "real_tweets": REAL_TWEETS[:50]})
+        except Exception as e:
+            print(f"[App] Tweet refresh error: {e}")
+        await asyncio.sleep(TWEET_REFRESH)
 
 
 async def _poll_loop():
@@ -217,7 +244,13 @@ async def get_news():
 
 
 @app.get("/api/real-tweets")
-async def get_real_tweets(n: int = 50):
+async def get_real_tweets(n: int = 50, refresh: bool = False):
+    global REAL_TWEETS
+    if refresh:
+        loop = asyncio.get_event_loop()
+        live = await loop.run_in_executor(None, fetch_live_tweets, 30)
+        if live:
+            REAL_TWEETS = live
     return REAL_TWEETS[:n]
 
 

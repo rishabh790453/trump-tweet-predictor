@@ -114,6 +114,7 @@
       <button class="tab-btn px-4 py-2 text-gray-600 font-bold tracking-wide" id="tab-real"
         onclick="switchTab('real')">REAL TWEETS</button>
       <div class="flex-1"></div>
+      <button id="refresh-tweets-btn" onclick="refreshTweets()" class="text-gray-600 hover:text-gray-400 text-xs px-2 py-1 self-center hidden" title="Refresh live tweets">↺ refresh</button>
       <span class="text-gray-700 text-xs px-3 py-2 self-center">all AI-generated · not real</span>
     </div>
 
@@ -245,7 +246,8 @@ function switchTab(name) {
     document.getElementById('tab-'+t).classList.toggle('text-gray-600', t!==name);
     document.getElementById('panel-'+t).classList.toggle('hidden', t!==name);
   });
-  if (name === 'real' && realTweets.length) renderRealTweets();
+  document.getElementById('refresh-tweets-btn').classList.toggle('hidden', name !== 'real');
+  if (name === 'real') renderRealTweets();
 }
 function switchMTab(name) {
   ['sim','hist'].forEach(t => {
@@ -355,28 +357,69 @@ function renderRealTweets() {
     panel.innerHTML = '<div class="text-center text-gray-500 py-8 text-sm">No tweet data loaded</div>';
     return;
   }
-  panel.innerHTML = realTweets.slice(0, 60).map(t => {
-    const sp = t.sp500;
-    const spStr = sp != null ? fmtDelta(sp) : null;
-    const spClass = sp != null ? deltaClass(sp) : '';
-    const platform = t.platform === 'Truth Social'
-      ? '<span class="text-xs text-purple-400 font-bold">TRUTH SOCIAL</span>'
-      : '<span class="text-xs text-blue-400 font-bold">TWITTER</span>';
-    const dateStr = t.ts ? new Date(t.ts).toLocaleDateString() : '';
-    const marketBadge = sp != null
-      ? `<span class="${spClass} text-xs font-bold">SP500 ${spStr}</span>
-         <span class="${deltaClass(t.dow)} text-xs">DOW ${fmtDelta(t.dow)}</span>`
-      : '<span class="text-xs text-gray-700">no market data</span>';
+  // Separate live vs historical
+  const live = realTweets.filter(t => t.source && t.source !== 'historical');
+  const hist = realTweets.filter(t => !t.source || t.source === 'historical');
 
-    return `<div class="real-tweet-card mx-2 my-2 p-2.5 rounded fade-in" style="background:#0d1117;">
-      <div class="flex items-center gap-2 mb-1.5">
-        ${platform}
-        <span class="text-gray-700 text-xs">${esc(dateStr)}</span>
-      </div>
-      <div class="text-gray-200 text-xs leading-relaxed mb-2">${esc(t.content.slice(0,280))}</div>
-      <div class="flex items-center gap-3">${marketBadge}</div>
+  let html = '';
+  if (live.length) {
+    html += `<div class="px-3 py-1.5 text-xs text-green-600 font-bold tracking-widest border-b border-gray-900">
+      ● LIVE POSTS (${live.length})
     </div>`;
-  }).join('');
+    html += live.map(t => renderTweetCard(t, true)).join('');
+  }
+  if (hist.length) {
+    html += `<div class="px-3 py-1.5 text-xs text-gray-600 font-bold tracking-widest border-b border-gray-900 mt-2">
+      HISTORICAL — Market Impact Data
+    </div>`;
+    html += hist.slice(0, 50).map(t => renderTweetCard(t, false)).join('');
+  }
+  panel.innerHTML = html || '<div class="text-center text-gray-500 py-8 text-sm">No tweets loaded</div>';
+}
+
+function renderTweetCard(t, isLive) {
+  const sp = t.sp500;
+  const spStr = sp != null ? fmtDelta(sp) : null;
+  const spClass = sp != null ? deltaClass(sp) : '';
+  const platform = t.platform === 'Truth Social'
+    ? '<span class="text-xs text-purple-400 font-bold">TRUTH SOCIAL</span>'
+    : (t.platform === 'Twitter/TS'
+      ? '<span class="text-xs text-blue-400 font-bold">TWITTER/TS</span>'
+      : '<span class="text-xs text-blue-400 font-bold">TWITTER</span>');
+  const dateStr = t.ts ? new Date(t.ts).toLocaleDateString() : '';
+  const srcBadge = t.source && t.source !== 'historical'
+    ? `<span class="text-xs text-gray-600">via ${esc(t.source)}</span>`
+    : '';
+  const marketBadge = sp != null
+    ? `<span class="${spClass} text-xs font-bold">SP500 ${spStr}</span>
+       <span class="${deltaClass(t.dow)} text-xs">DOW ${fmtDelta(t.dow)}</span>`
+    : '';
+  const borderColor = isLive ? '#22c55e' : '#3b82f6';
+
+  return `<div class="real-tweet-card mx-2 my-2 p-2.5 rounded fade-in" style="background:#0d1117;border-left-color:${borderColor};">
+    <div class="flex items-center gap-2 mb-1.5 flex-wrap">
+      ${platform}
+      <span class="text-gray-700 text-xs">${esc(dateStr)}</span>
+      ${srcBadge}
+    </div>
+    <div class="text-gray-200 text-xs leading-relaxed mb-2">${esc(t.content.slice(0,280))}</div>
+    <div class="flex items-center gap-3">${marketBadge}</div>
+  </div>`;
+}
+
+async function refreshTweets() {
+  const btn = document.getElementById('refresh-tweets-btn');
+  btn.textContent = '↺ loading...';
+  btn.disabled = true;
+  try {
+    const tweets = await fetch('/api/real-tweets?refresh=true&n=50').then(r => r.json());
+    if (tweets.length) {
+      realTweets = tweets;
+      renderRealTweets();
+    }
+  } catch(e) { console.error(e); }
+  btn.textContent = '↺ refresh';
+  btn.disabled = false;
 }
 
 // ── Ticker ────────────────────────────────────────────────────────────────────
@@ -636,6 +679,16 @@ function connect() {
       badge.className = 'model-badge ' + (colors[data.mode]||'bg-gray-800 text-gray-500');
     } else if (data.type === 'update') {
       handleUpdate(data);
+    } else if (data.type === 'tweets_update') {
+      if (data.real_tweets && data.real_tweets.length) {
+        realTweets = data.real_tweets;
+        buildHistChart(realTweets);
+        buildTopMovers(realTweets);
+        buildPlatformStats(realTweets);
+        if (!document.getElementById('panel-real').classList.contains('hidden')) {
+          renderRealTweets();
+        }
+      }
     }
   };
 
