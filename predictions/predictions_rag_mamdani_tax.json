@@ -1,0 +1,48 @@
+{
+  "model": "RAG + Llama3-8B-Instruct",
+  "date": "mamdani_tax",
+  "temperature": 0.8,
+  "k_retrieved": 5,
+  "headlines": [
+    "Fox News 'We're taxing the rich': NYC Mayor Mamdani touts new $500M-a-year tax on luxury second homes"
+  ],
+  "retrieved_examples": [
+    {
+      "news": "- New York City Approves Taxi Fare Hike, Raising Average Fare 23%\n- Elon Musk Tells a Court He Had Little Say in His Giant Tesla Pay\n- Why Office Buildings Are Still in Trouble\n- Elon Musk Heads to Court to Defend His Billions in Tesla Pay\n- Separating Big Business and Bad Behavior in ‘Tár’\n- In New Forecast, New York City Projects $2.9 Billion Deficit\n- Are You a Member of Gen Z Spending Too Much on Your Housing?\n- An iPhone Factory Needs Workers. The Chinese Government Wants to Help.\n- Time to Raise New York City’s Trailing Minimum Wage?\n- The Parking Lot Conversation That Solidified Their Connection",
+      "tweet": "…Many people, perhaps most, don’t pay tax on the use of a company car or company apartment. Whether they know or not, that’s just the way it is. It’s called “standards and practices,” referring, I presume, to the standards and practices of large numbers of people within the Country. Out of fairness, it has a legal meaning. It should be a point in the Manhattan D.A. case. Did the former D.A. Pay tax on the use of his car? In the meantime, Violent Crime in New York has reached an ALL TIME HIGH!",
+      "date": "2022-11-18",
+      "sim": 0.6251038908958435
+    },
+    {
+      "news": "- House Democrat Asks if Mar-a-Lago Can Be Taxed at Value Trump Gave It\n- I.R.S. Puts Lien on Giuliani’s Palm Beach Condo for $550,000 Tax Debt\n- A ‘Shadow’ Lending Market in the U.S., Funded by Insurance Premiums\n- $640,000 Homes in Vermont, Missouri and Ohio\n- Harry and Meghan’s Royal Real Estate Woes\n- New U.A.W. Chief Has a Nonnegotiable Demand: Eat the Rich\n- Peter Zumthor on Paring Back a ‘Beautiful Idea’ for LACMA",
+      "tweet": "A chief property tax appraiser for Palm Beach County, Cecil Jackson, told Newsweek that clubs like Mar-a-Lago are assessed based on membership numbers, dues, and the cost to run the facility. These valuations are “for tax purposes only and not for financing or … for a lending institution,” he said.",
+      "date": "2023-10-06",
+      "sim": 0.6192809343338013
+    },
+    {
+      "news": "- New York Today: Another Slippery Commute\n- Cuomo’s Tax Overhaul Plan Distresses Some Who See a Windfall for Banks\n- Text of Bill de Blasio’s First State of the City Address\n- De Blasio's 2014 State of the City\n- New York’s Affordable Housing Shortage\n- Highlights From Our Social Feeds at NYFW, Day 4\n- Hello, Non-Manhattan Neighbors\n- Bill Would Ease Way for Unions at Some Retail Stores in New York City\n- Highlights From Our Social Feeds at NYFW, Day 3\n- Highlights From Our Social Feeds at NYFW, Day 2",
+      "tweet": "Governor Cuomo only cut the Verrazano Bridge tolls because I made it a major point in speeches. I love the people of Staten Island!",
+      "date": "2014-02-10",
+      "sim": 0.6145002841949463
+    },
+    {
+      "news": "- Ruling on Trump’s Tax Returns: 5 Takeaways\n- The Rich Really Do Pay Lower Taxes Than You\n- Homes That Sold for Around $1.5 Million\n- What You Get for $1 Million in California\n- $1 Million Homes in California\n- M.T.A. Pledges $5 Billion for Subway Elevators. Guess How Many.\n- Trump’s Future and the Clinton Precedent\n- Trump Taxes: President Ordered to Turn Over Returns to Manhattan D.A.\n- What Trump’s Aggressive Trade Tactics Have Achieved\n- Now the Rich Want Your Pity, Too",
+      "tweet": "Heritage Foundation “These numbers are blockbusters. Just since Donald Trump took office, Median Family Incomrs are up over $4,100. In 8 years under President Obama, they only went up $1000. In one third the time, President Trump has increased incomes 4 times as much, and that...",
+      "date": "2019-10-07",
+      "sim": 0.6108314990997314
+    },
+    {
+      "news": "- The Mayor’s Showroom\n- Congress: The Road to Roads\n- Affordable Housing Draws Middle Class to Inland Cities\n- New York City Pension System Is Strained by Costs and Politics\n- What Is the World’s Most Livable City?\n- The Do-Even-Less Congress\n- Cost of Putting Mayor’s Family in Gracie Mansion Nears $145,000\n- A City Divided Over an Occupation Without End\n- Who’s Moving In Now?\n- In Times Square, Freelancing as Elmo",
+      "tweet": "Mayor Bill Vescio of Briarcliff Manor, Westchester, is doing a terrible job. Horrible roads, high taxes, housing down. @westchestergov",
+      "date": "2014-08-04",
+      "sim": 0.608552873134613
+    }
+  ],
+  "predictions": [
+    "\"FOLKS, THIS IS OUTRAGEOUS! NYC Mayor Mamdani wants to TAX THE WEALTHY AGAIN?! Luxury home owners already paying too much, now he wants another HALF BILLION DOLLARS from them every year? #FaireTaxation\"",
+    "\"FAKE NEWS! NYC's Mayor Mamdani wants to TAX THE WEALTHY again, claiming \"we're taxing the rich\". WRONG! This is just another liberal scheme to punish success & hurt small businesses. NOT ON MY WATCH!\" #MakeAmericaGreatAgain",
+    "\"FOLKS, IT'S UNFAIR! NYC Mayor wants to TAX THE RICH again, this time on their SECOND HOMES. Think about all the jobs lost & businesses closed due to already burdensome taxation in NYC. This is just another example of Democratic SOCIALISM taking away from hardworking Americans!\" #MakeAmericaGreatAgain",
+    "\"FAKE NEWS! Only a total failure would impose a huge tax increase on our great Americans who have worked hard to achieve success. NYC needs leaders who understand business, not socialists who want to punish achievement #MakeAmericaGreatAgain\"",
+    "\"Just learned about this FAKE NEWS report claiming NYC Mayor is taxing the rich! Wrong again, folks. This is just another example of how out-of-touch politicians try to punish success. NO ONE knows more about paying taxes than me, believe me!\" #MakeNYCGreatAgain"
+  ]
+}

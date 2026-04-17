@@ -1,0 +1,31 @@
+{
+  "timestamp": "2026-02-21T21:57:59.356195",
+  "model_type": "local",
+  "predictions": [
+    {
+      "tweet": "Border Security - DISASTROUS news! Remember, I told you this would happen. Nobody listened! Now look at the MESS! We need America First policies. Thank you for your attention to this matter! PRESIDENT DONALD J. TRUMP",
+      "topic": "template-generated",
+      "news_reference": "N/A (template-based)"
+    },
+    {
+      "tweet": "Just saw reports about the Stock Market. HORRIBLE! This is exactly why we need REAL change. The Fake News Media won't tell you this! President DJT",
+      "topic": "template-generated",
+      "news_reference": "N/A (template-based)"
+    },
+    {
+      "tweet": "International Trade - TERRIBLE news! Remember, I told you this would happen. Nobody listened! Now look at the MESS! We need REAL change. Thank you for your attention to this matter! PRESIDENT DONALD J. TRUMP",
+      "topic": "template-generated",
+      "news_reference": "N/A (template-based)"
+    },
+    {
+      "tweet": "Just saw reports about International Trade. FANTASTIC! This is exactly why we need STRONG LEADERSHIP. The Fake News Media won't tell you this! President DJT",
+      "topic": "template-generated",
+      "news_reference": "N/A (template-based)"
+    },
+    {
+      "tweet": "Just saw reports about Crime. HORRIBLE! This is exactly why we need STRONG LEADERSHIP. The Fake News Media won't tell you this! Thank you for your attention to this matter! PRESIDENT DONALD J. TRUMP",
+      "topic": "template-generated",
+      "news_reference": "N/A (template-based)"
+    }
+  ]
+}

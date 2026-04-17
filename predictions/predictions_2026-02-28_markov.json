@@ -1,0 +1,31 @@
+{
+  "date": "2026-02-28",
+  "method": "Markov Chain (order=3)",
+  "topic_keywords": [
+    "Iran",
+    "war",
+    "regime",
+    "strikes",
+    "economy",
+    "China",
+    "election",
+    "FAKE",
+    "GREAT",
+    "America"
+  ],
+  "headlines_context": [
+    "Trump strikes Iran, Khamenei killed",
+    "Trump Tells Iranians to Take Over Their Government",
+    "Trump, the Self-Declared Peace President, Goes to War Seeking Regime Change",
+    "Only 21% of Americans Support the United States Initiating an Attack on Iran",
+    "Trump Decision to Strike Iran Opens New Fissures in Midterms"
+  ],
+  "predictions": [
+    "MAKE AMERICA GREAT AGAIN! ImWithYou DrainTheSwamp http: bit. ly 28PIJre realDonaldTrump https: t. co v9Rdjz6DNu",
+    "The Great Commonwealth of Pennsylvania. He will work alongside Harmeet K. Dhillon, a fellow Californian, and our Great Administration, are being decimated by the media.",
+    "RT americangreatness https: amgreatness. com 2022 10 25 alaska republican party censures mitch mcconnell for meddling in race between two republicans",
+    "trumpvlog China is laughing at Jeb Bush spent 100 million on his Boeing 757. VIDEO: http: www. rsbnetwork.",
+    "Great NBA finals game last night with Autoworkers others. Watched Debate REPORT CARD: Doug Burgum did a very POOR job of handling Coronavirus, including the upcoming Midterms."
+  ],
+  "note": "Generated using Markov Chain fallback. Run python generate_tweet.py on Mac (with venv_mac) for GPT-2 model output."
+}

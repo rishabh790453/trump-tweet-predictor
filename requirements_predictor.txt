@@ -1,0 +1,6 @@
+pandas
+requests
+feedparser
+openai
+anthropic
+schedule

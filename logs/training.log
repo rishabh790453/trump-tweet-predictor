@@ -1,0 +1,232 @@
+============================================================
+FINE-TUNE GPT-2: News → Trump Tweet Predictor
+============================================================
+
+Checking device...
+  Apple MPS (Metal GPU)
+  torch: 2.11.0
+
+Loading training data...
+  Train: 59,297 examples
+  Val:   6,589 examples
+
+Loading gpt2 tokenizer...
+  Vocab size: 50,259
+
+Building datasets (lazy tokenization)...
+  Ready.
+
+Loading gpt2 model...
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+
+Loading weights:   0%|          | 0/148 [00:00<?, ?it/s]
+Loading weights: 100%|██████████| 148/148 [00:00<00:00, 17147.51it/s]
+The new embeddings will be initialized from a multivariate normal distribution that has old embeddings' mean and covariance. As described in this article: https://nlp.stanford.edu/~johnhew/vocab-expansion.html. To disable this, use `mean_resizing=False`
+  Parameters: 124M
+
+Training configuration:
+  Model:           gpt2
+  Device:          mps
+  Train examples:  59,297
+  Epochs:          3
+  Batch size:      4 x 8 grad accum = 32 effective
+  Max length:      512 tokens
+  Total steps:     5,562
+
+Starting training...
+
+`loss_type=None` was set in the config but it is unrecognized. Using the default loss: `ForCausalLMLoss`.
+  Epoch 1 | Step 50/5562 | loss: 3.8811 | lr: 4.96e-05 | 348s elapsed
+  Epoch 1 | Step 100/5562 | loss: 3.7157 | lr: 4.92e-05 | 691s elapsed
+  Epoch 1 | Step 150/5562 | loss: 3.6950 | lr: 4.88e-05 | 1033s elapsed
+  Epoch 1 | Step 200/5562 | loss: 3.5338 | lr: 4.84e-05 | 1376s elapsed
+  Epoch 1 | Step 250/5562 | loss: 3.5006 | lr: 4.80e-05 | 1719s elapsed
+  Epoch 1 | Step 300/5562 | loss: 3.5034 | lr: 4.76e-05 | 2060s elapsed
+  Epoch 1 | Step 350/5562 | loss: 3.3417 | lr: 4.72e-05 | 2402s elapsed
+  Epoch 1 | Step 400/5562 | loss: 3.3921 | lr: 4.68e-05 | 2915s elapsed
+  Epoch 1 | Step 450/5562 | loss: 3.2626 | lr: 4.64e-05 | 3256s elapsed
+  Epoch 1 | Step 500/5562 | loss: 3.4098 | lr: 4.60e-05 | 3740s elapsed
+  >>> Val loss: 3.1917 | perplexity: 24.33
+
+Writing model shards:   0%|          | 0/1 [00:00<?, ?it/s]
+Writing model shards: 100%|██████████| 1/1 [00:00<00:00,  7.45it/s]
+Writing model shards: 100%|██████████| 1/1 [00:00<00:00,  7.44it/s]
+  >>> Saved best checkpoint (val_loss=3.1917)
+  Epoch 1 | Step 550/5562 | loss: 3.2600 | lr: 4.56e-05 | 4509s elapsed
+  Epoch 1 | Step 600/5562 | loss: 3.3008 | lr: 4.51e-05 | 4851s elapsed
+  Epoch 1 | Step 650/5562 | loss: 3.3516 | lr: 4.47e-05 | 5192s elapsed
+  Epoch 1 | Step 700/5562 | loss: 3.1495 | lr: 4.43e-05 | 6068s elapsed
+  Epoch 1 | Step 750/5562 | loss: 3.2077 | lr: 4.39e-05 | 6411s elapsed
+  Epoch 1 | Step 800/5562 | loss: 3.1668 | lr: 4.35e-05 | 6760s elapsed
+  Epoch 1 | Step 850/5562 | loss: 3.2731 | lr: 4.31e-05 | 7110s elapsed
+  Epoch 1 | Step 900/5562 | loss: 3.1514 | lr: 4.27e-05 | 7463s elapsed
+  Epoch 1 | Step 950/5562 | loss: 3.1608 | lr: 4.23e-05 | 7819s elapsed
+  Epoch 1 | Step 1000/5562 | loss: 3.1510 | lr: 4.19e-05 | 8776s elapsed
+  >>> Val loss: 2.9643 | perplexity: 19.38
+
+Writing model shards:   0%|          | 0/1 [00:00<?, ?it/s]
+Writing model shards: 100%|██████████| 1/1 [00:00<00:00,  9.19it/s]
+Writing model shards: 100%|██████████| 1/1 [00:00<00:00,  9.18it/s]
+  >>> Saved best checkpoint (val_loss=2.9643)
+  Epoch 1 | Step 1050/5562 | loss: 2.9929 | lr: 4.15e-05 | 9545s elapsed
+  Epoch 1 | Step 1100/5562 | loss: 3.0547 | lr: 4.11e-05 | 9887s elapsed
+  Epoch 1 | Step 1150/5562 | loss: 3.1151 | lr: 4.07e-05 | 10229s elapsed
+  Epoch 1 | Step 1200/5562 | loss: 2.9791 | lr: 4.03e-05 | 10572s elapsed
+  Epoch 1 | Step 1250/5562 | loss: 2.8725 | lr: 3.99e-05 | 12334s elapsed
+  Epoch 1 | Step 1300/5562 | loss: 3.0405 | lr: 3.95e-05 | 13767s elapsed
+  Epoch 1 | Step 1350/5562 | loss: 2.9353 | lr: 3.91e-05 | 14110s elapsed
+  Epoch 1 | Step 1400/5562 | loss: 2.9348 | lr: 3.87e-05 | 14454s elapsed
+  Epoch 1 | Step 1450/5562 | loss: 2.9990 | lr: 3.83e-05 | 14797s elapsed
+  Epoch 1 | Step 1500/5562 | loss: 3.0611 | lr: 3.79e-05 | 17425s elapsed
+  >>> Val loss: 2.7853 | perplexity: 16.20
+
+Writing model shards:   0%|          | 0/1 [00:00<?, ?it/s]
+Writing model shards: 100%|██████████| 1/1 [00:00<00:00,  6.86it/s]
+Writing model shards: 100%|██████████| 1/1 [00:00<00:00,  6.85it/s]
+  >>> Saved best checkpoint (val_loss=2.7853)
+  Epoch 1 | Step 1550/5562 | loss: 2.9588 | lr: 3.75e-05 | 18194s elapsed
+  Epoch 1 | Step 1600/5562 | loss: 2.8292 | lr: 3.71e-05 | 19636s elapsed
+  Epoch 1 | Step 1650/5562 | loss: 2.9864 | lr: 3.67e-05 | 19980s elapsed
+  Epoch 1 | Step 1700/5562 | loss: 2.8863 | lr: 3.62e-05 | 20329s elapsed
+  Epoch 1 | Step 1750/5562 | loss: 2.9714 | lr: 3.58e-05 | 20678s elapsed
+  Epoch 1 | Step 1800/5562 | loss: 2.9044 | lr: 3.54e-05 | 21046s elapsed
+  Epoch 1 | Step 1850/5562 | loss: 2.8786 | lr: 3.50e-05 | 21412s elapsed
+
+Epoch 1 done | avg loss: 25.6694 | 357.2 min
+
+  Epoch 2 | Step 1900/5562 | loss: 2.8343 | lr: 3.46e-05 | 326s elapsed
+  Epoch 2 | Step 1950/5562 | loss: 2.9196 | lr: 3.42e-05 | 690s elapsed
+  Epoch 2 | Step 2000/5562 | loss: 2.7659 | lr: 3.38e-05 | 1043s elapsed
+  >>> Val loss: 2.6426 | perplexity: 14.05
+
+Writing model shards:   0%|          | 0/1 [00:00<?, ?it/s]
+Writing model shards: 100%|██████████| 1/1 [00:00<00:00,  8.97it/s]
+Writing model shards: 100%|██████████| 1/1 [00:00<00:00,  8.97it/s]
+  >>> Saved best checkpoint (val_loss=2.6426)
+  Epoch 2 | Step 2050/5562 | loss: 2.7287 | lr: 3.34e-05 | 1820s elapsed
+  Epoch 2 | Step 2100/5562 | loss: 2.9476 | lr: 3.30e-05 | 2166s elapsed
+  Epoch 2 | Step 2150/5562 | loss: 2.7852 | lr: 3.26e-05 | 2509s elapsed
+  Epoch 2 | Step 2200/5562 | loss: 2.8730 | lr: 3.22e-05 | 2853s elapsed
+  Epoch 2 | Step 2250/5562 | loss: 2.6373 | lr: 3.18e-05 | 3196s elapsed
+  Epoch 2 | Step 2300/5562 | loss: 2.6521 | lr: 3.14e-05 | 3884s elapsed
+  Epoch 2 | Step 2350/5562 | loss: 2.8618 | lr: 3.10e-05 | 4229s elapsed
+  Epoch 2 | Step 2400/5562 | loss: 2.8151 | lr: 3.06e-05 | 4574s elapsed
+  Epoch 2 | Step 2450/5562 | loss: 2.6738 | lr: 3.02e-05 | 4916s elapsed
+  Epoch 2 | Step 2500/5562 | loss: 2.7107 | lr: 2.98e-05 | 5260s elapsed
+  >>> Val loss: 2.5298 | perplexity: 12.55
+
+Writing model shards:   0%|          | 0/1 [00:00<?, ?it/s]
+Writing model shards: 100%|██████████| 1/1 [00:00<00:00,  9.37it/s]
+Writing model shards: 100%|██████████| 1/1 [00:00<00:00,  9.36it/s]
+  >>> Saved best checkpoint (val_loss=2.5298)
+  Epoch 2 | Step 2550/5562 | loss: 2.7646 | lr: 2.94e-05 | 6040s elapsed
+  Epoch 2 | Step 2600/5562 | loss: 2.8693 | lr: 2.90e-05 | 6382s elapsed
+  Epoch 2 | Step 2650/5562 | loss: 2.6510 | lr: 2.86e-05 | 6728s elapsed
+  Epoch 2 | Step 2700/5562 | loss: 2.8478 | lr: 2.82e-05 | 7073s elapsed
+  Epoch 2 | Step 2750/5562 | loss: 2.6296 | lr: 2.78e-05 | 7423s elapsed
+  Epoch 2 | Step 2800/5562 | loss: 2.6601 | lr: 2.73e-05 | 7770s elapsed
+  Epoch 2 | Step 2850/5562 | loss: 2.6952 | lr: 2.69e-05 | 8114s elapsed
+  Epoch 2 | Step 2900/5562 | loss: 2.8337 | lr: 2.65e-05 | 8459s elapsed
+  Epoch 2 | Step 2950/5562 | loss: 2.7666 | lr: 2.61e-05 | 8803s elapsed
+  Epoch 2 | Step 3000/5562 | loss: 2.4233 | lr: 2.57e-05 | 9147s elapsed
+  >>> Val loss: 2.4322 | perplexity: 11.38
+
+Writing model shards:   0%|          | 0/1 [00:00<?, ?it/s]
+Writing model shards: 100%|██████████| 1/1 [00:00<00:00,  7.56it/s]
+Writing model shards: 100%|██████████| 1/1 [00:00<00:00,  7.56it/s]
+  >>> Saved best checkpoint (val_loss=2.4322)
+  Epoch 2 | Step 3050/5562 | loss: 2.7179 | lr: 2.53e-05 | 9923s elapsed
+  Epoch 2 | Step 3100/5562 | loss: 2.5785 | lr: 2.49e-05 | 10269s elapsed
+  Epoch 2 | Step 3150/5562 | loss: 2.6186 | lr: 2.45e-05 | 10617s elapsed
+  Epoch 2 | Step 3200/5562 | loss: 2.6706 | lr: 2.41e-05 | 10958s elapsed
+  Epoch 2 | Step 3250/5562 | loss: 2.5901 | lr: 2.37e-05 | 11299s elapsed
+  Epoch 2 | Step 3300/5562 | loss: 2.7048 | lr: 2.33e-05 | 11640s elapsed
+  Epoch 2 | Step 3350/5562 | loss: 2.5262 | lr: 2.29e-05 | 11987s elapsed
+  Epoch 2 | Step 3400/5562 | loss: 2.6258 | lr: 2.25e-05 | 12334s elapsed
+  Epoch 2 | Step 3450/5562 | loss: 2.5824 | lr: 2.21e-05 | 12675s elapsed
+  Epoch 2 | Step 3500/5562 | loss: 2.6772 | lr: 2.17e-05 | 13016s elapsed
+  >>> Val loss: 2.3503 | perplexity: 10.49
+
+Writing model shards:   0%|          | 0/1 [00:00<?, ?it/s]
+Writing model shards: 100%|██████████| 1/1 [00:00<00:00, 11.38it/s]
+  >>> Saved best checkpoint (val_loss=2.3503)
+  Epoch 2 | Step 3550/5562 | loss: 2.4758 | lr: 2.13e-05 | 13786s elapsed
+  Epoch 2 | Step 3600/5562 | loss: 2.6044 | lr: 2.09e-05 | 14129s elapsed
+  Epoch 2 | Step 3650/5562 | loss: 2.7002 | lr: 2.05e-05 | 14473s elapsed
+  Epoch 2 | Step 3700/5562 | loss: 2.4876 | lr: 2.01e-05 | 14817s elapsed
+
+Epoch 2 done | avg loss: 10.7432 | 247.8 min
+
+  Epoch 3 | Step 3750/5562 | loss: 2.6526 | lr: 1.97e-05 | 292s elapsed
+  Epoch 3 | Step 3800/5562 | loss: 2.5332 | lr: 1.93e-05 | 642s elapsed
+  Epoch 3 | Step 3850/5562 | loss: 2.3773 | lr: 1.89e-05 | 991s elapsed
+  Epoch 3 | Step 3900/5562 | loss: 2.4450 | lr: 1.84e-05 | 1339s elapsed
+  Epoch 3 | Step 3950/5562 | loss: 2.5035 | lr: 1.80e-05 | 1688s elapsed
+  Epoch 3 | Step 4000/5562 | loss: 2.4890 | lr: 1.76e-05 | 2037s elapsed
+  >>> Val loss: 2.2874 | perplexity: 9.85
+
+Writing model shards:   0%|          | 0/1 [00:00<?, ?it/s]
+Writing model shards: 100%|██████████| 1/1 [00:00<00:00, 10.61it/s]
+  >>> Saved best checkpoint (val_loss=2.2874)
+  Epoch 3 | Step 4050/5562 | loss: 2.5369 | lr: 1.72e-05 | 2822s elapsed
+  Epoch 3 | Step 4100/5562 | loss: 2.5408 | lr: 1.68e-05 | 3170s elapsed
+  Epoch 3 | Step 4150/5562 | loss: 2.3771 | lr: 1.64e-05 | 3519s elapsed
+  Epoch 3 | Step 4200/5562 | loss: 2.2941 | lr: 1.60e-05 | 3867s elapsed
+  Epoch 3 | Step 4250/5562 | loss: 2.5038 | lr: 1.56e-05 | 4216s elapsed
+  Epoch 3 | Step 4300/5562 | loss: 2.4980 | lr: 1.52e-05 | 4565s elapsed
+  Epoch 3 | Step 4350/5562 | loss: 2.5666 | lr: 1.48e-05 | 4913s elapsed
+  Epoch 3 | Step 4400/5562 | loss: 2.5343 | lr: 1.44e-05 | 5262s elapsed
+  Epoch 3 | Step 4450/5562 | loss: 2.4142 | lr: 1.40e-05 | 5610s elapsed
+  Epoch 3 | Step 4500/5562 | loss: 2.3089 | lr: 1.36e-05 | 5959s elapsed
+  >>> Val loss: 2.2408 | perplexity: 9.40
+
+Writing model shards:   0%|          | 0/1 [00:00<?, ?it/s]
+Writing model shards: 100%|██████████| 1/1 [00:00<00:00,  9.73it/s]
+Writing model shards: 100%|██████████| 1/1 [00:00<00:00,  9.72it/s]
+  >>> Saved best checkpoint (val_loss=2.2408)
+  Epoch 3 | Step 4550/5562 | loss: 2.6073 | lr: 1.32e-05 | 6745s elapsed
+  Epoch 3 | Step 4600/5562 | loss: 2.6278 | lr: 1.28e-05 | 7094s elapsed
+  Epoch 3 | Step 4650/5562 | loss: 2.3167 | lr: 1.24e-05 | 7442s elapsed
+  Epoch 3 | Step 4700/5562 | loss: 2.6116 | lr: 1.20e-05 | 7791s elapsed
+  Epoch 3 | Step 4750/5562 | loss: 2.5007 | lr: 1.16e-05 | 8140s elapsed
+  Epoch 3 | Step 4800/5562 | loss: 2.4855 | lr: 1.12e-05 | 8489s elapsed
+  Epoch 3 | Step 4850/5562 | loss: 2.4048 | lr: 1.08e-05 | 8838s elapsed
+  Epoch 3 | Step 4900/5562 | loss: 2.4438 | lr: 1.04e-05 | 9188s elapsed
+  Epoch 3 | Step 4950/5562 | loss: 2.5172 | lr: 9.95e-06 | 9536s elapsed
+  Epoch 3 | Step 5000/5562 | loss: 2.3813 | lr: 9.55e-06 | 9885s elapsed
+  >>> Val loss: 2.2081 | perplexity: 9.10
+
+Writing model shards:   0%|          | 0/1 [00:00<?, ?it/s]
+Writing model shards: 100%|██████████| 1/1 [00:00<00:00,  9.26it/s]
+Writing model shards: 100%|██████████| 1/1 [00:00<00:00,  9.25it/s]
+  >>> Saved best checkpoint (val_loss=2.2081)
+  Epoch 3 | Step 5050/5562 | loss: 2.5692 | lr: 9.14e-06 | 10670s elapsed
+  Epoch 3 | Step 5100/5562 | loss: 2.4284 | lr: 8.74e-06 | 11019s elapsed
+  Epoch 3 | Step 5150/5562 | loss: 2.3448 | lr: 8.33e-06 | 11367s elapsed
+  Epoch 3 | Step 5200/5562 | loss: 2.3934 | lr: 7.93e-06 | 11716s elapsed
+  Epoch 3 | Step 5250/5562 | loss: 2.4479 | lr: 7.52e-06 | 12065s elapsed
+  Epoch 3 | Step 5300/5562 | loss: 2.4479 | lr: 7.12e-06 | 12413s elapsed
+  Epoch 3 | Step 5350/5562 | loss: 2.5199 | lr: 6.72e-06 | 12762s elapsed
+  Epoch 3 | Step 5400/5562 | loss: 2.4475 | lr: 6.31e-06 | 13111s elapsed
+  Epoch 3 | Step 5450/5562 | loss: 2.5150 | lr: 5.91e-06 | 13459s elapsed
+  Epoch 3 | Step 5500/5562 | loss: 2.4195 | lr: 5.50e-06 | 13808s elapsed
+  >>> Val loss: 2.1828 | perplexity: 8.87
+
+Writing model shards:   0%|          | 0/1 [00:00<?, ?it/s]
+Writing model shards: 100%|██████████| 1/1 [00:00<00:00, 11.05it/s]
+  >>> Saved best checkpoint (val_loss=2.1828)
+  Epoch 3 | Step 5550/5562 | loss: 2.3285 | lr: 5.10e-06 | 14593s elapsed
+
+Epoch 3 done | avg loss: 6.5656 | 244.5 min
+
+
+Final evaluation:
+  Loss:       2.1821
+  Perplexity: 8.87
+
+Saving model to trump_gpt2_model/...
+
+Writing model shards:   0%|          | 0/1 [00:00<?, ?it/s]
+Writing model shards: 100%|██████████| 1/1 [00:00<00:00, 10.53it/s]
+Done! Model saved to trump_gpt2_model/
+Next step: python generate_tweet.py

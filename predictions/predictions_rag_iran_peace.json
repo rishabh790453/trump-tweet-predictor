@@ -1,0 +1,48 @@
+{
+  "model": "RAG + Llama3-8B-Instruct",
+  "date": "iran_peace",
+  "temperature": 0.8,
+  "k_retrieved": 5,
+  "headlines": [
+    "US and Iran discuss next round of peace talks as Pakistani mediators arrive in Tehran"
+  ],
+  "retrieved_examples": [
+    {
+      "news": "- Iran’s Hard-Liners Show Restraint on Nuclear Talks With U.S.\n- In Nuclear Talks, Iran Seeks to Avoid Specifics\n- Netanyahu Aides Cite Iran as Source of U.S. Tensions\n- Israeli Officials Talk With French to Try to Influence Iran Nuclear Deal\n- Our Man in Tehran\n- Meet Our Man in Tehran\n- Rebukes From White House Risk Buoying Netanyahu\n- Key Findings from the F.B.I. 9/11 Report\n- Iran Judge Rejects Washington Post Reporter’s Petition for Prison Furlough\n- Out of Yemen, U.S. Is Hobbled in Terror Fight",
+      "tweet": "Via @bostonherald by Eugene R. Dunn: “Iran a clear danger” http://www.bostonherald.com/news_opinion/opinion/letters_to_the_editor/2015/03/letter_iran_a_clear_danger …",
+      "date": "2015-03-25",
+      "sim": 0.6115138530731201
+    },
+    {
+      "news": "- ‘Tricky Issues’ Remain as Deadline Nears in Nuclear Talks With Iran\n- No. 2 Negotiators in Iran Talks Argue Physics Behind Politics\n- Iran Backs Away From Key Detail in Nuclear Deal\n- Heated Words as Iran Deadline Nears\n- Iran’s Top Negotiator Says Accord Can Be Drafted\n- Iran Matters Most\n- Clinton Wants to Improve Ties With Israel\n- Stress and Hope In Tehran\n- What’s Going On in This Picture? | March 30, 2015\n- Foreigners Are Attacking ... American TV!",
+      "tweet": "\"@foxandfriends: .@realDonaldTrump calls out those negotiating with Iran on a new nuclear deal. pic.twitter.com/FR7y4IPvct\"",
+      "date": "2015-03-30",
+      "sim": 0.610857367515564
+    },
+    {
+      "news": "- As Nuclear Talks Drag On, U.S. and Iran Find It Harder to Hear Each Other\n- Heated Words as Iran Deadline Nears\n- ‘Don’t Worry About It’ Approach on Iran May Haunt White House, G.O.P. Lawmaker Says\n- Political Thunder Over the Iran Deal\n- Officials on Iran Nuclear Negotiations\n- Iran Matters Most\n- The Iran Nuclear Deal – A Simple Guide\n- Iran Backs Away From Key Detail in Nuclear Deal\n- As U.S. and Iran Seek Nuclear Deal, Saudi Arabia Makes Its Own Moves\n- ‘Tricky Issues’ Remain as Deadline Nears in Nuclear Talks With Iran",
+      "tweet": "\"@MichelleMeyer10: Donald, USA must NEVER allow Iran to make their chants \"death to America\" a reality",
+      "date": "2015-04-01",
+      "sim": 0.6099796295166016
+    },
+    {
+      "news": "- Iran Nuclear Negotiators, Facing Key Differences, Weigh Extending Deadline\n- U.S. and Allies Extend Iran Nuclear Talks by 7 Months\n- In Iran Talks, U.S. Seeks to Prevent a Covert Weapon\n- Obama Acknowledges Broad Gaps Between 2 Sides in Iran Nuclear Talks\n- Kerry Announces Extension to Iran Talks\n- Week Ahead: Updates on Europe’s Economy, and an OPEC Meeting\n- Good News on Energy\n- Morning Agenda: Challenges for the Fed\n- Iran Grants Bail to Woman From Britain Held 5 Months\n- International Monitor’s Report on Chemical Weapons Recovery in Iraq",
+      "tweet": "Iran and the United States just pushed deadline back SEVEN MONTHS on working out a nuclear deal. Iran is tapping along our bad negotiators!",
+      "date": "2014-11-24",
+      "sim": 0.6078561544418335
+    },
+    {
+      "news": "- ‘Tricky Issues’ Remain as Deadline Nears in Nuclear Talks With Iran\n- Iran Backs Away From Key Detail in Nuclear Deal\n- No. 2 Negotiators in Iran Talks Argue Physics Behind Politics\n- Heated Words as Iran Deadline Nears\n- Iran’s Top Negotiator Says Accord Can Be Drafted\n- Stress and Hope In Tehran\n- Clinton Wants to Improve Ties With Israel\n- What’s Going On in This Picture? | March 30, 2015\n- An ‘Ask Me Anything’ Chat on Climate Science and Coverage\n- Iran Matters Most",
+      "tweet": "\"@fortworthhomes: “@foxandfriends:Trump calls out those negotiating with Iran on a new nuclear deal. pic.twitter.com/FR7y4IPvct”I believe him.\"",
+      "date": "2015-03-30",
+      "sim": 0.5999309420585632
+    }
+  ],
+  "predictions": [
+    "\"Just got word that Pakistanis have arrived in Tehran to mediate between us & IRAN! Big mistake, folks. They'll only help them stall while they continue to play games. WE NEED TO STAND FIRM AND GET A FAIR DEAL!\" #MakeAmericaGreatAgain",
+    "\"FOLKS, WE'RE GETTING PLAYED! Pakistanis mediating between us and IRAN? The same country that harbors terrorists?! Not gonna happen!\" #MakeAmericaGreatAgain",
+    "\"TREMENDOUS development! Pakistan is now mediating between us & IRAN! Maybe they can help get these negotiations moving again, or maybe we'll finally see some REAL progress towards PEACE!\" #MakeAmericaGreatAgain",
+    "\"Just arrived at the table with Pakistanis in Tehran! Don't expect any weak concessions from me. We're going to MAKE PEACE GREAT AGAIN or we won't be making anything at all!\" #AmericaFirst",
+    "\"FOLKS, CAN'T BELIEVE THE FOOLS WE'RE DEALING WITH! Pakistanis mediating between us & IRAN? Give me a break! Let's get tough or walk away from these weak negotiations!\" #MakeAmericaGreatAgain"
+  ]
+}

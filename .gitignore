@@ -1,0 +1,38 @@
+# Large model weights — hosted on HuggingFace
+trump_llama_v3/
+
+# Large datasets — hosted on HuggingFace
+news_data.db
+news_2010_2026_full.csv
+finetune_train.jsonl
+finetune_data.jsonl
+rag_data.jsonl
+rag_index.faiss
+master_dataset.csv
+trump_tweets_combined.csv
+trump_finetune_mac.zip
+
+# Virtual environment
+venv_mac/
+venv/
+.venv/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# HuggingFace cache
+*.safetensors
+
+# Keys / secrets
+news_api_config.json
+
+# macOS
+.DS_Store
+
+# Demo artifacts
+scripts/demo_news.db
+scripts/demo_news_export.csv

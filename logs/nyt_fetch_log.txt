@@ -1,0 +1,311 @@
+
+DB: 32,346 articles  |  Checkpoint: 0 GDELT + 0 NYT tasks done
+
+======================================================================
+NYT Archive — every NYT article, 2009-2026
+  ~2,000-4,000 articles per month → ~300,000-600,000 total
+  Rate limit: 6 seconds between requests (10 req/min max)
+======================================================================
+  2009-01    0.5%  +10687 articles  DB:43,033
+  2009-02    1.0%  +10068 articles  DB:53,101
+  2009-03    1.5%  +11333 articles  DB:64,434
+  2009-04    1.9%  +11042 articles  DB:75,476
+  2009-05    2.4%  +13632 articles  DB:89,108
+  2009-06    2.9%  +14413 articles  DB:103,521
+  2009-07    3.4%  +13687 articles  DB:117,208
+  2009-08    3.9%  +13140 articles  DB:130,348
+  [NYT 429 – waiting 30s]
+  2009-09    4.4%  +14558 articles  DB:144,906
+  2009-10    4.9%  +15462 articles  DB:160,368
+  2009-11    5.3%  +9431 articles  DB:169,799
+  2009-12    5.8%  +9475 articles  DB:179,274
+  2010-01    6.3%  +9820 articles  DB:189,094
+  [NYT 429 – waiting 30s]
+  2010-02    6.8%  +9298 articles  DB:198,392
+  2010-03    7.3%  +10451 articles  DB:208,843
+  2010-04    7.8%  +9769 articles  DB:218,612
+  2010-05    8.3%  +9536 articles  DB:228,148
+  2010-06    8.7%  +9609 articles  DB:237,757
+  2010-07    9.2%  +9085 articles  DB:246,842
+  2010-08    9.7%  +8793 articles  DB:255,635
+  2010-09   10.2%  +9384 articles  DB:265,019
+  2010-10   10.7%  +9682 articles  DB:274,701
+  2010-11   11.2%  +8673 articles  DB:283,374
+  [NYT 429 – waiting 30s]
+  2010-12   11.7%  +8300 articles  DB:291,674
+  2011-01   12.1%  +8464 articles  DB:300,138
+  2011-02   12.6%  +7916 articles  DB:308,054
+  2011-03   13.1%  +9024 articles  DB:317,078
+  2011-04   13.6%  +8748 articles  DB:325,826
+  [NYT 429 – waiting 30s]
+  2011-05   14.1%  +8730 articles  DB:334,556
+  2011-06   14.6%  +8599 articles  DB:343,155
+  2011-07   15.0%  +7987 articles  DB:351,142
+  2011-08   15.5%  +8138 articles  DB:359,280
+  2011-09   16.0%  +9200 articles  DB:368,480
+  2011-10   16.5%  +8912 articles  DB:377,392
+  2011-11   17.0%  +8722 articles  DB:386,114
+  2011-12   17.5%  +8503 articles  DB:394,617
+  2012-01   18.0%  +9168 articles  DB:403,785
+  2012-02   18.4%  +8780 articles  DB:412,565
+  [NYT 429 – waiting 30s]
+  2012-03   18.9%  +9279 articles  DB:421,844
+  2012-04   19.4%  +8240 articles  DB:430,084
+  2012-05   19.9%  +8862 articles  DB:438,946
+  2012-06   20.4%  +8702 articles  DB:447,648
+  2012-07   20.9%  +7794 articles  DB:455,442
+  [NYT 429 – waiting 30s]
+  2012-08   21.4%  +8201 articles  DB:463,643
+  2012-09   21.8%  +8306 articles  DB:471,949
+  2012-10   22.3%  +8731 articles  DB:480,680
+  2012-11   22.8%  +7959 articles  DB:488,639
+  2012-12   23.3%  +7212 articles  DB:495,851
+  2013-01   23.8%  +7961 articles  DB:503,812
+  2013-02   24.3%  +7504 articles  DB:511,316
+  2013-03   24.8%  +8180 articles  DB:519,496
+  2013-04   25.2%  +7616 articles  DB:527,112
+  [NYT 429 – waiting 30s]
+  2013-05   25.7%  +7968 articles  DB:535,080
+  2013-06   26.2%  +7401 articles  DB:542,481
+  2013-07   26.7%  +6870 articles  DB:549,351
+  2013-08   27.2%  +6634 articles  DB:555,985
+  2013-09   27.7%  +7348 articles  DB:563,333
+  [NYT 429 – waiting 30s]
+  2013-10   28.2%  +7711 articles  DB:571,044
+  2013-11   28.6%  +7015 articles  DB:578,059
+  2013-12   29.1%  +6775 articles  DB:584,834
+  2014-01   29.6%  +7337 articles  DB:592,171
+  2014-02   30.1%  +6941 articles  DB:599,112
+  2014-03   30.6%  +7187 articles  DB:606,299
+  2014-04   31.1%  +7294 articles  DB:613,593
+  2014-05   31.6%  +7549 articles  DB:621,142
+  2014-06   32.0%  +7345 articles  DB:628,487
+  2014-07   32.5%  +6814 articles  DB:635,301
+  [NYT 429 – waiting 30s]
+  2014-08   33.0%  +6577 articles  DB:641,878
+  2014-09   33.5%  +7584 articles  DB:649,462
+  2014-10   34.0%  +7862 articles  DB:657,324
+  2014-11   34.5%  +6708 articles  DB:664,032
+  2014-12   35.0%  +6701 articles  DB:670,733
+  [NYT 429 – waiting 30s]
+  2015-01   35.4%  +6904 articles  DB:677,637
+  2015-02   35.9%  +6435 articles  DB:684,072
+  2015-03   36.4%  +6974 articles  DB:691,046
+  2015-04   36.9%  +6542 articles  DB:697,588
+  2015-05   37.4%  +6634 articles  DB:704,222
+  2015-06   37.9%  +6814 articles  DB:711,036
+  2015-07   38.3%  +6757 articles  DB:717,793
+  2015-08   38.8%  +6079 articles  DB:723,872
+  2015-09   39.3%  +6990 articles  DB:730,862
+  [NYT 429 – waiting 30s]
+  2015-10   39.8%  +7365 articles  DB:738,227
+  2015-11   40.3%  +6241 articles  DB:744,468
+  2015-12   40.8%  +6371 articles  DB:750,839
+  2016-01   41.3%  +6265 articles  DB:757,104
+  2016-02   41.7%  +6447 articles  DB:763,551
+  [NYT 429 – waiting 30s]
+  2016-03   42.2%  +6487 articles  DB:770,038
+  2016-04   42.7%  +5927 articles  DB:775,965
+  2016-05   43.2%  +5920 articles  DB:781,885
+  2016-06   43.7%  +5920 articles  DB:787,805
+  2016-07   44.2%  +5594 articles  DB:793,399
+  2016-08   44.7%  +5224 articles  DB:798,623
+  2016-09   45.1%  +5894 articles  DB:804,517
+  2016-10   45.6%  +5511 articles  DB:810,028
+  2016-11   46.1%  +5330 articles  DB:815,358
+  2016-12   46.6%  +4966 articles  DB:820,324
+  [NYT 429 – waiting 30s]
+  2017-01   47.1%  +5129 articles  DB:825,453
+  2017-02   47.6%  +4935 articles  DB:830,388
+  2017-03   48.1%  +5546 articles  DB:835,934
+  2017-04   48.5%  +4878 articles  DB:840,812
+  2017-05   49.0%  +5384 articles  DB:846,196
+  [NYT 429 – waiting 30s]
+  2017-06   49.5%  +5300 articles  DB:851,496
+  2017-07   50.0%  +4757 articles  DB:856,253
+  2017-08   50.5%  +4854 articles  DB:861,107
+  2017-09   51.0%  +5032 articles  DB:866,139
+  2017-10   51.5%  +5214 articles  DB:871,353
+  2017-11   51.9%  +4834 articles  DB:876,187
+  2017-12   52.4%  +4560 articles  DB:880,747
+  2018-01   52.9%  +4757 articles  DB:885,504
+  2018-02   53.4%  +4573 articles  DB:890,077
+  2018-03   53.9%  +5034 articles  DB:895,111
+  [NYT 429 – waiting 30s]
+  2018-04   54.4%  +4654 articles  DB:899,765
+  2018-05   54.9%  +5126 articles  DB:904,891
+  2018-06   55.3%  +4988 articles  DB:909,879
+  2018-07   55.8%  +4444 articles  DB:914,323
+  2018-08   56.3%  +6355 articles  DB:920,678
+  [NYT 429 – waiting 30s]
+  2018-09   56.8%  +4722 articles  DB:925,400
+  2018-10   57.3%  +5146 articles  DB:930,546
+  2018-11   57.8%  +4829 articles  DB:935,375
+  2018-12   58.3%  +4193 articles  DB:939,568
+  2019-01   58.7%  +4482 articles  DB:944,050
+  2019-02   59.2%  +4122 articles  DB:948,172
+  2019-03   59.7%  +4690 articles  DB:952,862
+  2019-04   60.2%  +4523 articles  DB:957,385
+  2019-05   60.7%  +4737 articles  DB:962,122
+  2019-06   61.2%  +4496 articles  DB:966,618
+  [NYT 429 – waiting 30s]
+  2019-07   61.7%  +4287 articles  DB:970,905
+  2019-08   62.1%  +4109 articles  DB:975,014
+  2019-09   62.6%  +4418 articles  DB:979,432
+  2019-10   63.1%  +4989 articles  DB:984,421
+  2019-11   63.6%  +4420 articles  DB:988,841
+  [NYT 429 – waiting 30s]
+  2019-12   64.1%  +3985 articles  DB:992,826
+  2020-01   64.6%  +4480 articles  DB:997,306
+  2020-02   65.0%  +4240 articles  DB:1,001,546
+  2020-03   65.5%  +4883 articles  DB:1,006,429
+  2020-04   66.0%  +5019 articles  DB:1,011,448
+  2020-05   66.5%  +4347 articles  DB:1,015,795
+  2020-06   67.0%  +4492 articles  DB:1,020,287
+  2020-07   67.5%  +4459 articles  DB:1,024,746
+  2020-08   68.0%  +4439 articles  DB:1,029,185
+  2020-09   68.4%  +4609 articles  DB:1,033,794
+  [NYT 429 – waiting 30s]
+  2020-10   68.9%  +5256 articles  DB:1,039,050
+  2020-11   69.4%  +5114 articles  DB:1,044,164
+  2020-12   69.9%  +4154 articles  DB:1,048,318
+  2021-01   70.4%  +6321 articles  DB:1,054,639
+  2021-02   70.9%  +4260 articles  DB:1,058,899
+  [NYT 429 – waiting 30s]
+  2021-03   71.4%  +4786 articles  DB:1,063,685
+  2021-04   71.8%  +4592 articles  DB:1,068,277
+  2021-05   72.3%  +4265 articles  DB:1,072,542
+  2021-06   72.8%  +4260 articles  DB:1,076,802
+  2021-07   73.3%  +4466 articles  DB:1,081,268
+  2021-08   73.8%  +4223 articles  DB:1,085,491
+  2021-09   74.3%  +4482 articles  DB:1,089,973
+  2021-10   74.8%  +4254 articles  DB:1,094,227
+  2021-11   75.2%  +4005 articles  DB:1,098,232
+  2021-12   75.7%  +3933 articles  DB:1,102,165
+  [NYT 429 – waiting 30s]
+  2022-01   76.2%  +3799 articles  DB:1,105,964
+  2022-02   76.7%  +4059 articles  DB:1,110,023
+  2022-03   77.2%  +4310 articles  DB:1,114,333
+  2022-04   77.7%  +3934 articles  DB:1,118,267
+  2022-05   78.2%  +4137 articles  DB:1,122,404
+  [NYT 429 – waiting 30s]
+  2022-06   78.6%  +4300 articles  DB:1,126,704
+  2022-07   79.1%  +3771 articles  DB:1,130,475
+  2022-08   79.6%  +3908 articles  DB:1,134,383
+  2022-09   80.1%  +4081 articles  DB:1,138,464
+  2022-10   80.6%  +3857 articles  DB:1,142,321
+  [NYT 429 – waiting 30s]
+  2022-11   81.1%  +4742 articles  DB:1,147,063
+  2022-12   81.6%  +3545 articles  DB:1,150,608
+  2023-01   82.0%  +3423 articles  DB:1,154,031
+  2023-02   82.5%  +3260 articles  DB:1,157,291
+  2023-03   83.0%  +5766 articles  DB:1,163,057
+  2023-04   83.5%  +3717 articles  DB:1,166,774
+  2023-05   84.0%  +3877 articles  DB:1,170,651
+  2023-06   84.5%  +3788 articles  DB:1,174,439
+  2023-07   85.0%  +3546 articles  DB:1,177,985
+  2023-08   85.4%  +3668 articles  DB:1,181,653
+  [NYT 429 – waiting 30s]
+  2023-09   85.9%  +3823 articles  DB:1,185,476
+  2023-10   86.4%  +3906 articles  DB:1,189,382
+  2023-11   86.9%  +3734 articles  DB:1,193,116
+  2023-12   87.4%  +3525 articles  DB:1,196,641
+  2024-01   87.9%  +3785 articles  DB:1,200,426
+  [NYT 429 – waiting 30s]
+  2024-02   88.3%  +3791 articles  DB:1,204,217
+  2024-03   88.8%  +4242 articles  DB:1,208,459
+  2024-04   89.3%  +3954 articles  DB:1,212,413
+  2024-05   89.8%  +4268 articles  DB:1,216,681
+  2024-06   90.3%  +3847 articles  DB:1,220,528
+  2024-07   90.8%  +4134 articles  DB:1,224,662
+  2024-08   91.3%  +4046 articles  DB:1,228,708
+  2024-09   91.7%  +4054 articles  DB:1,232,762
+  2024-10   92.2%  +4306 articles  DB:1,237,068
+  2024-11   92.7%  +4602 articles  DB:1,241,670
+  [NYT 429 – waiting 30s]
+  2024-12   93.2%  +3666 articles  DB:1,245,336
+Traceback (most recent call last):
+  File "C:\Users\risha\Downloads\trump_tweets_combined\fetch_us_news.py", line 407, in <module>
+    main()
+    ~~~~^^
+  File "C:\Users\risha\Downloads\trump_tweets_combined\fetch_us_news.py", line 398, in main
+    run_nyt(conn, cp)
+    ~~~~~~~^^^^^^^^^^
+  File "C:\Users\risha\Downloads\trump_tweets_combined\fetch_us_news.py", line 332, in run_nyt
+    arts = _nyt_fetch_month(yr, mo, api_key)
+  File "C:\Users\risha\Downloads\trump_tweets_combined\fetch_us_news.py", line 270, in _nyt_fetch_month
+    kws     = [kw.get("value","") for kw in doc.get("keywords", [])]
+                                            ~~~~~~~^^^^^^^^^^^^^^^^
+TypeError: 'NoneType' object is not iterable
+
+DB: 1,245,336 articles  |  Checkpoint: 0 GDELT + 192 NYT tasks done
+
+======================================================================
+NYT Archive — every NYT article, 2009-2026
+  ~2,000-4,000 articles per month → ~300,000-600,000 total
+  Rate limit: 6 seconds between requests (10 req/min max)
+======================================================================
+  2025-01   93.7%  +4465 articles  DB:1,249,801
+  2025-02   94.2%  +3916 articles  DB:1,253,717
+  2025-03   94.7%  +4340 articles  DB:1,258,057
+  [NYT 429 – waiting 30s]
+  2025-04   95.1%  +4196 articles  DB:1,262,253
+  2025-05   95.6%  +4180 articles  DB:1,266,433
+  2025-06   96.1%  +4003 articles  DB:1,270,436
+  2025-07   96.6%  +3698 articles  DB:1,274,134
+  2025-08   97.1%  +3500 articles  DB:1,277,634
+  2025-09   97.6%  +3916 articles  DB:1,281,550
+  2025-10   98.1%  +4258 articles  DB:1,285,808
+  2025-11   98.5%  +3758 articles  DB:1,289,566
+  2025-12   99.0%  +3568 articles  DB:1,293,134
+  2026-01   99.5%  +4045 articles  DB:1,297,179
+  [NYT 429 – waiting 30s]
+  2026-02  100.0%  +3928 articles  DB:1,301,107
+
+  NYT complete — 55,771 total new articles
+
+Done in 2.8 minutes
+
+======================================================================
+DATABASE STATS  (1,301,107 total articles)
+======================================================================
+
+  Top sources:
+    1,268,761  New York Times
+      32,043  The Guardian
+          50  The Times of India
+          20  CNN.com - RSS Channel - HP Hero
+          20  US Top News and Analysis
+          12  BusinessLine
+          11  NPR Topics: News
+          10  The Irish Times
+           9  Alltoc.com
+           9  Globalsecurity.org
+           7  Lifesciencesworld.com
+           5  Economictimes.com
+           5  Freerepublic.com
+           5  Ibtimes.com.au
+           5  RTE
+
+  Articles per year:
+    2007       10  
+    2009  149,035  ##############################
+    2010  114,969  ##############################
+    2011  105,683  ##############################
+    2012  105,391  ##############################
+    2013   92,571  ##############################
+    2014   88,248  ##############################
+    2015   82,661  ##############################
+    2016   70,477  ##############################
+    2017   61,406  ##############################
+    2018   59,812  #############################
+    2019   54,255  ###########################
+    2020   57,499  ############################
+    2021   54,840  ###########################
+    2022   49,438  ########################
+    2023   47,025  #######################
+    2024   49,688  ########################
+    2025   48,822  ########################
+    2026    9,225  ####
+======================================================================
+

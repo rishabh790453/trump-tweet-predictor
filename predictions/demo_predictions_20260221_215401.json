@@ -1,0 +1,31 @@
+{
+  "timestamp": "2026-02-21T21:54:01.075881",
+  "model_type": "local",
+  "predictions": [
+    {
+      "tweet": "Just saw reports about the Stock Market. TERRIBLE! This is exactly why we need STRONG LEADERSHIP. The Fake News Media won't tell you this! President DJT",
+      "topic": "template-generated",
+      "news_reference": "N/A (template-based)"
+    },
+    {
+      "tweet": "The Crime situation is FANTASTIC! Under my Administration, we achieved HISTORIC trade deals. The Radical Left wants to destroy everything we built. We won't let them! President DJT",
+      "topic": "template-generated",
+      "news_reference": "N/A (template-based)"
+    },
+    {
+      "tweet": "the Stock Market - DISASTROUS news! Remember, I told you this would happen. Nobody listened! Now look at the MESS! We need LAW AND ORDER. President DJT",
+      "topic": "template-generated",
+      "news_reference": "N/A (template-based)"
+    },
+    {
+      "tweet": "International Trade - AMAZING news! Remember, I told you this would happen. Nobody listened! Now look at the MESS! We need REAL change. Thank you for your attention to this matter! PRESIDENT DONALD J. TRUMP",
+      "topic": "template-generated",
+      "news_reference": "N/A (template-based)"
+    },
+    {
+      "tweet": "The Border Security situation is INCREDIBLE! Under my Administration, we achieved the STRONGEST military. The Radical Left wants to destroy everything we built. We won't let them! President DJT",
+      "topic": "template-generated",
+      "news_reference": "N/A (template-based)"
+    }
+  ]
+}

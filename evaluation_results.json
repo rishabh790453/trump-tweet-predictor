@@ -1,0 +1,39 @@
+{
+  "note": "bleu1 and rouge1 are exact values from console output; bleu2/rouge2/rougeL estimated from figure outputs",
+  "nyc_tax": {
+    "markov":   {"bleu1": 0.085, "bleu2": 0.006, "rouge1": 0.086, "rouge2": 0.009, "rougeL": 0.072},
+    "ngram":    {"bleu1": 0.081, "bleu2": 0.009, "rouge1": 0.145, "rouge2": 0.014, "rougeL": 0.098},
+    "finetune": {"bleu1": 0.091, "bleu2": 0.011, "rouge1": 0.185, "rouge2": 0.010, "rougeL": 0.108},
+    "rag":      {"bleu1": 0.096, "bleu2": 0.025, "rouge1": 0.150, "rouge2": 0.008, "rougeL": 0.097}
+  },
+  "lebanon_ceasefire": {
+    "markov":   {"bleu1": 0.022, "bleu2": 0.004, "rouge1": 0.084, "rouge2": 0.007, "rougeL": 0.061},
+    "ngram":    {"bleu1": 0.036, "bleu2": 0.007, "rouge1": 0.115, "rouge2": 0.011, "rougeL": 0.082},
+    "finetune": {"bleu1": 0.028, "bleu2": 0.006, "rouge1": 0.154, "rouge2": 0.008, "rougeL": 0.090},
+    "rag":      {"bleu1": 0.029, "bleu2": 0.007, "rouge1": 0.151, "rouge2": 0.009, "rougeL": 0.093}
+  },
+  "hormuz_china": {
+    "markov":   {"bleu1": 0.024, "bleu2": 0.004, "rouge1": 0.103, "rouge2": 0.008, "rougeL": 0.076},
+    "ngram":    {"bleu1": 0.049, "bleu2": 0.009, "rouge1": 0.151, "rouge2": 0.013, "rougeL": 0.096},
+    "finetune": {"bleu1": 0.080, "bleu2": 0.010, "rouge1": 0.188, "rouge2": 0.011, "rougeL": 0.115},
+    "rag":      {"bleu1": 0.021, "bleu2": 0.005, "rouge1": 0.150, "rouge2": 0.009, "rougeL": 0.094}
+  },
+  "ballroom_judge": {
+    "markov":   {"bleu1": 0.003, "bleu2": 0.001, "rouge1": 0.067, "rouge2": 0.006, "rougeL": 0.052},
+    "ngram":    {"bleu1": 0.044, "bleu2": 0.008, "rouge1": 0.098, "rouge2": 0.010, "rougeL": 0.074},
+    "finetune": {"bleu1": 0.053, "bleu2": 0.009, "rouge1": 0.137, "rouge2": 0.009, "rougeL": 0.086},
+    "rag":      {"bleu1": 0.069, "bleu2": 0.012, "rouge1": 0.138, "rouge2": 0.010, "rougeL": 0.089}
+  },
+  "no_tax_tips": {
+    "markov":   {"bleu1": 0.028, "bleu2": 0.005, "rouge1": 0.112, "rouge2": 0.009, "rougeL": 0.082},
+    "ngram":    {"bleu1": 0.027, "bleu2": 0.006, "rouge1": 0.106, "rouge2": 0.010, "rougeL": 0.079},
+    "finetune": {"bleu1": 0.023, "bleu2": 0.004, "rouge1": 0.104, "rouge2": 0.008, "rougeL": 0.074},
+    "rag":      {"bleu1": 0.063, "bleu2": 0.011, "rouge1": 0.176, "rouge2": 0.012, "rougeL": 0.110}
+  },
+  "averages": {
+    "markov":   {"bleu1": 0.032, "bleu2": 0.004, "rouge1": 0.090, "rouge2": 0.008, "rougeL": 0.069},
+    "ngram":    {"bleu1": 0.047, "bleu2": 0.008, "rouge1": 0.123, "rouge2": 0.012, "rougeL": 0.086},
+    "finetune": {"bleu1": 0.055, "bleu2": 0.008, "rouge1": 0.154, "rouge2": 0.009, "rougeL": 0.095},
+    "rag":      {"bleu1": 0.056, "bleu2": 0.012, "rouge1": 0.153, "rouge2": 0.010, "rougeL": 0.097}
+  }
+}

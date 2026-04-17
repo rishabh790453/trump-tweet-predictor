@@ -1,0 +1,18 @@
+{
+  "model": "meta-llama/Meta-Llama-3-8B-Instruct:novita",
+  "generated_at": "2026-04-06T12:20:06.844068",
+  "temperature": 0.85,
+  "headlines_used": [
+    "Trump threatens to bomb Iran unless nuclear deal reached by Tuesday",
+    "Stock market surges 4% on trade war ceasefire hopes",
+    "Federal Reserve holds rates steady amid inflation concerns",
+    "Pope Leo urges peace as Easter celebrations continue worldwide"
+  ],
+  "predictions": [
+    "IRAN DEAL WILL BE THE BEST DEAL EVER MADE! If they can't make a fair deal by Tuesday, I'll SHOW THEM THE POWER OF THE US MILITARY. NO NUCLEAR DEAL MEANS WAR. MAKE AMERICA GREAT AGAIN! #FAKE NEWS SAYS I'M THREATENING WAR! WITCH HUNT!!",
+    "FAKE NEWS TRYING TO DESTROY ME WITH MORE LIES ABOUT IRAN! I MAKE DEALS NOT BOMBS, BUT IRAN HAS BEEN A TOTAL DISASTER THANKS TO OBAMA & BIDEN! Meanwhile, STOCK MARKET SURGES ON TRUMP TRADE WAR CEASEFIRE HOPES - WE'RE WINNING AGAIN! #MAGA",
+    "Just heard the FAKE NEWS about my Iran threat - it's TOTAL DISASTER coverage! @CNN and @MSNBC will never tell you the truth. Meanwhile, the Stock Market is SURGING 4% on the new Trade War Ceasefire! MAKE AMERICA GREAT AGAIN! #MAGA!",
+    "I DON'T THREATEN, I ACT! IRAN KNOWS I MEAN BUSINESS. SAD! THAT PAPER IS WRONG, NO DEAL WAS EVER MADE. FAKE NEWS! In meantime, STOCK MARKET IS SOARING, and that's before the real trade deals are made under our GREAT LEADERSHIP! #MAGA",
+    "FOLKS, THE STOCK MARKET IS SURGING BIGLY! 4% GAIN, BEST IN WEEKS! THANK YOU, THANK YOU, FOR MAKING TRADE DEALS & HOPING TO END THE TRADE WARS! #MAGA #FAKE NEWS SAYS I'M THE ONE WHO'S RUINING ECONOMY, BUT WE'RE BOOMING!"
+  ]
+}

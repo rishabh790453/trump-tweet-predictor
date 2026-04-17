@@ -1,0 +1,49 @@
+{
+  "model": "RAG + Llama3-8B-Instruct",
+  "date": "iran_china",
+  "temperature": 0.8,
+  "k_retrieved": 5,
+  "headlines": [
+    "What the U.S.-Iran Conflict Reveals About China's Diplomacy",
+    "China's restrained public response to Trump's Iran campaign reflects a deliberate diplomatic approach by Beijing"
+  ],
+  "retrieved_examples": [
+    {
+      "news": "- To Stop Iran, Lean On China\n- Report Undercuts Iran’s Defense on Nuclear Effort\n- The Truth About Iran\n- Ayatollah Denounces U.N. Nuclear Report\n- Iran Escalates Anti-U.S. Rhetoric Over Nuclear Report\n- G.O.P. Field Attacks Obama Foreign Policy With Tough Talk on Iran\n- China Tries to Add Cultural Clout to Economic Muscle\n- U.N. Agency Says Iran Data Points to A-Bomb Work\n- Russia Dismisses Calls for New U.N. Sanctions on Iran\n- Report on Nuclear Efforts Draws a Muted Response From the White House",
+      "tweet": "China is advocating on behalf of Iran's nuclear program -- the Chinese oppose both sanctions and any militar… (cont) http://deck.ly/~BlGDb",
+      "date": "2011-11-10",
+      "sim": 0.7040830850601196
+    },
+    {
+      "news": "- Note to Self About China: Pick a Fight, Any Fight\n- On a Tightrope, President Prods China on Rights\n- Obama Approach to Diplomacy Faces Test in China\n- U.S. Reaffirms Defense of Philippines in Standoff With China\n- Unease Mounting, China and U.S. to Open Military Talks\n- China’s Vanishing Trade Imbalance\n- Contradictions Temper Optimism in Deal on Chinese Lawyer\n- China Demands Apology from U.S.\n- Making Headway on a Plan to Lure Producers to China\n- TimesCast | Diplomatic Tensions in China",
+      "tweet": "\"China's leadership is sneaky and underhanded, they significantly underreport their actual defense budget and (cont) http://tl.gd/h8fbkb",
+      "date": "2012-05-02",
+      "sim": 0.6844719052314758
+    },
+    {
+      "news": "- U.S.-Iran Tensions Over Nuclear Deal and Tankers\n- Iran and the U.S. Are on a Collision Course\n- The Iran Crisis, Explained\n- Trump Careens Toward a Confrontation With Iran\n- Trump Adds Troops After Iran Says It Will Breach Nuclear Deal\n- In Face-Off With Iran, Escalation May Depend on Who Prevails Inside Washington and Tehran\n- Supreme Court Upholds Virginia’s Ban on Uranium Mining\n- Trump Might Not Want War With Iran. Without Diplomacy He Will Get One.\n- As Trump Accuses Iran, He Has One Problem: His Own Credibility\n- Hong Kong, Iran, Egypt: Your Tuesday Briefing",
+      "tweet": "“Iran to defy Uranium Stockpile Limits”",
+      "date": "2019-06-17",
+      "sim": 0.6810224056243896
+    },
+    {
+      "news": "- Report Undercuts Iran’s Defense on Nuclear Effort\n- Iran Escalates Anti-U.S. Rhetoric Over Nuclear Report\n- To Stop Iran, Lean On China\n- U.S. Hangs Back as Inspectors Prepare Report on Iran’s Nuclear Program\n- Report on Nuclear Efforts Draws a Muted Response From the White House\n- G.O.P. Field Attacks Obama Foreign Policy With Tough Talk on Iran\n- U.N. Agency Says Iran Data Points to A-Bomb Work\n- Israeli Minister Stresses Military Readiness\n- Russia Dismisses Calls for New U.N. Sanctions on Iran\n- America’s Unnecessary Secrets",
+      "tweet": "America should not be pressuring @Israel to show restraint against Iran. We should be working to stop Iran's nuclear drive.",
+      "date": "2011-11-09",
+      "sim": 0.6794967651367188
+    },
+    {
+      "news": "- Obama Approach to Diplomacy Faces Test in China\n- Are We Headed for a Cold War With China?\n- Unease Mounting, China and U.S. to Open Military Talks\n- Chen Guangcheng\n- China Demands Apology from U.S.\n- A Chinese Dissident’s Smuggled Video Messages\n- China’s Vanishing Trade Imbalance\n- Contradictions Temper Optimism in Deal on Chinese Lawyer\n- Chinese Media Decry Western Interference in Chen Case\n- For Chinese, a Man in the News Is Much Discussed, if Not by Name",
+      "tweet": "Now @BarackObama is praising China's \"cooperation\" in negotiations over Chen Guangcheng http://bit.ly/KsSfqY  This is a sad episode for us.",
+      "date": "2012-05-03",
+      "sim": 0.6782416701316833
+    }
+  ],
+  "predictions": [
+    "\"FOLKS, CHINA IS PLAYING BOTH SIDES AGAIN! They're pretending to be neutral while secretly supporting IRAN'S NUCLEAR AMBITIONS. WE CAN'T TRUST THEM!\" #MAGA",
+    "\"FOLKS, CHINA IS PLAYING BOTH SIDES AGAIN! They're trying to make deals with IRAN while pretending to be our friends? NOT SMART!\" #MAGA",
+    "\"FOLKS, CHINA IS PLAYING IT COOL ON IRAN BECAUSE THEY KNOW I'M THE ONE WHO CAN TAKE THEM DOWN! THEIR RESTRAINED RESPONSE IS JUST A BLUFF, WAIT AND SEE WHAT HAPPENS WHEN WE TAKE ACTION!\" #MAGA",
+    "\"Folks, China is playing a weak hand trying to stay out of our Iran conflict. They're afraid of being seen as taking sides or getting burned like others have.\" #MAGA",
+    "\"Just saw the fake news about China's reaction to our strong stance on Iran! Don't believe it, folks, this is all part of their master plan to undermine American strength!\" #MAGA"
+  ]
+}

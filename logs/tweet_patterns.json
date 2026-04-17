@@ -1,0 +1,860 @@
+{
+  "common_phrases": {
+    "bigrams": [
+      [
+        "United States",
+        1805
+      ],
+      [
+        "President Trump",
+        1441
+      ],
+      [
+        "Donald Trump",
+        1419
+      ],
+      [
+        "Total Endorsement",
+        1237
+      ],
+      [
+        "New York",
+        1201
+      ],
+      [
+        "Fake News",
+        1031
+      ],
+      [
+        "Second Amendment",
+        1008
+      ],
+      [
+        "White House",
+        873
+      ],
+      [
+        "Joe Biden",
+        850
+      ],
+      [
+        "Radical Left",
+        773
+      ],
+      [
+        "Crooked Joe",
+        762
+      ],
+      [
+        "Congressional District",
+        732
+      ],
+      [
+        "America First",
+        535
+      ],
+      [
+        "Great State",
+        486
+      ],
+      [
+        "Witch Hunt",
+        439
+      ],
+      [
+        "Supreme Court",
+        411
+      ],
+      [
+        "Republican Party",
+        410
+      ],
+      [
+        "Crooked Hillary",
+        406
+      ],
+      [
+        "North Carolina",
+        401
+      ],
+      [
+        "New Hampshire",
+        360
+      ],
+      [
+        "Cut Taxes",
+        345
+      ],
+      [
+        "Make America",
+        329
+      ],
+      [
+        "President Donald",
+        327
+      ],
+      [
+        "Great Again",
+        325
+      ],
+      [
+        "The Democrats",
+        315
+      ],
+      [
+        "South Carolina",
+        309
+      ],
+      [
+        "Kamala Harris",
+        291
+      ],
+      [
+        "Presidential Election",
+        282
+      ],
+      [
+        "Sleepy Joe",
+        277
+      ],
+      [
+        "Law Enforcement",
+        275
+      ],
+      [
+        "Attorney General",
+        271
+      ],
+      [
+        "President Obama",
+        262
+      ],
+      [
+        "Hillary Clinton",
+        258
+      ],
+      [
+        "Southern Border",
+        252
+      ],
+      [
+        "Stop Migrant",
+        241
+      ],
+      [
+        "North Korea",
+        232
+      ],
+      [
+        "The Fake",
+        232
+      ],
+      [
+        "Prime Minister",
+        216
+      ],
+      [
+        "Nancy Pelosi",
+        212
+      ],
+      [
+        "The United",
+        207
+      ],
+      [
+        "In Congress",
+        200
+      ],
+      [
+        "Trump Tower",
+        197
+      ],
+      [
+        "Secure Border",
+        195
+      ],
+      [
+        "Middle East",
+        186
+      ],
+      [
+        "Fox News",
+        182
+      ],
+      [
+        "Trump Administration",
+        174
+      ],
+      [
+        "American People",
+        170
+      ],
+      [
+        "Election Interference",
+        170
+      ],
+      [
+        "Trump National",
+        164
+      ],
+      [
+        "National Security",
+        163
+      ]
+    ],
+    "trigrams": [
+      [
+        "Crooked Joe Biden",
+        582
+      ],
+      [
+        "Make America Great",
+        280
+      ],
+      [
+        "Fake News Media",
+        264
+      ],
+      [
+        "Stop Migrant Crime",
+        241
+      ],
+      [
+        "The Fake News",
+        210
+      ],
+      [
+        "The United States",
+        185
+      ],
+      [
+        "Radical Left Democrats",
+        159
+      ],
+      [
+        "Champion American Energy",
+        152
+      ],
+      [
+        "Crooked Hillary Clinton",
+        149
+      ],
+      [
+        "Sleepy Joe Biden",
+        146
+      ],
+      [
+        "New York State",
+        141
+      ],
+      [
+        "New York City",
+        131
+      ],
+      [
+        "Deranged Jack Smith",
+        129
+      ],
+      [
+        "America First Patriot",
+        123
+      ],
+      [
+        "The Radical Left",
+        105
+      ],
+      [
+        "The New York",
+        99
+      ],
+      [
+        "Do Nothing Democrats",
+        94
+      ],
+      [
+        "Unleash American Energy",
+        93
+      ],
+      [
+        "New York Times",
+        92
+      ],
+      [
+        "Advance American Energy",
+        90
+      ],
+      [
+        "President Donald Trump",
+        89
+      ],
+      [
+        "Comrade Kamala Harris",
+        84
+      ],
+      [
+        "Trump National Doral",
+        74
+      ],
+      [
+        "United States Supreme",
+        68
+      ],
+      [
+        "America First Agenda",
+        63
+      ],
+      [
+        "Presidential Records Act",
+        60
+      ],
+      [
+        "The Wall Street",
+        57
+      ],
+      [
+        "Radical Left Lunatics",
+        57
+      ],
+      [
+        "The White House",
+        55
+      ],
+      [
+        "Crazy Nancy Pelosi",
+        55
+      ],
+      [
+        "Kim Jong Un",
+        53
+      ],
+      [
+        "Trump Derangement Syndrome",
+        52
+      ],
+      [
+        "United States Senate",
+        52
+      ],
+      [
+        "United States Ambassador",
+        52
+      ],
+      [
+        "Trump International Golf",
+        50
+      ],
+      [
+        "Radical Left Democrat",
+        49
+      ],
+      [
+        "Failing New York",
+        49
+      ],
+      [
+        "Wall Street Journal",
+        48
+      ],
+      [
+        "The Failing New",
+        46
+      ],
+      [
+        "The Republican Party",
+        45
+      ],
+      [
+        "Restore American Energy",
+        45
+      ],
+      [
+        "America First Conservative",
+        43
+      ],
+      [
+        "Trump National Golf",
+        42
+      ],
+      [
+        "Old Post Office",
+        41
+      ],
+      [
+        "The Supreme Court",
+        40
+      ],
+      [
+        "Air Force One",
+        39
+      ],
+      [
+        "The Washington Post",
+        39
+      ],
+      [
+        "The Do Nothing",
+        38
+      ],
+      [
+        "Brave Law Enforcement",
+        36
+      ],
+      [
+        "Trump International Hotel",
+        36
+      ]
+    ]
+  },
+  "capitalization": {
+    "common_caps_words": [
+      [
+        "THE",
+        3868
+      ],
+      [
+        "GREAT",
+        2672
+      ],
+      [
+        "AMERICA",
+        2055
+      ],
+      [
+        "YOU",
+        1883
+      ],
+      [
+        "TRUMP",
+        1797
+      ],
+      [
+        "AND",
+        1655
+      ],
+      [
+        "AGAIN",
+        1530
+      ],
+      [
+        "MAGA",
+        1465
+      ],
+      [
+        "MAKE",
+        1405
+      ],
+      [
+        "WILL",
+        1236
+      ],
+      [
+        "FBI",
+        1139
+      ],
+      [
+        "CNN",
+        982
+      ],
+      [
+        "USA",
+        976
+      ],
+      [
+        "NEVER",
+        833
+      ],
+      [
+        "VOTE",
+        806
+      ],
+      [
+        "FOR",
+        803
+      ],
+      [
+        "THANK",
+        792
+      ],
+      [
+        "GOP",
+        779
+      ],
+      [
+        "ALL",
+        766
+      ],
+      [
+        "NOT",
+        737
+      ],
+      [
+        "BIG",
+        718
+      ],
+      [
+        "PRESIDENT",
+        687
+      ],
+      [
+        "LIVE",
+        663
+      ],
+      [
+        "DOWN",
+        613
+      ],
+      [
+        "NOW",
+        588
+      ],
+      [
+        "LET",
+        577
+      ],
+      [
+        "ELECTION",
+        573
+      ],
+      [
+        "RSBN",
+        563
+      ],
+      [
+        "OUR",
+        533
+      ],
+      [
+        "THIS",
+        511
+      ],
+      [
+        "WIN",
+        482
+      ],
+      [
+        "DOJ",
+        466
+      ],
+      [
+        "ARE",
+        459
+      ],
+      [
+        "DJT",
+        448
+      ],
+      [
+        "FAKE",
+        429
+      ],
+      [
+        "THAT",
+        419
+      ],
+      [
+        "POTUS",
+        388
+      ],
+      [
+        "MUST",
+        381
+      ],
+      [
+        "MADE",
+        364
+      ],
+      [
+        "NEWS",
+        363
+      ],
+      [
+        "NBC",
+        362
+      ],
+      [
+        "HAVE",
+        355
+      ],
+      [
+        "NOTHING",
+        351
+      ],
+      [
+        "DOMINANCE",
+        350
+      ],
+      [
+        "COUNTRY",
+        349
+      ],
+      [
+        "NEW",
+        348
+      ],
+      [
+        "GET",
+        343
+      ],
+      [
+        "VERY",
+        340
+      ],
+      [
+        "BIDEN",
+        332
+      ],
+      [
+        "OUT",
+        330
+      ],
+      [
+        "THEY",
+        327
+      ],
+      [
+        "ISIS",
+        311
+      ],
+      [
+        "TRUTH",
+        305
+      ],
+      [
+        "DONALD",
+        303
+      ],
+      [
+        "INTERFERENCE",
+        296
+      ],
+      [
+        "WITH",
+        288
+      ],
+      [
+        "SECURE",
+        277
+      ],
+      [
+        "EVER",
+        272
+      ],
+      [
+        "RINO",
+        271
+      ],
+      [
+        "WATCH",
+        263
+      ],
+      [
+        "WAS",
+        261
+      ],
+      [
+        "ABC",
+        252
+      ],
+      [
+        "STATES",
+        245
+      ],
+      [
+        "PEOPLE",
+        239
+      ],
+      [
+        "FIRST",
+        231
+      ],
+      [
+        "NYC",
+        230
+      ],
+      [
+        "ONE",
+        229
+      ],
+      [
+        "UNITED",
+        229
+      ],
+      [
+        "BREAKING",
+        229
+      ],
+      [
+        "LAW",
+        227
+      ],
+      [
+        "ORDER",
+        227
+      ],
+      [
+        "CRIME",
+        215
+      ],
+      [
+        "JOBS",
+        212
+      ],
+      [
+        "TIME",
+        212
+      ],
+      [
+        "PEACE",
+        208
+      ],
+      [
+        "JOE",
+        208
+      ],
+      [
+        "JUST",
+        206
+      ],
+      [
+        "DAY",
+        202
+      ],
+      [
+        "HAS",
+        195
+      ],
+      [
+        "HISTORY",
+        194
+      ],
+      [
+        "RIGGED",
+        193
+      ],
+      [
+        "FROM",
+        192
+      ],
+      [
+        "BUT",
+        191
+      ],
+      [
+        "ZERO",
+        189
+      ],
+      [
+        "YOUR",
+        187
+      ],
+      [
+        "WON",
+        186
+      ],
+      [
+        "WITCH",
+        184
+      ],
+      [
+        "MUCH",
+        182
+      ],
+      [
+        "LOVE",
+        181
+      ],
+      [
+        "TODAY",
+        181
+      ],
+      [
+        "MORE",
+        180
+      ],
+      [
+        "HUNT",
+        178
+      ],
+      [
+        "NATO",
+        177
+      ],
+      [
+        "WORST",
+        176
+      ],
+      [
+        "BACK",
+        176
+      ],
+      [
+        "CASE",
+        170
+      ],
+      [
+        "ONLY",
+        169
+      ],
+      [
+        "WORLD",
+        168
+      ],
+      [
+        "SAFE",
+        168
+      ],
+      [
+        "WHAT",
+        168
+      ]
+    ],
+    "percentage_tweets_with_caps": 32.60183358477428,
+    "avg_caps_per_tweet": 1.272066844609493
+  },
+  "punctuation": {
+    "avg_exclamations_per_tweet": 0.6507021004990136,
+    "avg_questions_per_tweet": 0.09296739004293837,
+    "avg_quotes_per_tweet": 0.3539050713705466,
+    "tweets_with_exclamation_pct": 45.73401415805965
+  },
+  "topics": {
+    "democrats": 10.287803179760937,
+    "election": 9.747011721016595,
+    "economy": 7.170709063479169,
+    "media": 6.8631774399442955,
+    "border": 5.344087269351283,
+    "international": 4.667517697574562,
+    "achievements": 3.858651502843217,
+    "crime": 3.030056864337937,
+    "military": 2.7167227573401416
+  },
+  "sentence_structure": {
+    "avg_sentences_per_tweet": 2.8977022165486828,
+    "median_sentences": 3
+  },
+  "common_targets": "[('News', 1306), ('Joe', 1108), ('Left', 917), ('Hillary', 418), ('Democrats', 152), ('Nancy', 90), ('and', 81), ('Bernie', 46), ('Media', 37), ('Dems', 35), ('Kamala', 32), ('Dossier', 32), ('Democrat', 31), ('Judge', 28), ('Eyes', 21), ('Attorney', 18), ('H', 18), ('Islamic', 16), ('Election', 14), ('New', 14), ('Biden', 13), ('Liberal', 12), ('Polls', 12), ('Story', 10), ('Stories', 10), ('Case', 10), ('Politicians', 9), ('Press', 9), ('Witch', 9), ('A', 9)]",
+  "signature_phrases": {
+    "MAKE AMERICA GREAT AGAIN": 1553,
+    "Fake News": 1457,
+    "Complete and Total": 1285,
+    "has my complete and total endorsement": 1157,
+    "Witch Hunt": 840,
+    "America First": 688,
+    "Tremendous": 660,
+    "in the history of": 541,
+    "the Greatest": 511,
+    "will never let you down": 441,
+    "PRESIDENT DONALD J. TRUMP": 366,
+    "Thank you for your attention to this matter": 278,
+    "Law and Order": 158,
+    "Trump Derangement Syndrome": 88,
+    "the likes of which": 61,
+    "nobody has ever seen": 8
+  },
+  "length_stats": {
+    "avg_length": 161.40798421724497,
+    "median_length": 132,
+    "min_length": 1,
+    "max_length": 2933
+  }
+}

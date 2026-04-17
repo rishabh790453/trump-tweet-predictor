@@ -1,0 +1,51 @@
+{
+  "model": "RAG + Llama3-8B-Instruct",
+  "date": "politics",
+  "temperature": 0.8,
+  "k_retrieved": 5,
+  "headlines": [
+    "Biden approval rating hits new low",
+    "Democrats lose House seat in special election",
+    "Crime surges in major cities",
+    "Border crossings at record high"
+  ],
+  "retrieved_examples": [
+    {
+      "news": "- High Voter Turnout and Record Fund-Raising Give Democrats Hope for November\n- New Yorkers, Voting Could Get Much Easier for You\n- Top Democrats Send Letter on Possible Foreign Meddling in November Election\n- After Death of John Lewis, Democrats Renew Push for Voting Rights Law\n- Summer Reading Contest Winner, Week 4: On ‘Many Latinos Couldn’t Stay Home. Now Virus Cases Are Soaring in Their Communities.’\n- Corrections: July 19, 2020\n- Where Is the Outrage?\n- Ohio Primary Election Results: 13th Congressional District\n- Corrections: July 21, 2020\n- Big Polling Leads Tend to Erode. Is Biden’s Edge Different?",
+      "tweet": "Mail-In Voting, unless changed by the courts, will lead to the most CORRUPT ELECTION in our Nation’s History! #RIGGEDELECTION",
+      "date": "2020-07-21",
+      "sim": 0.6363602876663208
+    },
+    {
+      "news": "- Consistent Signs of Erosion in Black and Hispanic Support for Biden\n- Why So Many Americans Are So Down on Biden\n- New York’s Migrant Crisis Is Growing. So Are Democrats’ Anxieties.\n- No Trump, Not Much Biden: The Ad Wars in 3 Governor’s Races\n- Progressive District Attorney Enters Race to Unseat Ted Cruz\n- New Hampshire Voters Like Ramaswamy, but More as a No. 2\n- In Chaotic Rhode Island Primary, 11 Democrats Vie for a House Seat\n- Rishi Sunak, Behind in U.K. Polls, Embraces Divisive Politics\n- Buyer of Trump’s Truth Social Gets More Time to Complete Merger\n- Utah 2nd Congressional District Special Primary Election Results",
+      "tweet": "MINORITY VOTERS ARE ABANDONING CROOKED JOE BIDEN & THE DEMOCRAT PARTY FOR “TRUMP.” THANK YOU, A VERY WISE DECISION!",
+      "date": "2023-09-05",
+      "sim": 0.6360499858856201
+    },
+    {
+      "news": "- Democrats Express Deep Anxiety as Polls Show Biden Trailing Trump\n- Why Biden Is Behind, and How He Could Come Back\n- How Louisiana Democrats Lost Before a Ballot Was Cast\n- Lauren Boebert Wants ‘Mercy.’ Some Republicans Want an Alternative.\n- Why Liberal Academia Needs Republican Friends\n- ‘MAGA Mike Johnson’ and Our Broken Christian Politics\n- Trump Now Leads Biden\n- Trump Leads in 5 Critical States as Voters Blast Biden, Times/Siena Poll Finds\n- Glenn Youngkin and the Lost Republican Art of Winning\n- Ballot-Stuffers Caught on Camera Have Upended a Race for Mayor",
+      "tweet": "Sloppy Chris & “Aida” got booed off the stage yesterday at the big, and very successful, Republican Party event in Florida. I didn’t even know that Aida was still in the race. He’s polling at ZERO, and Sloppy is not much better, at 2%. Why are they, and others, wasting time and money, and hurting the Republican Party. The enemy is Crooked Joe Biden, not me!",
+      "date": "2023-11-05",
+      "sim": 0.6213381886482239
+    },
+    {
+      "news": "- In Dash to Finish, Biden and Trump Set Up Showdown in Pennsylvania\n- Trump defends Texas drivers who surrounded Biden bus, while the president’s supporters block traffic in New York and New Jersey.\n- With just two days until Election Day, all eyes are on Pennsylvania.\n- Republicans, Not Biden, Are About to Raise Your Taxes\n- In Ohio, some 2016 third-party voters see Biden as the country’s only way forward.\n- Trump vs. Biden on Policing, Crime and Guns\n- Trump hits North Carolina, Pennsylvania, Michigan and Wisconsin as Biden visits Ohio and Pennsylvania.\n- In an Arizona border city, no Biden but long memories on Trump.\n- A federal judge denies a bid to throw out more than 127,000 votes in Texas. But most drive-in sites are closed on Election Day.\n- This Is an Election Story That Mentions Neither Biden Nor Trump",
+      "tweet": "Texas, Pennsylvania: Biden is against Second Amendment and Fracking. Please remember!",
+      "date": "2020-11-02",
+      "sim": 0.6164424419403076
+    },
+    {
+      "news": "- Under the Radar, Right-Wing Push to Tighten Voting Laws Persists\n- Biden Casts Himself as the Trump Beater. Polls Suggest That’s No Sure Thing.\n- Biden Faces Bleak Approval Numbers as He Starts Re-election Campaign\n- In Debt Limit Talks, Biden and Republicans Start Far Apart\n- A Gun-Filled America Is a World of Fear and Alienation\n- Timothy McVeigh’s Dreams Are Coming True\n- Liz Cheney Back on the Attack With an Anti-Trump Ad in New Hampshire\n- The One Thing That United These 12 Biden and Trump Supporters\n- The New Surge at the Border\n- Did China Help Vancouver’s Mayor Win Election?",
+      "tweet": "ELECTION INTERFERENCE AT A LEVEL NEVER SEEN BEFORE IN OUR COUNTRY. WE’LL WIN ANYWAY, & MAKE AMERICA GREAT AGAIN!!!!",
+      "date": "2023-05-09",
+      "sim": 0.614839494228363
+    }
+  ],
+  "predictions": [
+    "\"FAKE NEWS POLL NUMBERS DON'T TELL THE STORY. MY APPROVAL RATINGS ARE THROUGH THE ROOF AND PEOPLE LOVE ME! DEMS LOST ANOTHER HOUSE SEAT, CRIME RATES SOARING, BORDER CHAOS... IT'S ALL A RESULT OF BAD LEADERSHIP FROM THE SWAMP!\"",
+    "\"FAKE NEWS MEDIA HIDES IT, BUT CRIME RATES SKYROCKET UNDER SLEEPY JOE'S WATCH WHILE BORDER CROSSINGS REACH RECORD HIGHS AND HOUSE SEATS FLEECE TO REPUBLICANS! GET OUT AND VOTE ON NOVEMBER 8TH AND RESTORE LAW AND ORDER TO THIS NATION!\" #MAKEMERICAHEALTHYAGAIN",
+    "\"Biden's FAILURE TO LEAD IS NOW ON FULL DISPLAY. His LOWEST APPROVAL RATING EVER and LOSSES like last night's special election PROVE HE'S UNFIT TO BE PRESIDENT!\" #SAD!",
+    "\"FOLKS, IT'S ALL FALLING APART FOR SAD SACK JOE BIDEN AND THE DEMS! NEW LOW APPROVAL RATING, LOSE ANOTHER HOUSE SEAT, CRIME SURGES NATIONWIDE, AND RECORD-BREAKING BORDER CROSSINGS. CAN'T FIX STUPID!\"",
+    "FAKE NEWS REPORTS ON MY PREVIOUSLY UNBELIEVABLE LOW APPROVAL RATINGS OF SLEEPY JOE'S JUST DESPERATE TO KEEP HIMSELF LOOKING GOOD. HIS ACT IS GETTING OLD AND IT WON'T WORK THIS TIME! #MAKETHEMAYORAGAIN"
+  ]
+}

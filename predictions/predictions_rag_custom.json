@@ -1,0 +1,49 @@
+{
+  "model": "RAG + Llama3-8B-Instruct",
+  "date": "custom",
+  "temperature": 0.8,
+  "k_retrieved": 5,
+  "headlines": [
+    "Trump imposes 145% tariffs on China",
+    "Stock market drops 3% on trade war fears",
+    "Fed holds interest rates steady",
+    "China retaliates with tariffs on US goods"
+  ],
+  "retrieved_examples": [
+    {
+      "news": "- Are Trump’s Tariffs Bolstering the U.S. Economy? Nope\n- Why Markets Aren’t Sweating the U.S.-China Trade War Much: The ‘Trump Put’\n- On Politics: Trade Deal With China Is in Jeopardy\n- Trump Threatens More China Tariffs, and Beijing Prepares to Retaliate\n- DealBook Briefing: Trump Wasn’t Joking About New Tariffs on China\n- The Economics of Donald J. Keynes\n- Stocks Fall as Trump Threatens New Tariffs on China\n- DealBook Briefing: Trump Plays Chicken With China on Trade\n- U.S.-China Trade Talks to Resume Despite Trump’s Tariff Threat\n- Trump’s Trade War Threat Poses Problems for China and Investors",
+      "tweet": "“The reality is, with the Tariffs, the economy has grown more rapidly in the United States and much more slowly in China.” Peter Morici, Former Chief Economist, USITC",
+      "date": "2019-05-08",
+      "sim": 0.7769482135772705
+    },
+    {
+      "news": "- The Economy Has Been Resilient. The New Round of Tariffs May Hit Harder.\n- It’s No Bluff: The Tariff Rate Is Soaring Under Trump\n- Rising Inflation Underscores Risks in Trump’s New Tariff Threats\n- U.S. Inflation Accelerated in June as Trump’s Tariffs Pushed Up Prices\n- If You Like 35 Percent Inflation, Go Ahead, Fire the Fed Chair\n- For Big Banks, the Trump Era Is Proving Profitable Thus Far\n- How Long Can China Keep Propping Up Its Consumers With Subsidies?\n- Wednesday Briefing: China’s Economy Grows Despite Tariffs\n- Stocks Shrug Off Trump’s Latest Tariff Threats\n- China’s Economy Grows Steadily Despite Trump’s Tariffs",
+      "tweet": "Consumer Prices LOW. Bring down the Fed Rate, NOW!!!",
+      "date": "2025-07-15",
+      "sim": 0.7746384739875793
+    },
+    {
+      "news": "- On Politics: Trump Increases Tariffs on Chinese Goods\n- How Trump’s Tariffs on Chinese Goods Will Hit Your Shopping Cart\n- Trump Could Raise Tariffs on China. Here’s How China Could Respond.\n- Trump Increases China Tariffs as Trade Deal Hangs in the Balance\n- Why Markets Aren’t Sweating the U.S.-China Trade War Much: The ‘Trump Put’\n- Trump Threatens More China Tariffs, and Beijing Prepares to Retaliate\n- What We’ve Learned From Trump’s Taxes\n- What Happens if Trade Talks With China Fall Apart\n- China Trade, India, Mueller: Your Friday Briefing\n- China, Defiant but Careful, Promises Aggressive Response to Tariffs",
+      "tweet": "Tariffs will bring in FAR MORE wealth to our Country than even a phenomenal deal of the traditional kind. Also, much easier & quicker to do. Our Farmers will do better, faster, and starving nations can now be helped. Waivers on some products will be granted, or go to new source!",
+      "date": "2019-05-10",
+      "sim": 0.7704042196273804
+    },
+    {
+      "news": "- On Politics: Trump Increases Tariffs on Chinese Goods\n- How Trump’s Tariffs on Chinese Goods Will Hit Your Shopping Cart\n- Trump Could Raise Tariffs on China. Here’s How China Could Respond.\n- Trump Increases China Tariffs as Trade Deal Hangs in the Balance\n- Why Markets Aren’t Sweating the U.S.-China Trade War Much: The ‘Trump Put’\n- Trump Threatens More China Tariffs, and Beijing Prepares to Retaliate\n- What We’ve Learned From Trump’s Taxes\n- What Happens if Trade Talks With China Fall Apart\n- China Trade, India, Mueller: Your Friday Briefing\n- China, Defiant but Careful, Promises Aggressive Response to Tariffs",
+      "tweet": "Tariffs will bring in FAR MORE wealth to our Country than even a phenomenal deal of the traditional kind. Also, much easier & quicker to do. Our Farmers will do better, faster, and starving nations can now be helped. Waivers on some products will be granted, or go to new source!",
+      "date": "2019-05-10",
+      "sim": 0.7704042196273804
+    },
+    {
+      "news": "- On Politics: Trump Increases Tariffs on Chinese Goods\n- How Trump’s Tariffs on Chinese Goods Will Hit Your Shopping Cart\n- Trump Could Raise Tariffs on China. Here’s How China Could Respond.\n- Trump Increases China Tariffs as Trade Deal Hangs in the Balance\n- Why Markets Aren’t Sweating the U.S.-China Trade War Much: The ‘Trump Put’\n- Trump Threatens More China Tariffs, and Beijing Prepares to Retaliate\n- What We’ve Learned From Trump’s Taxes\n- What Happens if Trade Talks With China Fall Apart\n- China Trade, India, Mueller: Your Friday Briefing\n- China, Defiant but Careful, Promises Aggressive Response to Tariffs",
+      "tweet": "Tariffs will bring in FAR MORE wealth to our country than even a phenomenal deal of the traditional kind. Also, much easier & quicker to do. Our Farmers will do better, faster, and starving nations can now be helped. Waivers on some products will be granted, or go to new source!",
+      "date": "2019-05-10",
+      "sim": 0.7704042196273804
+    }
+  ],
+  "predictions": [
+    "\"FOLKS, IT'S WORKING! 145% TARIFFS ON CHINA, AND THE FED KEEPS RATES STEADY. STOCK MARKET GOES DOWN, BUT WE'RE WINNING BIG TIME WITH TRADE WAR!\" #MAGA",
+    "\"FOLKS, DON'T WORRY ABOUT THE STOCK MARKET DROP! We're taking back control of our economy and making China pay up. 145% TARIFFS ON CHINA WILL BRING IN EVEN BIGGER MONEY FLOWS INTO OUR COUNTRY!\"",
+    "\"FOLKS, don't worry about the stock market drop! The fake media is trying to scare you again. My brilliant tariffs on China will ultimately lead to BIG LEAGUE gains, just wait and see!\" #MAGA"
+  ]
+}

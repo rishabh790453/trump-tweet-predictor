@@ -1,0 +1,31 @@
+{
+  "update_interval_minutes": 15,
+  "query": "economy OR politics OR finance OR stock market OR trade OR GDP",
+  "sources": {
+    "newsapi": true,
+    "guardian": true,
+    "nytimes": true,
+    "alphavantage": true,
+    "rss": true,
+    "gdelt": true
+  },
+  "auto_start": false,
+  "max_articles_per_fetch": 500,
+  
+  "rss_feeds": [
+    "http://rss.cnn.com/rss/cnn_topstories.rss",
+    "http://feeds.bbci.co.uk/news/rss.xml",
+    "https://feeds.npr.org/1001/rss.xml",
+    "https://www.reuters.com/rssFeed/topNews",
+    "https://www.politico.com/rss/politics08.xml",
+    "https://www.cnbc.com/id/100003114/device/rss/rss.html"
+  ],
+  
+  "categories": [
+    "economy",
+    "politics",
+    "finance",
+    "international",
+    "business"
+  ]
+}
