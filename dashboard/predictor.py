@@ -101,6 +101,8 @@ class TweetPredictor:
             self._init_local_rag()
 
     def _predict_claude(self, headlines: list[str]) -> str:
+        if self.mode != "claude_api":
+            return self._predict_template(headlines)
         # Build few-shot prompt from sample examples
         examples = random.sample(self._sample_examples, min(5, len(self._sample_examples)))
         messages = []
@@ -109,15 +111,25 @@ class TweetPredictor:
             messages.append({"role": "assistant","content": ex["tweet"]})
         messages.append({"role": "user", "content": "\n".join(headlines)})
 
-        resp = self._claude.messages.create(
-            model="claude-haiku-4-5-20251001",
-            max_tokens=150,
-            system=SYSTEM_PROMPT,
-            messages=messages,
-        )
-        result = resp.content[0].text.strip()
-        result = re.sub(r"https?://\S+", "", result).strip()
-        return result
+        try:
+            resp = self._claude.messages.create(
+                model="claude-haiku-4-5-20251001",
+                max_tokens=150,
+                system=SYSTEM_PROMPT,
+                messages=messages,
+            )
+            result = resp.content[0].text.strip()
+            result = re.sub(r"https?://\S+", "", result).strip()
+            return result
+        except Exception as e:
+            err = str(e)
+            if "credit balance" in err or "billing" in err.lower() or "402" in err or "400" in err:
+                # Permanently fall back to template — stop hammering the API
+                print(f"[Predictor] Claude API billing error — switching to template mode permanently")
+                self.mode = "template"
+            else:
+                print(f"[Predictor] Claude API error: {e}")
+            return self._predict_template(headlines)
 
     # ── Local RAG + Llama mode ────────────────────────────────────────────────
 
