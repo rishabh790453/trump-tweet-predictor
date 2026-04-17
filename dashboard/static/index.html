@@ -3,367 +3,532 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>TrumpTweet.live — Real-Time Prediction Dashboard</title>
+<title>TrumpTweet.live — Live Prediction Dashboard</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
-  body { background: #0a0d14; font-family: 'Courier New', monospace; }
-  .terminal-border { border: 1px solid #1e2d45; }
-  .glow-red { box-shadow: 0 0 8px rgba(239,68,68,0.3); }
-  .glow-green { box-shadow: 0 0 8px rgba(34,197,94,0.3); }
-  .ticker-tape { animation: scroll-left 30s linear infinite; }
-  @keyframes scroll-left {
-    0%   { transform: translateX(100%); }
-    100% { transform: translateX(-100%); }
-  }
-  .blink { animation: blink 1s step-end infinite; }
-  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
-  ::-webkit-scrollbar { width: 4px; }
-  ::-webkit-scrollbar-track { background: #0a0d14; }
-  ::-webkit-scrollbar-thumb { background: #1e2d45; border-radius: 2px; }
-  .news-item:hover { background: #111827; cursor: pointer; }
-  .tweet-card { border-left: 3px solid #ef4444; }
-  .tweet-card.bullish { border-left-color: #22c55e; }
-  .tweet-card.neutral  { border-left-color: #6b7280; }
-  .chart-container { position: relative; height: 200px; }
-  .mode-badge { font-size: 10px; padding: 2px 6px; border-radius: 3px; }
-  .live-dot { width: 8px; height: 8px; border-radius: 50%; background: #ef4444; display: inline-block; }
-  .impact-bar { height: 6px; border-radius: 3px; transition: width 0.5s ease; }
-  .custom-input { background: #0f172a; border: 1px solid #1e2d45; color: #e2e8f0; }
-  .custom-input:focus { outline: none; border-color: #ef4444; }
+  body { background:#08090f; font-family:'Courier New',monospace; overflow:hidden; }
+  ::-webkit-scrollbar { width:3px; height:3px; }
+  ::-webkit-scrollbar-track { background:#0d1117; }
+  ::-webkit-scrollbar-thumb { background:#1e2d45; border-radius:2px; }
+  .panel { background:#0d1117; border:1px solid #1a2332; }
+  .blink { animation:blink 1s step-end infinite; }
+  @keyframes blink { 0%,100%{opacity:1}50%{opacity:0} }
+  .fade-in { animation:fadeIn .4s ease; }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none} }
+  .news-row:hover { background:#111827; cursor:pointer; }
+  .source-pill { font-size:9px; padding:1px 5px; border-radius:2px; font-weight:700; letter-spacing:.5px; }
+  .tweet-card { border-left:3px solid #374151; transition:border-color .3s; }
+  .tweet-card.bearish { border-left-color:#ef4444; }
+  .tweet-card.bullish { border-left-color:#22c55e; }
+  .tweet-card.neutral  { border-left-color:#374151; }
+  .real-tweet-card { border-left:3px solid #3b82f6; }
+  .custom-input { background:#0f172a; border:1px solid #1e2d45; color:#e2e8f0; }
+  .custom-input:focus { outline:none; border-color:#ef4444; box-shadow:0 0 0 1px #ef4444; }
+  .tab-btn { border-bottom:2px solid transparent; transition:all .2s; }
+  .tab-btn.active { border-bottom-color:#ef4444; color:#f1f5f9; }
+  .impact-bar { height:5px; border-radius:2px; transition:width .5s ease; }
+  .model-badge { font-size:9px; padding:2px 6px; border-radius:3px; font-weight:700; letter-spacing:.5px; }
+  /* Ticker */
+  .ticker-wrap { overflow:hidden; white-space:nowrap; }
+  .ticker-inner { display:inline-block; animation:ticker 40s linear infinite; }
+  @keyframes ticker { 0%{transform:translateX(100vw)} 100%{transform:translateX(-100%)} }
 </style>
 </head>
-<body class="text-gray-300 min-h-screen">
+<body class="text-gray-300 select-none" style="height:100vh;">
 
-<!-- ── Header ─────────────────────────────────────────────────────────────── -->
-<header class="border-b border-gray-800 px-4 py-2 flex items-center justify-between sticky top-0 z-50" style="background:#0a0d14;">
+<!-- ══ HEADER ══════════════════════════════════════════════════════════════ -->
+<header class="flex items-center justify-between px-4 py-1.5 border-b border-gray-800" style="background:#08090f;">
   <div class="flex items-center gap-3">
-    <span class="text-red-500 font-bold text-lg tracking-widest">TRUMP TWEET PREDICTOR</span>
-    <span class="live-dot blink"></span>
-    <span class="text-xs text-gray-500">LIVE</span>
+    <span class="text-red-500 font-bold tracking-widest text-sm">▲ TRUMPTWEET.LIVE</span>
+    <span class="w-2 h-2 bg-red-500 rounded-full blink inline-block"></span>
+    <span class="text-xs text-gray-600">LIVE</span>
   </div>
-  <div class="flex items-center gap-4 text-xs text-gray-500">
-    <span id="mode-badge" class="mode-badge bg-gray-800 text-gray-400">loading...</span>
+  <div class="flex items-center gap-4 text-xs">
+    <!-- Model badge -->
+    <div class="flex items-center gap-1.5">
+      <span class="text-gray-600">MODEL:</span>
+      <span id="model-badge" class="model-badge bg-yellow-900 text-yellow-300">loading...</span>
+    </div>
     <span id="pred-count" class="text-gray-600">0 predictions</span>
-    <span id="clock" class="text-gray-600"></span>
+    <span id="clock" class="text-gray-700 font-mono"></span>
   </div>
 </header>
 
-<!-- ── Ticker tape ─────────────────────────────────────────────────────────── -->
-<div class="overflow-hidden border-b border-gray-800 py-1" style="background:#050810;">
-  <div class="ticker-tape whitespace-nowrap text-xs" id="ticker">
-    <span class="text-gray-600">SPY <span class="text-white" id="t-SPY">—</span></span>
-    <span class="text-gray-600 mx-6">DJI <span class="text-white" id="t-DJI">—</span></span>
-    <span class="text-gray-600 mx-6">QQQ <span class="text-white" id="t-QQQ">—</span></span>
-    <span class="text-gray-600 mx-6">XLE <span class="text-white" id="t-XLE">—</span></span>
-    <span class="text-gray-600 mx-6">LMT <span class="text-white" id="t-LMT">—</span></span>
-    <span class="text-gray-600 mx-6">RTX <span class="text-white" id="t-RTX">—</span></span>
-    <span class="text-gray-600 mx-6">MSTR <span class="text-white" id="t-MSTR">—</span></span>
-    <span class="text-gray-600 mx-6">COIN <span class="text-white" id="t-COIN">—</span></span>
-    <span class="text-gray-600 mx-6">GLD <span class="text-white" id="t-GLD">—</span></span>
-    <span class="text-gray-600 mx-6">TLT <span class="text-white" id="t-TLT">—</span></span>
+<!-- ══ TICKER TAPE ══════════════════════════════════════════════════════════ -->
+<div class="ticker-wrap border-b border-gray-900 py-1 text-xs" style="background:#050810;">
+  <div class="ticker-inner" id="ticker-inner">
+    <span id="tk-SPY"  class="mx-4 text-gray-500">SPY <span class="text-gray-300">—</span></span>
+    <span id="tk-DJI"  class="mx-4 text-gray-500">DJI <span class="text-gray-300">—</span></span>
+    <span id="tk-QQQ"  class="mx-4 text-gray-500">QQQ <span class="text-gray-300">—</span></span>
+    <span id="tk-XLE"  class="mx-4 text-gray-500">XLE <span class="text-gray-300">—</span></span>
+    <span id="tk-LMT"  class="mx-4 text-gray-500">LMT <span class="text-gray-300">—</span></span>
+    <span id="tk-RTX"  class="mx-4 text-gray-500">RTX <span class="text-gray-300">—</span></span>
+    <span id="tk-MSTR" class="mx-4 text-gray-500">MSTR <span class="text-gray-300">—</span></span>
+    <span id="tk-COIN" class="mx-4 text-gray-500">COIN <span class="text-gray-300">—</span></span>
+    <span id="tk-GLD"  class="mx-4 text-gray-500">GLD <span class="text-gray-300">—</span></span>
+    <span id="tk-TLT"  class="mx-4 text-gray-500">TLT <span class="text-gray-300">—</span></span>
   </div>
 </div>
 
-<!-- ── Main grid ───────────────────────────────────────────────────────────── -->
-<div class="grid grid-cols-12 gap-0" style="height: calc(100vh - 88px);">
+<!-- ══ MAIN GRID ════════════════════════════════════════════════════════════ -->
+<div class="grid grid-cols-12" style="height:calc(100vh - 66px);">
 
-  <!-- Column 1: News Feed -->
+  <!-- ── COL 1: News Feed ─────────────────────────────────────────────────── -->
   <div class="col-span-3 border-r border-gray-800 flex flex-col">
-    <div class="px-3 py-2 border-b border-gray-800 flex items-center justify-between">
-      <span class="text-xs font-bold text-gray-400 tracking-widest">LIVE NEWS FEED</span>
-      <span class="text-xs text-gray-600" id="news-count">—</span>
+    <div class="px-3 py-1.5 border-b border-gray-800 flex items-center justify-between">
+      <span class="text-xs font-bold text-gray-500 tracking-widest">LIVE NEWS</span>
+      <span id="news-src-count" class="text-xs text-gray-700">12 sources</span>
     </div>
 
-    <!-- Custom predict input -->
-    <div class="px-3 py-2 border-b border-gray-800">
-      <div class="flex gap-2">
-        <input id="custom-input" type="text" placeholder="Enter any headline..." class="custom-input text-xs px-2 py-1 flex-1 rounded" />
-        <button id="custom-btn" onclick="predictCustom()" class="bg-red-600 hover:bg-red-700 text-white text-xs px-3 py-1 rounded font-bold transition-colors">
-          PREDICT
+    <!-- Custom predict -->
+    <div class="px-2 py-1.5 border-b border-gray-800">
+      <div class="flex gap-1.5">
+        <input id="custom-input" type="text" placeholder="Type any headline → predict"
+          class="custom-input text-xs px-2 py-1 flex-1 rounded text-gray-200" />
+        <button onclick="predictCustom()"
+          class="bg-red-700 hover:bg-red-600 text-white text-xs px-2 py-1 rounded font-bold transition-colors">
+          →
         </button>
       </div>
     </div>
 
+    <!-- Source filter pills -->
+    <div class="px-2 py-1.5 border-b border-gray-800 flex flex-wrap gap-1" id="source-filters">
+      <!-- filled by JS -->
+    </div>
+
+    <!-- News list -->
     <div id="news-list" class="flex-1 overflow-y-auto text-xs">
-      <div class="px-3 py-4 text-gray-600 text-center">Fetching news...</div>
+      <div class="text-center text-gray-700 py-6">Fetching from 12 sources...</div>
     </div>
   </div>
 
-  <!-- Column 2: Tweet Predictions -->
+  <!-- ── COL 2: Real Tweets + AI Predictions ─────────────────────────────── -->
   <div class="col-span-5 border-r border-gray-800 flex flex-col">
-    <div class="px-3 py-2 border-b border-gray-800 flex items-center justify-between">
-      <span class="text-xs font-bold text-gray-400 tracking-widest">PREDICTED POSTS</span>
-      <span class="text-xs text-gray-600">AI-generated · not real</span>
+
+    <!-- Tabs -->
+    <div class="flex border-b border-gray-800 text-xs">
+      <button class="tab-btn active px-4 py-2 text-gray-400 font-bold tracking-wide" id="tab-ai"
+        onclick="switchTab('ai')">AI PREDICTIONS</button>
+      <button class="tab-btn px-4 py-2 text-gray-600 font-bold tracking-wide" id="tab-real"
+        onclick="switchTab('real')">REAL TWEETS</button>
+      <div class="flex-1"></div>
+      <span class="text-gray-700 text-xs px-3 py-2 self-center">all AI-generated · not real</span>
     </div>
-    <div id="tweet-list" class="flex-1 overflow-y-auto">
-      <div class="px-4 py-8 text-gray-600 text-center text-sm">
-        Waiting for predictions...<br/>
-        <span class="text-xs text-gray-700 mt-1 block">Model loading in background</span>
+
+    <!-- AI Predictions panel -->
+    <div id="panel-ai" class="flex-1 overflow-y-auto">
+      <div class="text-center text-gray-700 py-8 text-sm">
+        Waiting for first prediction...<br/>
+        <span class="text-xs text-gray-800">~30s per tweet (Llama 3 on MPS)</span>
       </div>
+    </div>
+
+    <!-- Real Tweets panel (hidden by default) -->
+    <div id="panel-real" class="flex-1 overflow-y-auto hidden">
+      <div class="text-center text-gray-700 py-8 text-sm">Loading real tweets...</div>
     </div>
   </div>
 
-  <!-- Column 3: Market Simulation -->
+  <!-- ── COL 3: Market ────────────────────────────────────────────────────── -->
   <div class="col-span-4 flex flex-col">
-    <div class="px-3 py-2 border-b border-gray-800">
-      <span class="text-xs font-bold text-gray-400 tracking-widest">MARKET IMPACT SIMULATION</span>
-      <span class="text-xs text-gray-600 block mt-0.5">Simulated · not real financial data</span>
+
+    <!-- Market tabs -->
+    <div class="flex border-b border-gray-800 text-xs">
+      <button class="tab-btn active px-3 py-2 text-gray-400 font-bold tracking-wide" id="mtab-sim"
+        onclick="switchMTab('sim')">PREDICTION SIM</button>
+      <button class="tab-btn px-3 py-2 text-gray-600 font-bold tracking-wide" id="mtab-hist"
+        onclick="switchMTab('hist')">HISTORICAL</button>
     </div>
 
-    <!-- SPY chart -->
-    <div class="px-3 pt-2 pb-1 border-b border-gray-800">
-      <div class="flex items-center justify-between mb-1">
-        <span class="text-xs text-gray-500">SPY cumulative Δ% (session)</span>
-        <span id="spy-current" class="text-xs font-bold text-gray-300">0.00%</span>
+    <!-- Simulation panel -->
+    <div id="mpanel-sim" class="flex flex-col flex-1">
+      <!-- SPY chart -->
+      <div class="px-3 pt-2 pb-1 border-b border-gray-800">
+        <div class="flex items-center justify-between mb-1">
+          <span class="text-xs text-gray-600">SPY sim Δ% · session</span>
+          <span id="spy-val" class="text-xs font-bold text-gray-400">+0.000%</span>
+        </div>
+        <div style="height:140px;position:relative;">
+          <canvas id="spy-chart"></canvas>
+        </div>
       </div>
-      <div class="chart-container">
-        <canvas id="spy-chart"></canvas>
+
+      <!-- Impact bars -->
+      <div class="px-3 py-2 border-b border-gray-800">
+        <div class="text-xs text-gray-600 mb-1.5">Latest tweet → market</div>
+        <div id="impact-bars" class="space-y-1.5">
+          <div class="text-xs text-gray-800">No prediction yet</div>
+        </div>
+      </div>
+
+      <!-- Sentiment + keywords -->
+      <div class="px-3 py-2">
+        <div class="flex items-center gap-2 mb-1.5">
+          <span class="text-xs text-gray-600">Signal:</span>
+          <span id="sentiment-badge" class="text-xs px-2 py-0.5 rounded font-bold bg-gray-800 text-gray-600">—</span>
+          <span class="text-xs text-gray-700 ml-auto" id="match-pct"></span>
+        </div>
+        <div id="trigger-pills" class="flex flex-wrap gap-1"></div>
       </div>
     </div>
 
-    <!-- Ticker impact bars -->
-    <div class="px-3 py-2 border-b border-gray-800 flex-1">
-      <div class="text-xs text-gray-500 mb-2">Latest tweet impact</div>
-      <div id="impact-bars" class="space-y-2">
-        <!-- filled dynamically -->
+    <!-- Historical panel -->
+    <div id="mpanel-hist" class="flex-col flex-1 hidden">
+      <div class="px-3 pt-2 pb-1 border-b border-gray-800">
+        <div class="flex items-center justify-between mb-1">
+          <span class="text-xs text-gray-600">Real tweet → SP500 Δ% (4,956 tweets)</span>
+        </div>
+        <div style="height:140px;position:relative;">
+          <canvas id="hist-chart"></canvas>
+        </div>
+      </div>
+      <div class="px-3 py-2 border-b border-gray-800">
+        <div class="text-xs text-gray-600 mb-2">Top market-moving tweets (by |SP500 Δ%|)</div>
+        <div id="top-movers" class="space-y-2 overflow-y-auto" style="max-height:200px;"></div>
+      </div>
+      <div class="px-3 py-2">
+        <div class="text-xs text-gray-600 mb-1">Avg impact by platform</div>
+        <div id="platform-stats" class="space-y-1"></div>
       </div>
     </div>
 
-    <!-- Sentiment + trigger words -->
-    <div class="px-3 py-2">
-      <div class="flex items-center gap-2 mb-2">
-        <span class="text-xs text-gray-500">Market signal:</span>
-        <span id="sentiment-badge" class="text-xs px-2 py-0.5 rounded font-bold">—</span>
-      </div>
-      <div id="triggers" class="flex flex-wrap gap-1">
-      </div>
-    </div>
   </div>
-
 </div>
 
-<!-- ── Scripts ─────────────────────────────────────────────────────────────── -->
+<!-- ══ SCRIPTS ══════════════════════════════════════════════════════════════ -->
 <script>
-// ── Chart setup ──────────────────────────────────────────────────────────────
-const spyCtx = document.getElementById('spy-chart').getContext('2d');
-const spyChart = new Chart(spyCtx, {
-  type: 'line',
-  data: {
-    labels: ['0'],
-    datasets: [{
-      label: 'SPY Δ%',
-      data: [0],
-      borderColor: '#ef4444',
-      backgroundColor: 'rgba(239,68,68,0.08)',
-      borderWidth: 1.5,
-      pointRadius: 0,
-      fill: true,
-      tension: 0.3,
-    }]
-  },
-  options: {
-    responsive: true,
-    maintainAspectRatio: false,
-    animation: { duration: 400 },
-    plugins: { legend: { display: false } },
-    scales: {
-      x: { display: false },
-      y: {
-        grid: { color: 'rgba(255,255,255,0.05)' },
-        ticks: { color: '#4b5563', font: { size: 9 },
-          callback: v => v.toFixed(2) + '%' },
-        border: { display: false },
-      }
-    }
-  }
-});
+// ── Helpers ──────────────────────────────────────────────────────────────────
+function esc(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function fmtDelta(v) {
+  if (v == null) return '—';
+  return (v >= 0 ? '+' : '') + Number(v).toFixed(3) + '%';
+}
+function deltaClass(v) {
+  return v > 0 ? 'text-green-400' : v < 0 ? 'text-red-400' : 'text-gray-500';
+}
+
+// ── Clock ─────────────────────────────────────────────────────────────────────
+setInterval(() => {
+  document.getElementById('clock').textContent = new Date().toUTCString().slice(17,25)+' UTC';
+}, 1000);
 
 // ── State ─────────────────────────────────────────────────────────────────────
 let predCount = 0;
-const BASE_PRICES = {
-  SPY: 520, DJI: 38500, QQQ: 445, XLE: 88,
-  LMT: 475, RTX: 125, MSTR: 380, COIN: 225, GLD: 230, TLT: 95
+let allNewsItems = [];
+let activeSourceFilter = null;
+let realTweets = [];
+
+const SOURCE_COLORS = {
+  'Reuters':'bg-orange-900 text-orange-300',
+  'AP News':'bg-blue-900 text-blue-300',
+  'NYT':'bg-gray-700 text-gray-200',
+  'Guardian':'bg-cyan-900 text-cyan-300',
+  'CNN':'bg-red-900 text-red-300',
+  'CNBC':'bg-indigo-900 text-indigo-300',
+  'Fox News':'bg-yellow-900 text-yellow-300',
+  'Politico':'bg-purple-900 text-purple-300',
+  'WashPost':'bg-teal-900 text-teal-300',
+  'MarketWatch':'bg-green-900 text-green-300',
+  'Axios':'bg-pink-900 text-pink-300',
+  'BBC':'bg-red-950 text-red-400',
 };
-let currentPrices = { ...BASE_PRICES };
 
-// ── Clock ─────────────────────────────────────────────────────────────────────
-function updateClock() {
-  document.getElementById('clock').textContent =
-    new Date().toUTCString().slice(17, 25) + ' UTC';
+// ── Tabs ──────────────────────────────────────────────────────────────────────
+function switchTab(name) {
+  ['ai','real'].forEach(t => {
+    document.getElementById('tab-'+t).classList.toggle('active', t===name);
+    document.getElementById('tab-'+t).classList.toggle('text-gray-400', t===name);
+    document.getElementById('tab-'+t).classList.toggle('text-gray-600', t!==name);
+    document.getElementById('panel-'+t).classList.toggle('hidden', t!==name);
+  });
+  if (name === 'real' && realTweets.length) renderRealTweets();
 }
-setInterval(updateClock, 1000);
-updateClock();
+function switchMTab(name) {
+  ['sim','hist'].forEach(t => {
+    document.getElementById('mtab-'+t).classList.toggle('active', t===name);
+    document.getElementById('mtab-'+t).classList.toggle('text-gray-400', t===name);
+    document.getElementById('mtab-'+t).classList.toggle('text-gray-600', t!==name);
+    document.getElementById('mpanel-'+t).classList.toggle('hidden', t!==name);
+    document.getElementById('mpanel-'+t).classList.toggle('flex', t===name);
+  });
+}
 
-// ── Ticker tape ───────────────────────────────────────────────────────────────
-function updateTicker(prices, impacts) {
-  for (const [ticker, price] of Object.entries(prices)) {
-    const el = document.getElementById('t-' + ticker);
-    if (!el) continue;
-    const delta = impacts[ticker] || 0;
-    const sign = delta >= 0 ? '+' : '';
-    el.textContent = `${price.toFixed(2)} (${sign}${delta.toFixed(2)}%)`;
-    el.className = delta > 0 ? 'text-green-400' : delta < 0 ? 'text-red-400' : 'text-white';
-  }
-  currentPrices = prices;
+// ── Source filter pills ───────────────────────────────────────────────────────
+function buildSourceFilters(sources) {
+  const el = document.getElementById('source-filters');
+  el.innerHTML = sources.map(s => {
+    const col = SOURCE_COLORS[s] || 'bg-gray-800 text-gray-400';
+    return `<button class="source-pill ${col} hover:opacity-80 transition-opacity"
+      onclick="filterSource('${esc(s)}')">${esc(s)}</button>`;
+  }).join('');
+}
+function filterSource(src) {
+  activeSourceFilter = activeSourceFilter === src ? null : src;
+  renderNewsList();
 }
 
 // ── News list ─────────────────────────────────────────────────────────────────
-const newsItems = [];
 function addNewsItem(item) {
-  newsItems.unshift(item);
-  if (newsItems.length > 60) newsItems.pop();
+  if (allNewsItems.find(x => x.id === item.id)) return;
+  allNewsItems.unshift(item);
+  if (allNewsItems.length > 120) allNewsItems.pop();
   renderNewsList();
+  // Update source filters
+  const sources = [...new Set(allNewsItems.map(x => x.source))];
+  buildSourceFilters(sources);
+  document.getElementById('news-src-count').textContent = `${sources.length} sources`;
 }
 
 function renderNewsList() {
   const el = document.getElementById('news-list');
-  const sourceColors = {
-    'Reuters': 'text-orange-400', 'AP News': 'text-blue-400',
-    'NYT': 'text-gray-300', 'BBC': 'text-red-400',
-    'Fox News': 'text-yellow-400', 'Politico': 'text-purple-400',
+  const items = activeSourceFilter
+    ? allNewsItems.filter(x => x.source === activeSourceFilter)
+    : allNewsItems;
+  if (!items.length) { el.innerHTML = '<div class="text-center text-gray-700 py-6 text-xs">No items</div>'; return; }
+  const relBar = r => {
+    const filled = Math.round((r||0)*5);
+    return '<span class="text-gray-800">'+('█'.repeat(filled)+'░'.repeat(5-filled))+'</span>';
   };
-  el.innerHTML = newsItems.map(item => {
-    const sc = sourceColors[item.source] || 'text-gray-500';
-    const bars = Math.round((item.relevance || 0) * 5);
-    const rel = '█'.repeat(bars) + '░'.repeat(5 - bars);
-    return `
-      <div class="news-item px-3 py-2 border-b border-gray-900"
-           onclick="predictFromNews('${escHtml(item.title)}')">
-        <div class="text-gray-200 leading-snug mb-1">${escHtml(item.title)}</div>
-        <div class="flex items-center justify-between">
-          <span class="${sc} font-bold">${escHtml(item.source)}</span>
-          <span class="text-gray-700 tracking-wider text-xs">${rel}</span>
-        </div>
-      </div>`;
+  el.innerHTML = items.map(item => {
+    const col = SOURCE_COLORS[item.source] || 'bg-gray-800 text-gray-400';
+    return `<div class="news-row px-3 py-2 border-b border-gray-900"
+        onclick="predictFromNews('${esc(item.title)}')">
+      <div class="text-gray-200 leading-snug mb-1 text-xs">${esc(item.title)}</div>
+      <div class="flex items-center gap-2">
+        <span class="source-pill ${col}">${esc(item.source)}</span>
+        ${relBar(item.relevance)}
+      </div>
+    </div>`;
   }).join('');
-  document.getElementById('news-count').textContent = `${newsItems.length} items`;
 }
 
-// ── Tweet cards ───────────────────────────────────────────────────────────────
-function addTweetCard(news, prediction, market, mode, ts) {
+// ── AI Prediction cards ───────────────────────────────────────────────────────
+function addPredictionCard(news, prediction, market, mode, ts) {
   predCount++;
   document.getElementById('pred-count').textContent = `${predCount} predictions`;
 
   const sent = market.sentiment;
-  const sentClass = sent === 'bullish' ? 'bullish' : sent === 'bearish' ? '' : 'neutral';
   const sentBadge = sent === 'bullish'
     ? '<span class="text-green-400 text-xs font-bold">▲ BULLISH</span>'
     : sent === 'bearish'
     ? '<span class="text-red-400 text-xs font-bold">▼ BEARISH</span>'
-    : '<span class="text-gray-500 text-xs font-bold">● NEUTRAL</span>';
+    : '<span class="text-gray-600 text-xs">● NEUTRAL</span>';
 
-  const modeBadge = {
-    'rag_llm': '<span class="bg-red-900 text-red-300 mode-badge">🔥 Llama 3 + RAG</span>',
-    'rag_retrieve': '<span class="bg-blue-900 text-blue-300 mode-badge">🔍 RAG Retrieve</span>',
-    'template': '<span class="bg-gray-800 text-gray-400 mode-badge">📝 Template</span>',
-  }[mode] || '';
-
-  const spyDelta = market.spy_delta || 0;
-  const spyStr = (spyDelta >= 0 ? '+' : '') + spyDelta.toFixed(2) + '%';
-  const spyColor = spyDelta > 0 ? 'text-green-400' : spyDelta < 0 ? 'text-red-400' : 'text-gray-500';
-
-  const timeStr = new Date(ts).toLocaleTimeString();
-  const headline = news.title;
+  const modeMap = {
+    'rag_llm': 'bg-red-900 text-red-300',
+    'rag_retrieve': 'bg-blue-900 text-blue-300',
+    'template': 'bg-gray-800 text-gray-500',
+  };
+  const modeLabel = { 'rag_llm':'🔥 Llama 3 + RAG', 'rag_retrieve':'🔍 RAG', 'template':'📝 Template' }[mode] || mode;
+  const spyD = market.spy_delta || 0;
+  const spyStr = fmtDelta(spyD);
 
   const card = `
-    <div class="tweet-card ${sentClass} mx-3 my-2 p-3 rounded" style="background:#0f1624;">
-      <div class="flex items-start justify-between mb-2">
-        <span class="text-xs text-gray-600 truncate flex-1 mr-2">${escHtml(headline)}</span>
-        ${sentBadge}
-      </div>
-      <div class="text-sm text-gray-100 leading-relaxed mb-3 font-mono">
-        &ldquo;${escHtml(prediction)}&rdquo;
-      </div>
-      <div class="flex items-center justify-between text-xs">
+    <div class="tweet-card ${sent} mx-2 my-2 p-2.5 rounded fade-in" style="background:#0d1117;">
+      <div class="text-gray-600 text-xs mb-1.5 truncate">📰 ${esc(news.source)} · ${esc(news.title.slice(0,60))}…</div>
+      <div class="text-gray-100 text-xs leading-relaxed mb-2">"${esc(prediction)}"</div>
+      <div class="flex items-center justify-between">
         <div class="flex items-center gap-2">
-          ${modeBadge}
-          <span class="${spyColor} font-bold">SPY ${spyStr}</span>
+          <span class="model-badge ${modeMap[mode]||'bg-gray-800 text-gray-500'}">${modeLabel}</span>
+          ${sentBadge}
+          <span class="${deltaClass(spyD)} text-xs font-bold">SPY ${spyStr}</span>
         </div>
-        <span class="text-gray-700">${timeStr}</span>
+        <span class="text-gray-800 text-xs">${new Date(ts).toLocaleTimeString()}</span>
       </div>
     </div>`;
 
-  const list = document.getElementById('tweet-list');
-  // Clear placeholder
-  if (list.querySelector('.text-center')) list.innerHTML = '';
-  list.insertAdjacentHTML('afterbegin', card);
+  const panel = document.getElementById('panel-ai');
+  if (panel.querySelector('.text-center')) panel.innerHTML = '';
+  panel.insertAdjacentHTML('afterbegin', card);
+  const cards = panel.querySelectorAll('.tweet-card');
+  if (cards.length > 40) cards[cards.length-1].remove();
+}
 
-  // Keep max 30 cards
-  const cards = list.querySelectorAll('.tweet-card');
-  if (cards.length > 30) cards[cards.length - 1].remove();
+// ── Real Tweets ───────────────────────────────────────────────────────────────
+function renderRealTweets() {
+  const panel = document.getElementById('panel-real');
+  if (!realTweets.length) {
+    panel.innerHTML = '<div class="text-center text-gray-700 py-8 text-sm">No tweet data loaded</div>';
+    return;
+  }
+  panel.innerHTML = realTweets.slice(0, 60).map(t => {
+    const sp = t.sp500;
+    const spStr = sp != null ? fmtDelta(sp) : null;
+    const spClass = sp != null ? deltaClass(sp) : '';
+    const platform = t.platform === 'Truth Social'
+      ? '<span class="text-xs text-purple-400 font-bold">TRUTH SOCIAL</span>'
+      : '<span class="text-xs text-blue-400 font-bold">TWITTER</span>';
+    const dateStr = t.ts ? new Date(t.ts).toLocaleDateString() : '';
+    const marketBadge = sp != null
+      ? `<span class="${spClass} text-xs font-bold">SP500 ${spStr}</span>
+         <span class="${deltaClass(t.dow)} text-xs">DOW ${fmtDelta(t.dow)}</span>`
+      : '<span class="text-xs text-gray-700">no market data</span>';
+
+    return `<div class="real-tweet-card mx-2 my-2 p-2.5 rounded fade-in" style="background:#0d1117;">
+      <div class="flex items-center gap-2 mb-1.5">
+        ${platform}
+        <span class="text-gray-700 text-xs">${esc(dateStr)}</span>
+      </div>
+      <div class="text-gray-200 text-xs leading-relaxed mb-2">${esc(t.content.slice(0,280))}</div>
+      <div class="flex items-center gap-3">${marketBadge}</div>
+    </div>`;
+  }).join('');
+}
+
+// ── Ticker ────────────────────────────────────────────────────────────────────
+function updateTicker(prices, impacts) {
+  for (const [ticker, price] of Object.entries(prices)) {
+    const el = document.getElementById('tk-'+ticker);
+    if (!el) continue;
+    const d = impacts[ticker] || 0;
+    const sign = d >= 0 ? '+' : '';
+    el.innerHTML = `<span class="text-gray-500">${ticker} </span><span class="${deltaClass(d)} font-bold">${price.toFixed(2)} <span class="text-xs">(${sign}${d.toFixed(2)}%)</span></span>`;
+  }
 }
 
 // ── Impact bars ───────────────────────────────────────────────────────────────
 function updateImpactBars(impacts) {
   const container = document.getElementById('impact-bars');
-  const tickers = Object.entries(impacts).filter(([, v]) => v !== 0).sort((a, b) => Math.abs(b[1]) - Math.abs(a[1]));
-  if (tickers.length === 0) {
-    container.innerHTML = '<div class="text-xs text-gray-700">No significant impact detected</div>';
-    return;
-  }
-  const maxAbs = Math.max(...tickers.map(([, v]) => Math.abs(v)), 0.1);
-  container.innerHTML = tickers.slice(0, 8).map(([ticker, pct]) => {
-    const pctW = Math.round(Math.abs(pct) / maxAbs * 100);
-    const isPos = pct >= 0;
-    const barColor = isPos ? 'bg-green-500' : 'bg-red-500';
-    const sign = isPos ? '+' : '';
-    return `
-      <div class="flex items-center gap-2">
-        <span class="text-xs text-gray-500 w-10 text-right font-bold">${ticker}</span>
-        <div class="flex-1 bg-gray-900 rounded-full h-1.5 overflow-hidden">
-          <div class="impact-bar ${barColor}" style="width:${pctW}%"></div>
-        </div>
-        <span class="text-xs w-14 ${isPos ? 'text-green-400' : 'text-red-400'}">${sign}${pct.toFixed(2)}%</span>
-      </div>`;
+  const entries = Object.entries(impacts).filter(([,v])=>v!==0).sort((a,b)=>Math.abs(b[1])-Math.abs(a[1]));
+  if (!entries.length) { container.innerHTML = '<div class="text-xs text-gray-800">No impact signals</div>'; return; }
+  const maxAbs = Math.max(...entries.map(([,v])=>Math.abs(v)), 0.1);
+  container.innerHTML = entries.slice(0,8).map(([t,pct]) => {
+    const pW = Math.round(Math.abs(pct)/maxAbs*100);
+    const pos = pct >= 0;
+    return `<div class="flex items-center gap-2">
+      <span class="text-xs text-gray-600 w-10 text-right font-bold">${t}</span>
+      <div class="flex-1 rounded-full overflow-hidden" style="height:5px;background:#1a1a2e;">
+        <div class="impact-bar ${pos?'bg-green-500':'bg-red-500'}" style="width:${pW}%"></div>
+      </div>
+      <span class="text-xs w-14 ${pos?'text-green-400':'text-red-400'}">${pos?'+':''}${pct.toFixed(2)}%</span>
+    </div>`;
   }).join('');
 }
 
-// ── Sentiment + triggers ──────────────────────────────────────────────────────
-function updateSentiment(sentiment, triggered_by) {
+// ── Sentiment ─────────────────────────────────────────────────────────────────
+function updateSentiment(sentiment, triggered) {
   const badge = document.getElementById('sentiment-badge');
-  if (sentiment === 'bullish') {
-    badge.textContent = '▲ BULLISH';
-    badge.className = 'text-xs px-2 py-0.5 rounded font-bold bg-green-900 text-green-400';
-  } else if (sentiment === 'bearish') {
-    badge.textContent = '▼ BEARISH';
-    badge.className = 'text-xs px-2 py-0.5 rounded font-bold bg-red-900 text-red-400';
-  } else {
-    badge.textContent = '● NEUTRAL';
-    badge.className = 'text-xs px-2 py-0.5 rounded font-bold bg-gray-800 text-gray-500';
-  }
-  const triggers = document.getElementById('triggers');
-  triggers.innerHTML = (triggered_by || []).map(kw =>
-    `<span class="text-xs px-1.5 py-0.5 rounded bg-gray-800 text-gray-400">${escHtml(kw)}</span>`
+  if (sentiment==='bullish')      { badge.textContent='▲ BULLISH'; badge.className='text-xs px-2 py-0.5 rounded font-bold bg-green-900 text-green-400'; }
+  else if (sentiment==='bearish') { badge.textContent='▼ BEARISH'; badge.className='text-xs px-2 py-0.5 rounded font-bold bg-red-900 text-red-400'; }
+  else                            { badge.textContent='● NEUTRAL';  badge.className='text-xs px-2 py-0.5 rounded font-bold bg-gray-800 text-gray-500'; }
+  document.getElementById('trigger-pills').innerHTML = (triggered||[]).map(kw =>
+    `<span class="text-xs px-1.5 py-0.5 rounded bg-gray-900 text-gray-500 border border-gray-800">${esc(kw)}</span>`
   ).join('');
 }
 
-// ── SPY chart update ──────────────────────────────────────────────────────────
+// ── SPY chart ─────────────────────────────────────────────────────────────────
+const spyChart = new Chart(document.getElementById('spy-chart').getContext('2d'), {
+  type:'line',
+  data:{ labels:['0'], datasets:[{ label:'SPY Δ%', data:[0], borderColor:'#ef4444',
+    backgroundColor:'rgba(239,68,68,0.06)', borderWidth:1.5, pointRadius:0, fill:true, tension:.3 }] },
+  options:{ responsive:true, maintainAspectRatio:false, animation:{duration:300},
+    plugins:{legend:{display:false}},
+    scales:{ x:{display:false},
+      y:{ grid:{color:'rgba(255,255,255,0.04)'}, border:{display:false},
+          ticks:{color:'#374151',font:{size:9},callback:v=>v.toFixed(2)+'%'} } } }
+});
+
 function updateSpyChart(history) {
-  spyChart.data.labels = history.map((_, i) => i.toString());
+  if (!history||!history.length) return;
+  spyChart.data.labels = history.map((_,i)=>i.toString());
   spyChart.data.datasets[0].data = history;
-  // Dynamic color: red if down, green if up
-  const last = history[history.length - 1] || 0;
-  spyChart.data.datasets[0].borderColor = last >= 0 ? '#22c55e' : '#ef4444';
-  spyChart.data.datasets[0].backgroundColor = last >= 0
-    ? 'rgba(34,197,94,0.08)' : 'rgba(239,68,68,0.08)';
+  const last = history[history.length-1]||0;
+  const pos = last >= 0;
+  spyChart.data.datasets[0].borderColor = pos ? '#22c55e' : '#ef4444';
+  spyChart.data.datasets[0].backgroundColor = pos ? 'rgba(34,197,94,0.05)' : 'rgba(239,68,68,0.05)';
   spyChart.update();
-  const spyCurrent = document.getElementById('spy-current');
-  spyCurrent.textContent = (last >= 0 ? '+' : '') + last.toFixed(3) + '%';
-  spyCurrent.className = 'text-xs font-bold ' + (last >= 0 ? 'text-green-400' : 'text-red-400');
+  const el = document.getElementById('spy-val');
+  el.textContent = fmtDelta(last);
+  el.className = 'text-xs font-bold ' + deltaClass(last);
 }
 
-// ── Handle incoming event ─────────────────────────────────────────────────────
+// ── Historical chart ──────────────────────────────────────────────────────────
+let histChartInst = null;
+
+function buildHistChart(tweets) {
+  if (!tweets.length) return;
+  // Scatter: x=index, y=SP500 pct
+  const withData = tweets.filter(t=>t.sp500!=null);
+  if (!withData.length) return;
+
+  const positiveData = withData.filter(t=>t.sp500>=0).map((t,i)=>({x:i, y:t.sp500}));
+  const negativeData = withData.filter(t=>t.sp500<0).map((t,i)=>({x:i, y:t.sp500}));
+
+  const ctx = document.getElementById('hist-chart').getContext('2d');
+  if (histChartInst) histChartInst.destroy();
+  histChartInst = new Chart(ctx, {
+    type:'scatter',
+    data:{ datasets:[
+      { label:'Positive', data:positiveData, backgroundColor:'rgba(34,197,94,0.5)', pointRadius:3 },
+      { label:'Negative', data:negativeData, backgroundColor:'rgba(239,68,68,0.5)', pointRadius:3 },
+    ]},
+    options:{ responsive:true, maintainAspectRatio:false, animation:{duration:0},
+      plugins:{legend:{display:false}},
+      scales:{
+        x:{display:false},
+        y:{ grid:{color:'rgba(255,255,255,0.04)'}, border:{display:false},
+            ticks:{color:'#374151',font:{size:9},callback:v=>v.toFixed(2)+'%'} }
+      }
+    }
+  });
+}
+
+function buildTopMovers(tweets) {
+  const withData = tweets.filter(t=>t.sp500!=null)
+    .sort((a,b)=>Math.abs(b.sp500)-Math.abs(a.sp500)).slice(0,8);
+  const el = document.getElementById('top-movers');
+  el.innerHTML = withData.map(t => {
+    const pos = t.sp500 >= 0;
+    return `<div class="border-l-2 ${pos?'border-green-700':'border-red-700'} pl-2 py-0.5">
+      <div class="text-xs text-gray-400 leading-snug mb-0.5">${esc(t.content.slice(0,100))}…</div>
+      <div class="flex gap-3 text-xs">
+        <span class="${deltaClass(t.sp500)} font-bold">SP500 ${fmtDelta(t.sp500)}</span>
+        <span class="${deltaClass(t.dow)}">DOW ${fmtDelta(t.dow)}</span>
+        <span class="text-gray-700">${new Date(t.ts).toLocaleDateString()}</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function buildPlatformStats(tweets) {
+  const byPlatform = {};
+  tweets.forEach(t => {
+    if (t.sp500==null) return;
+    const p = t.platform || 'Unknown';
+    if (!byPlatform[p]) byPlatform[p] = [];
+    byPlatform[p].push(t.sp500);
+  });
+  const el = document.getElementById('platform-stats');
+  el.innerHTML = Object.entries(byPlatform).map(([platform, vals]) => {
+    const avg = vals.reduce((a,b)=>a+b,0)/vals.length;
+    const pos = avg >= 0;
+    return `<div class="flex items-center gap-2 text-xs">
+      <span class="${platform.includes('Truth')?'text-purple-400':'text-blue-400'} font-bold w-24">${esc(platform)}</span>
+      <span class="${deltaClass(avg)} font-bold">${fmtDelta(avg)}</span>
+      <span class="text-gray-700">${vals.length} tweets</span>
+    </div>`;
+  }).join('');
+}
+
+// ── Handle event ──────────────────────────────────────────────────────────────
 function handleUpdate(event) {
   addNewsItem(event.news);
-  addTweetCard(event.news, event.prediction, event.market, event.mode, event.ts);
+  addPredictionCard(event.news, event.prediction, event.market, event.mode, event.ts);
   updateTicker(event.market.prices, event.market.impacts);
   updateImpactBars(event.market.impacts);
   updateSentiment(event.market.sentiment, event.market.triggered_by);
   if (event.market.spy_history) updateSpyChart(event.market.spy_history);
-  // Update mode badge
-  const modeLabels = { rag_llm: 'Llama 3 + RAG', rag_retrieve: 'RAG', template: 'Template' };
-  document.getElementById('mode-badge').textContent = modeLabels[event.mode] || event.mode;
+
+  // Update model badge
+  const labels = {'rag_llm':'🔥 Llama 3 + RAG','rag_retrieve':'🔍 RAG Retrieve','template':'📝 Template'};
+  const colors = {'rag_llm':'bg-red-900 text-red-300','rag_retrieve':'bg-blue-900 text-blue-300','template':'bg-gray-800 text-gray-500'};
+  const badge = document.getElementById('model-badge');
+  badge.textContent = labels[event.mode] || event.mode;
+  badge.className = 'model-badge ' + (colors[event.mode]||'bg-gray-800 text-gray-500');
 }
 
 // ── Custom predict ────────────────────────────────────────────────────────────
@@ -371,25 +536,20 @@ async function predictCustom() {
   const input = document.getElementById('custom-input');
   const headline = input.value.trim();
   if (!headline) return;
-  const btn = document.getElementById('custom-btn');
-  btn.textContent = '...';
-  btn.disabled = true;
+  input.value = '';
+  input.placeholder = 'Generating...';
   try {
     const res = await fetch(`/api/predict?headline=${encodeURIComponent(headline)}`);
     const data = await res.json();
     handleUpdate({
       ts: new Date().toISOString(),
-      news: { id: 'custom', title: headline, source: '✍ Custom', url: '', relevance: 1 },
+      news: {id:'custom', title:headline, source:'✍ Custom', url:'', relevance:1},
       prediction: data.prediction,
-      market: { ...data.market, spy_delta: data.market.impacts.SPY || 0, spy_history: [] },
+      market: {...data.market, spy_history:[]},
       mode: data.mode,
     });
-  } catch (e) {
-    console.error(e);
-  }
-  btn.textContent = 'PREDICT';
-  btn.disabled = false;
-  input.value = '';
+  } catch(e) { console.error(e); }
+  input.placeholder = 'Type any headline → predict';
 }
 
 function predictFromNews(title) {
@@ -402,46 +562,36 @@ document.getElementById('custom-input').addEventListener('keydown', e => {
 });
 
 // ── WebSocket ─────────────────────────────────────────────────────────────────
-function escHtml(s) {
-  return String(s || '')
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
-}
-
-function connectWS() {
+function connect() {
   const ws = new WebSocket(`ws://${location.host}/ws`);
-
   ws.onopen = () => console.log('[WS] connected');
-
-  ws.onmessage = (msg) => {
+  ws.onmessage = msg => {
     const data = JSON.parse(msg.data);
     if (data.type === 'init') {
-      // Populate from server history
-      if (data.feed && data.feed.length > 0) {
-        // render oldest first so newest ends up on top
+      if (data.real_tweets && data.real_tweets.length) {
+        realTweets = data.real_tweets;
+        buildHistChart(realTweets);
+        buildTopMovers(realTweets);
+        buildPlatformStats(realTweets);
+      }
+      if (data.feed && data.feed.length) {
         [...data.feed].reverse().forEach(handleUpdate);
       }
       if (data.spy_history) updateSpyChart(data.spy_history);
       if (data.prices) updateTicker(data.prices, {});
-      const modeLabels = { rag_llm: 'Llama 3 + RAG', rag_retrieve: 'RAG', template: 'Template' };
-      document.getElementById('mode-badge').textContent =
-        modeLabels[data.mode] || data.mode;
+      const labels = {'rag_llm':'🔥 Llama 3 + RAG','rag_retrieve':'🔍 RAG Retrieve','template':'📝 Template'};
+      const colors = {'rag_llm':'bg-red-900 text-red-300','rag_retrieve':'bg-blue-900 text-blue-300','template':'bg-gray-800 text-gray-500'};
+      const badge = document.getElementById('model-badge');
+      badge.textContent = labels[data.mode] || data.mode;
+      badge.className = 'model-badge ' + (colors[data.mode]||'bg-gray-800 text-gray-500');
     } else if (data.type === 'update') {
       handleUpdate(data);
     }
   };
-
-  ws.onclose = () => {
-    console.log('[WS] disconnected, reconnecting in 3s...');
-    setTimeout(connectWS, 3000);
-  };
-
-  ws.onerror = (e) => console.error('[WS] error', e);
+  ws.onclose = () => setTimeout(connect, 3000);
+  ws.onerror = e => console.error('[WS]', e);
 }
-
-connectWS();
+connect();
 </script>
 </body>
 </html>

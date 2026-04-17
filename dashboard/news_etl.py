@@ -5,12 +5,18 @@ from datetime import datetime, timezone
 import feedparser
 
 FEEDS = [
-    ("Reuters",  "https://feeds.reuters.com/reuters/topNews"),
-    ("AP News",  "https://feeds.ap.org/rss/apf-topnews"),
-    ("NYT",      "https://rss.nytimes.com/services/xml/rss/nyt/US.xml"),
-    ("BBC",      "https://feeds.bbci.co.uk/news/world/us_canada/rss.xml"),
-    ("Fox News", "https://moxie.foxnews.com/google-publisher/politics.xml"),
-    ("Politico", "https://www.politico.com/rss/politics08.xml"),
+    ("Reuters",    "https://feeds.reuters.com/reuters/topNews"),
+    ("AP News",    "https://feeds.ap.org/rss/apf-topnews"),
+    ("NYT",        "https://rss.nytimes.com/services/xml/rss/nyt/US.xml"),
+    ("Guardian",   "https://www.theguardian.com/us-news/rss"),
+    ("CNN",        "http://rss.cnn.com/rss/cnn_allpolitics.rss"),
+    ("CNBC",       "https://www.cnbc.com/id/100003114/device/rss/rss.html"),
+    ("Fox News",   "https://moxie.foxnews.com/google-publisher/politics.xml"),
+    ("Politico",   "https://www.politico.com/rss/politics08.xml"),
+    ("WashPost",   "https://feeds.washingtonpost.com/rss/politics"),
+    ("MarketWatch","https://feeds.content.dowjones.io/public/rss/mw_topstories"),
+    ("Axios",      "https://api.axios.com/feed/"),
+    ("BBC",        "https://feeds.bbci.co.uk/news/world/us_canada/rss.xml"),
 ]
 
 TRUMP_KEYWORDS = {
@@ -18,7 +24,8 @@ TRUMP_KEYWORDS = {
     "senate", "federal", "border", "immigration", "economy", "fed",
     "interest rate", "stock", "market", "china", "russia", "iran",
     "nato", "ukraine", "israel", "tax", "budget", "inflation", "dollar",
-    "crypto", "bitcoin", "musk", "doge", "elon",
+    "crypto", "bitcoin", "musk", "doge", "elon", "wall street", "dow",
+    "s&p", "nasdaq", "rally", "sanctions", "ceasefire", "deal",
 }
 
 
@@ -29,16 +36,16 @@ class NewsItem:
     source: str
     url: str
     published: str
-    relevance: float  # 0-1, how Trump-tweet-worthy
+    relevance: float
 
 
 def _relevance(title: str) -> float:
     words = set(title.lower().split())
-    hits = len(words & TRUMP_KEYWORDS)
+    hits = sum(1 for kw in TRUMP_KEYWORDS if kw in title.lower())
     return min(hits / 3.0, 1.0)
 
 
-def fetch_all_news(max_per_feed: int = 10) -> list[NewsItem]:
+def fetch_all_news(max_per_feed: int = 8) -> list[NewsItem]:
     items: list[NewsItem] = []
     seen: set[str] = set()
 
@@ -52,19 +59,16 @@ def fetch_all_news(max_per_feed: int = 10) -> list[NewsItem]:
                 seen.add(title)
                 item_id = hashlib.md5(title.encode()).hexdigest()[:10]
                 published = entry.get("published", datetime.now(timezone.utc).isoformat())
-                items.append(
-                    NewsItem(
-                        id=item_id,
-                        title=title,
-                        source=source,
-                        url=entry.get("link", ""),
-                        published=published,
-                        relevance=_relevance(title),
-                    )
-                )
+                items.append(NewsItem(
+                    id=item_id,
+                    title=title,
+                    source=source,
+                    url=entry.get("link", ""),
+                    published=published,
+                    relevance=_relevance(title),
+                ))
         except Exception as exc:
             print(f"[ETL] Feed error {source}: {exc}")
 
-    # Sort highest relevance first
     items.sort(key=lambda x: x.relevance, reverse=True)
     return items

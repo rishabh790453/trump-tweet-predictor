@@ -1,10 +1,11 @@
 """
-FastAPI backend for Trump Tweet Live Predictor dashboard.
-Run: uvicorn app:app --reload --port 8000
+FastAPI backend — Trump Tweet Live Predictor dashboard.
+Run: uvicorn app:app --port 8000
 """
 
 import asyncio
-import json
+import csv
+import random
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
@@ -20,24 +21,60 @@ from predictor import TweetPredictor
 
 app = FastAPI(title="Trump Tweet Live Predictor")
 
+REPO_ROOT = Path(__file__).parent.parent
+
 # ── Global state ──────────────────────────────────────────────────────────────
 predictor: TweetPredictor | None = None
 seen_ids: set[str] = set()
-feed: list[dict] = []                   # most-recent-first event log
+feed: list[dict] = []
 session_prices: dict[str, float] = BASE_PRICES.copy()
-spy_history: list[float] = [0.0]        # cumulative SPY % changes
+spy_history: list[float] = [0.0]
 connected: list[WebSocket] = []
 
-POLL_INTERVAL = 300   # seconds between RSS polls
-MAX_NEW_PER_POLL = 3  # cap predictions per cycle
+POLL_INTERVAL = 300
+MAX_NEW_PER_POLL = 3
+
+
+# ── Load historical tweet+market data ────────────────────────────────────────
+
+def load_real_tweets(n: int = 200) -> list[dict]:
+    """Load recent tweets that have market data attached."""
+    path = REPO_ROOT / "trump_tweets_finance_with_market_data.csv"
+    if not path.exists():
+        return []
+    rows = []
+    with open(path, newline="", encoding="utf-8") as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            sp = row.get("SP500_pct", "").strip()
+            dw = row.get("Dow_pct", "").strip()
+            content = row.get("content", "").strip()
+            if not content or content.startswith("RT "):
+                continue
+            rows.append({
+                "ts": row.get("timestamp", ""),
+                "platform": row.get("platform", ""),
+                "content": content[:280],
+                "sp500": float(sp) if sp else None,
+                "dow": float(dw) if dw else None,
+                "likes": row.get("likes", "0"),
+            })
+    # Most recent first, keep rows with market data near top
+    with_data = [r for r in rows if r["sp500"] is not None]
+    without = [r for r in rows if r["sp500"] is None]
+    combined = (with_data + without)[:n]
+    return combined
+
+
+REAL_TWEETS: list[dict] = []
 
 
 # ── Lifecycle ─────────────────────────────────────────────────────────────────
 
 @app.on_event("startup")
 async def startup():
-    global predictor
-    # Load model in background so server responds immediately
+    global predictor, REAL_TWEETS
+    REAL_TWEETS = load_real_tweets(300)
     loop = asyncio.get_event_loop()
     predictor = await loop.run_in_executor(None, TweetPredictor)
     asyncio.create_task(_poll_loop())
@@ -59,9 +96,9 @@ async def broadcast(data: dict):
             pass
 
 
-# ── Background news → prediction loop ────────────────────────────────────────
+# ── Prediction + market pipeline ──────────────────────────────────────────────
 
-async def _process_item(item) -> dict | None:
+async def _process_item(item) -> dict:
     global session_prices, spy_history
 
     loop = asyncio.get_event_loop()
@@ -75,7 +112,7 @@ async def _process_item(item) -> dict | None:
     if len(spy_history) > 200:
         spy_history = spy_history[-200:]
 
-    event = {
+    return {
         "type": "update",
         "ts": datetime.now(timezone.utc).isoformat(),
         "news": {
@@ -92,20 +129,18 @@ async def _process_item(item) -> dict | None:
             "prices": impact.prices,
             "triggered_by": impact.triggered_by,
             "spy_delta": impact.spy_delta,
-            "spy_history": spy_history[-50:],
+            "spy_history": spy_history[-60:],
         },
         "mode": predictor.mode,
     }
-    return event
 
 
 async def _poll_loop():
-    await asyncio.sleep(2)  # give server a moment to start
+    await asyncio.sleep(2)
     while True:
         try:
-            items = await asyncio.get_event_loop().run_in_executor(None, fetch_all_news, 10)
+            items = await asyncio.get_event_loop().run_in_executor(None, fetch_all_news, 8)
             new_items = [i for i in items if i.id not in seen_ids]
-
             count = 0
             for item in new_items:
                 if count >= MAX_NEW_PER_POLL:
@@ -113,35 +148,32 @@ async def _poll_loop():
                 seen_ids.add(item.id)
                 try:
                     event = await _process_item(item)
-                    if event:
-                        feed.insert(0, event)
-                        if len(feed) > 100:
-                            feed.pop()
-                        await broadcast(event)
-                        count += 1
-                        await asyncio.sleep(1)
+                    feed.insert(0, event)
+                    if len(feed) > 100:
+                        feed.pop()
+                    await broadcast(event)
+                    count += 1
+                    await asyncio.sleep(1)
                 except Exception as e:
                     print(f"[App] Prediction error: {e}")
-
         except Exception as e:
             print(f"[App] Poll error: {e}")
-
         await asyncio.sleep(POLL_INTERVAL)
 
 
-# ── WebSocket endpoint ────────────────────────────────────────────────────────
+# ── WebSocket ─────────────────────────────────────────────────────────────────
 
 @app.websocket("/ws")
 async def ws_endpoint(ws: WebSocket):
     await ws.accept()
     connected.append(ws)
-    # Send current state immediately
     await ws.send_json({
         "type": "init",
         "feed": feed[:30],
-        "spy_history": spy_history[-50:],
+        "spy_history": spy_history[-60:],
         "mode": predictor.mode if predictor else "loading",
         "prices": session_prices,
+        "real_tweets": REAL_TWEETS[:50],
     })
     try:
         while True:
@@ -167,6 +199,7 @@ async def predict_custom(headline: str):
             "sentiment": impact.sentiment,
             "impacts": impact.impacts,
             "triggered_by": impact.triggered_by,
+            "spy_delta": impact.spy_delta,
         },
         "mode": predictor.mode,
     }
@@ -175,11 +208,17 @@ async def predict_custom(headline: str):
 @app.get("/api/news")
 async def get_news():
     loop = asyncio.get_event_loop()
-    items = await loop.run_in_executor(None, fetch_all_news, 10)
+    items = await loop.run_in_executor(None, fetch_all_news, 8)
     return [
-        {"id": i.id, "title": i.title, "source": i.source, "url": i.url, "relevance": i.relevance}
+        {"id": i.id, "title": i.title, "source": i.source,
+         "url": i.url, "relevance": i.relevance}
         for i in items
     ]
+
+
+@app.get("/api/real-tweets")
+async def get_real_tweets(n: int = 50):
+    return REAL_TWEETS[:n]
 
 
 @app.get("/api/status")
@@ -188,10 +227,9 @@ async def status():
         "mode": predictor.mode if predictor else "loading",
         "predictions_generated": len(feed),
         "spy_history": spy_history[-20:],
+        "real_tweets_loaded": len(REAL_TWEETS),
     }
 
-
-# ── Serve dashboard ───────────────────────────────────────────────────────────
 
 @app.get("/", response_class=HTMLResponse)
 async def index():
