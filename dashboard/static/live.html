@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Trump Post Pipeline — Live</title>
+<style>
+  :root{
+    --bg:#0d1117; --panel:#161b22; --panel2:#1c2230; --line:#283041;
+    --text:#e6edf3; --dim:#8b949e; --dim2:#6e7681;
+    --accent:#58a6ff; --good:#3fb950; --warn:#d29922; --bad:#f85149;
+    --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);
+       font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+  header{display:flex;align-items:center;gap:16px;flex-wrap:wrap;
+         padding:14px 20px;background:var(--panel);border-bottom:1px solid var(--line);
+         position:sticky;top:0;z-index:10}
+  h1{font-size:15px;margin:0;font-weight:600;letter-spacing:.2px}
+  .pill{font:11px/1 var(--mono);padding:5px 9px;border-radius:20px;
+        background:var(--panel2);color:var(--dim);border:1px solid var(--line)}
+  .pill b{color:var(--text);font-weight:600}
+  #conn.on{color:var(--good);border-color:#1d572b}
+  #conn.off{color:var(--bad);border-color:#5c2626}
+  .wrap{max-width:1500px;margin:0 auto;padding:18px 20px 60px}
+  .grid{display:grid;grid-template-columns:1.15fr 1fr;gap:18px}
+  @media(max-width:1000px){.grid{grid-template-columns:1fr}}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:10px;
+        margin-bottom:18px;overflow:hidden}
+  .card>h2{font-size:12px;text-transform:uppercase;letter-spacing:.7px;color:var(--dim);
+           margin:0;padding:11px 15px;border-bottom:1px solid var(--line);
+           display:flex;justify-content:space-between;align-items:center;font-weight:600}
+  .card>h2 span{font:11px var(--mono);color:var(--dim2);text-transform:none;letter-spacing:0}
+  .body{padding:13px 15px;max-height:460px;overflow-y:auto}
+  .body.tall{max-height:none}
+  /* week tracker */
+  .statrow{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+  .stat{flex:1;min-width:96px;background:var(--panel2);border:1px solid var(--line);
+        border-radius:8px;padding:10px 12px}
+  .stat .k{font:10px var(--mono);color:var(--dim2);text-transform:uppercase;letter-spacing:.5px}
+  .stat .v{font:20px/1.25 var(--mono);font-weight:600;margin-top:3px}
+  .bar{display:flex;align-items:center;gap:9px;margin:3px 0;font:12px var(--mono)}
+  .bar .lab{width:66px;color:var(--dim);text-align:right;flex:none}
+  .bar .track{flex:1;height:15px;background:var(--panel2);border-radius:3px;overflow:hidden}
+  .bar .fill{height:100%;background:linear-gradient(90deg,#1f6feb,#58a6ff);
+             border-radius:3px;transition:width .45s ease}
+  .bar .fill.top{background:linear-gradient(90deg,#1a7f37,#3fb950)}
+  .bar .pc{width:46px;color:var(--dim);flex:none}
+  /* feeds */
+  .item{padding:9px 0;border-bottom:1px solid var(--line)}
+  .item:last-child{border-bottom:0}
+  .meta{font:10px var(--mono);color:var(--dim2);display:flex;gap:9px;
+        margin-bottom:4px;flex-wrap:wrap;align-items:center}
+  .txt{font-size:13px;white-space:pre-wrap;word-break:break-word}
+  .tag{padding:1px 6px;border-radius:4px;background:var(--panel2);
+       border:1px solid var(--line);color:var(--dim)}
+  .tag.pos{color:var(--good);border-color:#1d572b}
+  .tag.neg{color:var(--bad);border-color:#5c2626}
+  .tag.model{color:var(--accent);border-color:#1f4d7a}
+  .muted{color:var(--dim2);font-style:italic}
+  .new{animation:flash 1.6s ease-out}
+  @keyframes flash{from{background:rgba(88,166,255,.16)}to{background:transparent}}
+  .warn{background:#2d2410;border:1px solid #5c4813;color:var(--warn);
+        padding:9px 11px;border-radius:7px;font-size:12px;margin-bottom:12px}
+  .empty{color:var(--dim2);text-align:center;padding:26px 10px;font-size:13px}
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+<header>
+  <h1>Trump Post Pipeline</h1>
+  <span class="pill" id="conn">connecting…</span>
+  <span class="pill">posts <b id="hPosts">–</b></span>
+  <span class="pill">news <b id="hNews">–</b></span>
+  <span class="pill">predictions <b id="hPreds">–</b></span>
+  <span class="pill">polls <b id="hPolls">–</b></span>
+  <span class="pill">429s <b id="hLimited">–</b></span>
+  <span class="pill" style="margin-left:auto">updated <b id="hClock">–</b></span>
+</header>
+
+<div class="wrap">
+  <div id="staleWarn"></div>
+
+  <div class="card">
+    <h2>Kalshi week tracker <span id="weekRange">–</span></h2>
+    <div class="body tall">
+      <div class="statrow">
+        <div class="stat"><div class="k">posts so far</div><div class="v" id="wObs">–</div></div>
+        <div class="stat"><div class="k">week elapsed</div><div class="v" id="wPct">–</div></div>
+        <div class="stat"><div class="k">pace proj.</div><div class="v" id="wPace">–</div></div>
+        <div class="stat"><div class="k">model mean</div><div class="v" id="wMean">–</div></div>
+        <div class="stat"><div class="k">most likely</div><div class="v" id="wTop">–</div></div>
+      </div>
+      <div id="brackets"></div>
+      <div class="meta" style="margin-top:10px" id="wSource"></div>
+    </div>
+  </div>
+
+  <div class="grid">
+    <div>
+      <div class="card">
+        <h2>Live posts <span id="postCount"></span></h2>
+        <div class="body" id="posts"><div class="empty">waiting…</div></div>
+      </div>
+    </div>
+    <div>
+      <div class="card">
+        <h2>Predictions <span id="predCount"></span></h2>
+        <div class="body" id="preds"><div class="empty">waiting…</div></div>
+      </div>
+      <div class="card">
+        <h2>News <span id="newsCount"></span></h2>
+        <div class="body" id="news"><div class="empty">waiting…</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+const esc = s => (s??"").replace(/[&<>"']/g, c =>
+  ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+
+function ago(iso){
+  if(!iso) return "–";
+  const s = (Date.now() - new Date(iso).getTime())/1000;
+  if(s < 60) return Math.max(0,Math.round(s))+"s";
+  if(s < 3600) return Math.round(s/60)+"m";
+  if(s < 86400) return (s/3600).toFixed(1)+"h";
+  return (s/86400).toFixed(1)+"d";
+}
+const polTag = p => p == null ? ""
+  : `<span class="tag ${p>0.05?"pos":p<-0.05?"neg":""}">${p>0?"+":""}${p.toFixed(2)}</span>`;
+
+function renderPosts(list){
+  $("postCount").textContent = list.length ? `newest ${ago(list[0].created_at)} ago` : "";
+  if(!list.length){ $("posts").innerHTML = '<div class="empty">no posts yet</div>'; return; }
+  $("posts").innerHTML = list.map(p => {
+    const body = p.text && p.text.trim()
+      ? `<div class="txt">${esc(p.text.slice(0,420))}</div>`
+      : `<div class="txt muted">${p.has_media ? "media only — no text" : "(empty)"}</div>`;
+    return `<div class="item" data-id="${esc(p.id)}">
+      <div class="meta">
+        <span>${ago(p.created_at)} ago</span>
+        ${p.topic && p.topic!=="other" ? `<span class="tag">${esc(p.topic)}</span>`:""}
+        ${polTag(p.polarity)}
+        ${p.is_reblog ? '<span class="tag">reblog</span>':""}
+        ${p.url ? `<a href="${esc(p.url)}" target="_blank" rel="noopener">open</a>`:""}
+      </div>${body}</div>`;
+  }).join("");
+}
+
+function renderPreds(list){
+  $("predCount").textContent = list.length ? `${list.length} recent` : "";
+  if(!list.length){ $("preds").innerHTML = '<div class="empty">no predictions yet</div>'; return; }
+  $("preds").innerHTML = list.map(p => {
+    let outcome = '<span class="tag">pending</span>';
+    if(p.matched === 1) outcome = `<span class="tag pos">matched ${(p.similarity??0).toFixed(2)}${p.topic_hit?" · topic hit":""}</span>`;
+    else if(p.matched === 0) outcome = '<span class="tag neg">no match</span>';
+    return `<div class="item">
+      <div class="meta">
+        <span class="tag model">${esc(p.model)}</span>
+        <span>${ago(p.predicted_at)} ago</span>
+        ${p.topic && p.topic!=="other" ? `<span class="tag">${esc(p.topic)}</span>`:""}
+        ${polTag(p.polarity)} ${outcome}
+      </div>
+      <div class="txt${p.text?"":" muted"}">${esc(p.text ? p.text.slice(0,300) : "(empty generation)")}</div>
+    </div>`;
+  }).join("");
+}
+
+function renderNews(list){
+  $("newsCount").textContent = list.length ? `${list.length} recent` : "";
+  if(!list.length){ $("news").innerHTML = '<div class="empty">no news yet</div>'; return; }
+  $("news").innerHTML = list.map(n => `<div class="item">
+      <div class="meta"><span class="tag">${esc(n.source)}</span>
+        <span>rel ${(n.relevance??0).toFixed(2)}</span>
+        <span>${ago(n.collected_at)} ago</span></div>
+      <div class="txt">${n.url ? `<a href="${esc(n.url)}" target="_blank" rel="noopener">${esc(n.title)}</a>` : esc(n.title)}</div>
+    </div>`).join("");
+}
+
+function renderWeek(w){
+  if(!w) return;
+  $("weekRange").textContent = "week of " + w.week_start;
+  $("wObs").textContent  = w.observed ?? "–";
+  $("wPct").textContent  = (w.elapsed_pct ?? 0) + "%";
+  $("wPace").textContent = w.pace_projection ?? "–";
+  $("wMean").textContent = w.model_mean ?? "–";
+  $("wSource").innerHTML = w.model_source ? `prior: ${esc(w.model_source)}` : "";
+
+  const bs = w.brackets || [];
+  if(!bs.length){ $("brackets").innerHTML = '<div class="empty">not enough history to fit a prior yet</div>'; $("wTop").textContent="–"; return; }
+  const max = Math.max(...bs.map(b=>b.prob), 0.0001);
+  const top = bs.reduce((a,b)=> b.prob>a.prob?b:a, bs[0]);
+  $("wTop").textContent = top.label;
+  $("brackets").innerHTML = bs.map(b => `<div class="bar">
+      <span class="lab">${esc(b.label)}</span>
+      <span class="track"><span class="fill${b.label===top.label?" top":""}" style="width:${(b.prob/max*100).toFixed(1)}%"></span></span>
+      <span class="pc">${(b.prob*100).toFixed(1)}%</span>
+    </div>`).join("");
+
+  const f = w.freshness || {};
+  $("staleWarn").innerHTML = f.stale
+    ? `<div class="warn"><b>Stale collection.</b> Last cycle ${f.last_cycle_age_h ?? "?"}h ago —
+       the partial count is probably missing posts, which biases the forecast toward the
+       LOW brackets. Treat these probabilities as unreliable until collection catches up.</div>`
+    : "";
+}
+
+function renderHealth(h){
+  if(!h) return;
+  const s = h.store || {}, w = h.watcher || {};
+  $("hPosts").textContent = s.posts ?? "–";
+  $("hNews").textContent = s.news ?? "–";
+  $("hPreds").textContent = s.predictions ?? "–";
+  $("hPolls").textContent = w.polls ?? "–";
+  $("hLimited").textContent = w.rate_limited ?? "–";
+  $("hClock").textContent = new Date().toLocaleTimeString();
+}
+
+async function bootstrap(){
+  try{
+    const r = await fetch("/api/bootstrap");
+    const d = await r.json();
+    renderPosts(d.posts); renderPreds(d.predictions);
+    renderNews(d.news); renderWeek(d.week); renderHealth(d.health);
+  }catch(e){ console.error("bootstrap failed", e); }
+}
+
+async function refreshFeeds(){
+  try{
+    const [p, pr, n] = await Promise.all([
+      fetch("/api/posts").then(r=>r.json()),
+      fetch("/api/predictions").then(r=>r.json()),
+      fetch("/api/news").then(r=>r.json()),
+    ]);
+    renderPosts(p); renderPreds(pr); renderNews(n);
+  }catch(e){ console.error(e); }
+}
+
+let ws;
+function connect(){
+  // ws:// on http, wss:// on https — a hardcoded scheme breaks behind TLS.
+  const proto = location.protocol === "https:" ? "wss:" : "ws:";
+  ws = new WebSocket(`${proto}//${location.host}/ws`);
+  ws.onopen = () => { $("conn").textContent = "live"; $("conn").className = "pill on"; };
+  ws.onclose = () => {
+    $("conn").textContent = "reconnecting…"; $("conn").className = "pill off";
+    setTimeout(connect, 3000);
+  };
+  ws.onerror = () => ws.close();
+  ws.onmessage = ev => {
+    const m = JSON.parse(ev.data);
+    if(m.kind === "tick" || m.kind === "hello"){
+      renderHealth(m.payload.health || m.payload);
+      if(m.payload.week) renderWeek(m.payload.week);
+    } else if(m.kind === "post" || m.kind === "prediction" || m.kind === "news"){
+      refreshFeeds();
+      if(m.kind === "post"){
+        // brief highlight so a new arrival is visible without re-reading the feed
+        setTimeout(() => {
+          const first = document.querySelector("#posts .item");
+          if(first) first.classList.add("new");
+        }, 120);
+      }
+    }
+  };
+}
+
+bootstrap(); connect();
+setInterval(refreshFeeds, 60000);          // safety net if a WS event is missed
+setInterval(() => $("hClock").textContent = new Date().toLocaleTimeString(), 1000);
+</script>
+</body>
+</html>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  launchd job for the live collection loop.
+
+  NOT installed automatically — installing it is one command, below, so that
+  putting a recurring background job on your machine stays your decision.
+
+  Install:
+    cp deploy/com.rishabh.trumppipeline.plist ~/Library/LaunchAgents/
+    launchctl load ~/Library/LaunchAgents/com.rishabh.trumppipeline.plist
+
+  Check / stop:
+    launchctl list | grep trumppipeline
+    launchctl unload ~/Library/LaunchAgents/com.rishabh.trumppipeline.plist
+
+  Runs every 30 minutes with the cheap models. StartInterval fires only while the
+  Mac is awake — sleep gaps are expected and status.py reports them. Ground truth
+  is unaffected: each cycle pages back through Truth Social until it reaches a
+  post already stored, so a sleep gap is backfilled on the next wake rather than
+  lost, as long as the gap is under roughly 20 posts.
+-->
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.rishabh.trumppipeline</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <string>/Users/rishabh/Downloads/trump_tweets_combined/venv_mac/bin/python3</string>
+        <string>/Users/rishabh/Downloads/trump_tweets_combined/run_cycle.py</string>
+        <string>--models</string>
+        <string>markov,ngram,rag_retrieve</string>
+        <string>--quiet</string>
+    </array>
+
+    <key>WorkingDirectory</key>
+    <string>/Users/rishabh/Downloads/trump_tweets_combined</string>
+
+    <key>StartInterval</key>
+    <integer>1800</integer>
+
+    <key>RunAtLoad</key>
+    <true/>
+
+    <key>StandardOutPath</key>
+    <string>/Users/rishabh/Downloads/trump_tweets_combined/logs/pipeline.log</string>
+    <key>StandardErrorPath</key>
+    <string>/Users/rishabh/Downloads/trump_tweets_combined/logs/pipeline.err</string>
+
+    <!-- Keep the job from being throttled into a tight restart loop if the
+         script exits immediately (e.g. a bad --models argument). -->
+    <key>ThrottleInterval</key>
+    <integer>60</integer>
+</dict>
+</plist>

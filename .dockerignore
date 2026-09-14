@@ -1,0 +1,25 @@
+# Keep the build context small — Render clones the whole repo, and the image
+# only needs pipeline/, dashboard/, the two baseline predictors and the corpus.
+venv_mac/
+venv/
+.venv/
+__pycache__/
+*.pyc
+.git/
+trump_llama_v3/
+*.safetensors
+*.faiss
+news_data.db
+live_pipeline.db*
+finetune_*.jsonl
+rag_data.jsonl
+news_2010_2026_full.csv
+master_dataset.csv
+trump_tweets_combined.csv
+figures/
+logs/
+predictions/
+docs/
+scripts/
+*.pdf
+*.tex

@@ -1,0 +1,51 @@
+# Live dashboard + collector, one container.
+#
+# Build from the REPO ROOT, not from deploy/:
+#   docker build -f deploy/Dockerfile.live -t trump-live .
+#   docker run -p 8000:8000 -v trumpdata:/data trump-live
+#
+# Why one container: Truth Social rate-limits per client, so collection must have
+# exactly one owner. The watcher runs as a thread inside the web process. Scaling
+# this to 2+ replicas would make them fight each other for the same budget and
+# each would see fewer posts — keep it at one instance.
+#
+# Deliberately excludes torch / faiss / sentence-transformers (~2.5GB). Those are
+# only needed for the RAG and fine-tuned models and for semantic match scoring;
+# the hosted demo runs the lightweight models. Set ENABLE_MATCHING=1 and add
+# sentence-transformers to the requirements if scoring is wanted in the cloud.
+
+FROM python:3.11-slim
+
+WORKDIR /app
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        build-essential \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY deploy/requirements.live.txt ./requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY pipeline/ ./pipeline/
+COPY dashboard/live_app.py ./dashboard/live_app.py
+COPY dashboard/static/live.html ./dashboard/static/live.html
+
+# predict.py loads these from the repo root via sys.path, so they must ship even
+# though they are not inside pipeline/.
+COPY markov_predictor.py ngram_predictor.py ./
+
+# Corpus for the Markov / n-gram models (21MB). The fine-tuned weights (16GB),
+# FAISS index and news DB are deliberately not shipped.
+COPY trump_tweets_cleaned.csv ./
+
+# The SQLite store must live on a mounted volume. Without one it lands on the
+# container filesystem and every redeploy silently wipes the collected history —
+# which is the one asset here that cannot be re-fetched (news scrolls off RSS).
+ENV PIPELINE_DB=/data/live_pipeline.db
+VOLUME ["/data"]
+
+ENV PYTHONUNBUFFERED=1
+ENV WATCHER_MODELS=markov,ngram
+ENV PORT=8000
+EXPOSE 8000
+
+CMD ["sh", "-c", "uvicorn dashboard.live_app:app --host 0.0.0.0 --port ${PORT:-8000}"]

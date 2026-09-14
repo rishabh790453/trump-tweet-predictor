@@ -1,0 +1,54 @@
+# Render blueprint for the live dashboard.
+#
+# Deploy: https://dashboard.render.com/blueprints → New Blueprint Instance →
+# pick this repo. Render reads this file; nothing to configure by hand.
+#
+# ── Plan choice ──────────────────────────────────────────────────────────────
+# Defaults to `free` so it deploys with no card. Two consequences, both real:
+#
+#   1. The service SLEEPS after ~15 min idle and cold-starts (~30s) on the next
+#      visit. Collection stops while asleep.
+#   2. Free instances cannot mount a persistent disk, so the SQLite store is
+#      ephemeral and resets on every restart/redeploy.
+#
+# The dashboard degrades gracefully under both: on wake the watcher immediately
+# pulls the latest 20 posts from Truth Social, so a visitor still sees a current
+# feed. What is lost is ACCUMULATED history — the Kalshi weekly counter will
+# under-report, because it counts posts we were awake to collect.
+#
+# For real continuous collection, switch to `starter` and uncomment the disk
+# block. That is the only way the weekly count is trustworthy.
+#
+# ── One instance only ────────────────────────────────────────────────────────
+# Never raise numInstances. Truth Social rate-limits per client, not per process:
+# two replicas fight over one budget and each sees FEWER posts, with the failure
+# looking like "he stopped posting" rather than an error.
+
+services:
+  - type: web
+    name: trump-post-pipeline
+    runtime: docker
+    dockerfilePath: ./deploy/Dockerfile.live
+    dockerContext: .
+    plan: free
+    region: oregon
+    branch: live-dashboard
+    numInstances: 1
+    healthCheckPath: /api/health
+
+    # Uncomment together with `plan: starter` for persistent history.
+    # disk:
+    #   name: pipeline-data
+    #   mountPath: /data
+    #   sizeGB: 1
+
+    envVars:
+      # Lightweight models only — the image ships without torch/faiss.
+      - key: WATCHER_MODELS
+        value: markov,ngram
+      # Free plan has no disk, so keep the DB on the container filesystem.
+      # With a disk attached, change to /data/live_pipeline.db.
+      - key: PIPELINE_DB
+        value: /app/live_pipeline.db
+      - key: PYTHONUNBUFFERED
+        value: "1"

@@ -36,3 +36,10 @@ news_api_config.json
 # Demo artifacts
 scripts/demo_news.db
 scripts/demo_news_export.csv
+
+# Live pipeline database (regenerable; grows continuously)
+live_pipeline.db
+live_pipeline.db-wal
+live_pipeline.db-shm
+logs/pipeline.log
+logs/pipeline.err
