@@ -25,7 +25,7 @@ EXAMPLES = [
         "label": "NYC Luxury Tax",
         "headlines": [
             "Fox News: 'We're taxing the rich' — NYC Mayor Mamdani touts new $500M-a-year tax on luxury second homes",
-            "New York City Mayor proposes half-billion dollar annual tax on high-end second properties",
+            "New York City Mayor proposes $500M-a-year tax on high-end second properties",
             "Democrats push wealth tax as NYC housing crisis deepens",
         ],
         "ground_truth": (

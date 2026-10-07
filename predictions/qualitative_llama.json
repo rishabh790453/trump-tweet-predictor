@@ -1,0 +1,50 @@
+{
+  "mode": "rag_llm",
+  "results": {
+    "nyc_tax": {
+      "label": "NYC Luxury Tax (Mamdani)",
+      "headlines": [
+        "Fox News: 'We're taxing the rich': NYC Mayor Mamdani touts new $500M-a-year tax on luxury second homes",
+        "We're taxing the rich: Mamdani unveils new NYC wealth tax plan",
+        "New York City targets luxury real estate with $500M-a-year surcharge"
+      ],
+      "prediction": "https:// thenationalpulse.com/2023/07/18 /nycs-new-mayor-zohran-mamdani-is-a-trump-hating-socialist-who-wants-to-impose-a-500m-tax-on-luxury-homes/"
+    },
+    "lebanon_ceasefire": {
+      "label": "Lebanon\u2013Israel Ceasefire",
+      "headlines": [
+        "Israel and Lebanon hold first direct talks in 34 years in Washington",
+        "Netanyahu and Lebanese President Aoun meet with Rubio at State Department",
+        "US brokers deal as Israel-Lebanon border tensions escalate"
+      ],
+      "prediction": "Israel is receiving the biggest and best military aid package that the United States has ever given to Israel. The military aid is $3.8 billion, which is more than double the amount that we have ever given."
+    },
+    "hormuz_china": {
+      "label": "Strait of Hormuz / China",
+      "headlines": [
+        "US military blockades Strait of Hormuz amid Iran nuclear standoff",
+        "China urges restraint as Trump threatens to close Persian Gulf shipping lanes",
+        "Beijing and Washington reach back-channel agreement on Iran weapons shipments"
+      ],
+      "prediction": "China is working with Iran on everything, including oil. As you know, Iran is responsible for a lot of bad acts! Our great Naval ships are securing the Strait of Hormuz. If anyone, or any country, gets in our way, they will be met with the full force of America!"
+    },
+    "ballroom_judge": {
+      "label": "White House Ballroom / Judge",
+      "headlines": [
+        "Federal judge blocks White House ballroom construction citing permit violations",
+        "DC District Court halts Trump 400 million White House renovation project",
+        "Trump White House ballroom project faces legal challenge from DC judge"
+      ],
+      "prediction": "\u201cTrump White House construction halted after judge ruling\u201d https:// thehill.com/homenews/administ ration/5273543-trump-white-house-construction-halted-after-judge-ruling/"
+    },
+    "no_tax_tips": {
+      "label": "No Tax on Tips",
+      "headlines": [
+        "Trump heads to Las Vegas to rally support for no-tax-on-tips legislation",
+        "Senate Republicans advance bill to exempt tip income from federal taxes",
+        "Las Vegas hospitality industry embraces Trump tip tax elimination plan"
+      ],
+      "prediction": "Join me LIVE in Las Vegas, Nevada at 5:00 PM Eastern! \\nDonaldJTrump.com"
+    }
+  }
+}

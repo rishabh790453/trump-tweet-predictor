@@ -38,38 +38,24 @@ and Retrieval-Augmented Generation}}
 \maketitle
 
 \begin{abstract}
-We study the problem of predicting Donald Trump's social media posts in response to contemporaneous news headlines, framing it as a conditional natural language generation task. We construct a large-scale dataset of 86,170 posts spanning Twitter and Truth Social (2009--2026) and semantically match each post to relevant news articles from a corpus of over 1.3 million New York Times and Guardian pieces. Four generation approaches are evaluated: (1) Markov chain and (2) N-gram statistical baselines operating purely on the tweet corpus, (3) a LoRA fine-tuned Llama 3 8B Instruct model trained on 25,000 news--post pairs with completion-only supervision, and (4) a retrieval-augmented generation (RAG) pipeline using FAISS-indexed embeddings over the matched dataset paired with a base Llama 3 8B Instruct model. Automatic evaluation across five diverse held-out examples spanning political, diplomatic, and domestic policy topics, scored using BLEU and ROUGE against verified ground-truth posts, shows the fine-tuned model and RAG achieving statistically similar performance (ROUGE-1: 0.154 vs.\ 0.153; BLEU-1: 0.055 vs.\ 0.056), both substantially outperforming statistical baselines. Qualitative analysis reveals a complementary failure mode: the fine-tuned model captures correct entities and topics but hallucinates URLs and structural artifacts, whereas RAG produces fluent, stylistically consistent outputs but generalizes less specifically to novel named entities. These findings motivate hybrid approaches and highlight the limits of surface metrics for evaluating stylistic generation.
+Donald Trump's social media posts react fast and hard to the news, in a voice almost anyone can recognize. We ask a simple question: given the day's headlines, can a model write the post he would have written? We build a dataset of 86,170 of his posts from Twitter and Truth Social (2009--2026) and match each one to the news articles that came before it, drawing on more than 1.3 million New York Times and Guardian pieces. We then compare four ways of turning headlines into a post: two simple statistical models (a Markov chain and a trigram model), a Llama 3 8B model fine-tuned with LoRA on 25,000 news--post pairs, and a retrieval-augmented (RAG) setup that hands a base Llama 3 real past examples at generation time. On five held-out April 2026 events spanning politics, diplomacy, and domestic policy, the fine-tuned model and RAG come out about even (ROUGE-1 0.154 vs.\ 0.153; BLEU-1 0.055 vs.\ 0.056), and both clearly beat the statistical baselines. They fail in different ways, though: the fine-tuned model gets the names and topics right but invents URLs, while RAG sounds fluent and on-style yet leans heavily on whatever it happens to retrieve. No model reliably reproduces Trump's signature phrasing --- a result that says as much about word-overlap metrics as it does about the models.
 \end{abstract}
 
 \section{Introduction}
 
-Presidential communication has been fundamentally reshaped by social media. Donald Trump's prolific use of Twitter (2009--2021) and Truth Social (2022--present) represents one of the most extensively studied corpora of political social media behavior \citep{bovet2019influence,wells2016trump}. His posts are characterized by a distinctive style: emphatic capitalization, punchy declarative sentences, direct attacks on named individuals and institutions, and rapid reactivity to news cycles.
+Few politicians have used social media as relentlessly as Donald Trump, whose posts on Twitter (2009--2021) and Truth Social (2022--present) have become one of the most studied records of political communication online \citep{wells2016trump}. The style is unmistakable: emphatic capitalization, short declarative jabs, named targets, and a habit of firing back at the news within hours.
 
-The ability to predict such posts from contemporaneous news headlines has both scientific and practical implications. Scientifically, it tests whether language models can learn the mapping from world events to a specific individual's expressive register. Practically, researchers studying market reactions to presidential statements, political communication scholars, and policy analysts could benefit from a tool that anticipates the tone and content of politically consequential posts.
+Trying to predict those posts is interesting for two reasons. It is a clean test of whether a language model can learn the path from a world event to one person's very particular way of talking about it. And it is genuinely useful: anyone tracking how markets, opponents, or allies react to a presidential statement would gain from knowing, roughly, what that statement is likely to say.
 
-We formulate this as a \textit{news-conditioned tweet generation} task: given a set of news headlines published in the 48 hours preceding a known post, generate a post that resembles what Trump actually wrote. We compare four systems spanning the complexity spectrum from classical statistical models to large language models (LLMs) augmented with retrieval.
+The setup is simple. Take the news headlines from the 48 hours before a known post, and generate a post that reads like the one Trump actually wrote. We try four ways of doing this, from two plain statistical models up to large language models with and without retrieval, and compare them on the same examples.
 
-Our contributions are:
-\begin{itemize}[noitemsep]
-    \item A large-scale semantically-matched dataset of 65,733 news--tweet pairs, built from 86,170 posts and 1.3M news articles using sentence-level cosine similarity filtering.
-    \item A systematic comparison of Markov chain, N-gram, LoRA fine-tuning, and RAG approaches on the same task, evaluated across five diverse held-out examples.
-    \item Empirical evidence that fine-tuning and RAG achieve comparable average performance (ROUGE-1 $\approx$ 0.154), with complementary topic-dependent strengths that motivate hybrid architectures.
-    \item An analysis of the limits of BLEU/ROUGE for evaluating stylistic text generation.
-\end{itemize}
+Along the way we put together a dataset of 65,733 news--post pairs, drawn from 86,170 posts and roughly 1.3 million news articles and matched with sentence-embedding similarity. The headline result is that fine-tuning and retrieval land in almost the same place on average but stumble on different topics, and that standard overlap metrics miss most of what makes a Trump post a Trump post.
 
 \section{Related Work}
 
-\paragraph{Political text generation.}
-Generating politically stylized text has attracted substantial attention since the availability of large presidential corpora. \citet{gpt2trump} demonstrated that GPT-2 fine-tuned on Trump's tweets produces stylistically recognizable outputs. \citet{rashkin2019towards} studied controllable political rhetoric generation. More recently, instruction-tuned LLMs have been prompted to impersonate political figures with varying fidelity \citep{argyle2023out}. \citet{herbold2024impersonate} showed that LLMs can impersonate politicians and public figures with varying fidelity, with persona-conditioned approaches outperforming generic prompting for idiosyncratic speakers. Our work extends this line by introducing news conditioning as the control signal and evaluating across four generation paradigms.
+Teaching a model to write like one specific person is an old idea with a recent revival. An early demonstration fine-tuned GPT-2 on Trump's tweets and got outputs recognizable enough to pass a casual glance \citep{gpt2trump}. Larger instruction-tuned models have since proven good at impersonating politicians and other public figures, particularly when they are conditioned on a persona rather than prompted generically \citep{herbold2024impersonate}. Closest to what we do here, \citet{jiang2024trumppolls} use an LLM to stand in for Trump-style responses in surveys. What is usually missing is a tie to real events: rather than ask a model to "be Trump" in the abstract, we give it the headlines a post was reacting to and see how close it can get.
 
-\paragraph{Retrieval-augmented generation.}
-RAG \citep{lewis2020retrieval} augments LLM generation with retrieved documents at inference time, reducing hallucination and improving factual grounding. \citet{gupta2024ragsurvey} and \citet{gao2024retrievalaugmented} survey RAG systems extensively, finding that retrieval quality is the primary bottleneck — motivating our use of dense semantic retrieval over BM25 for stylistic examples. In our setting, retrieved (news, tweet) pairs serve as few-shot demonstrations that ground the model in Trump's actual vocabulary and reaction patterns.
-
-\paragraph{Parameter-efficient fine-tuning.}
-LoRA \citep{hu2022lora} reduces the computational cost of adapting billion-parameter models by injecting low-rank adapter matrices, training $<$1\% of parameters. \citet{dettmers2024qlora} extended this to 4-bit quantization, enabling fine-tuning on consumer hardware. We use standard bfloat16 LoRA on Apple Silicon (MPS), achieving comparable results without quantization given 32GB unified memory. Supervised fine-tuning with completion-only loss \citep{ouyang2022instructgpt} is critical to prevent prompt-leakage artifacts, a failure mode we encountered in preliminary experiments and document in Section~\ref{sec:failures}.
-
-\paragraph{Presidential tweet analysis.}
-A substantial body of work analyzes Trump's tweets for sentiment \citep{wang2017sentiment}, market impact \citep{bollen2011twitter,zhang2016predicting}, and political messaging strategy \citep{wells2016trump}. \citet{jiang2024trumppolls} simulate Trump-style public opinion in survey responses using LLMs, while \citet{schwager2026simulate} evaluate conditioned LLM comment prediction on real social media threads — both underscoring the broader interest in LLM-based social media simulation across the post-2020 political landscape. Our work is the first, to our knowledge, to directly predict tweet content from news headlines across multiple generation paradigms, jointly covering both platforms.
+Our systems lean on two now-standard tools. Retrieval-augmented generation \citep{lewis2020retrieval} feeds a model relevant documents at generation time; in our case those documents are real (news, post) pairs that double as few-shot examples. LoRA \citep{hu2022lora} adapts a billion-parameter model by training a small set of low-rank weights, which is what makes fine-tuning Llama 3 8B practical on a single machine. Sentence embeddings \citep{reimers2019sentence} do the rest of the heavy lifting, both for matching posts to news and for retrieving examples at inference time.
 
 \section{Dataset Construction}
 
@@ -83,7 +69,7 @@ We assembled a news corpus of approximately 1.3 million articles: 1.27M from the
 
 \subsection{Semantic News--Tweet Matching}
 
-To construct training pairs, we match each post to relevant news articles using a 48-hour look-back window: for a post published on date $d$, we retrieve all articles published between $d-48h$ and $d$. Candidate pairs are scored by cosine similarity between sentence embeddings \citep{reimers2019sentence} of the article headline and the post, using the \texttt{all-MiniLM-L6-v2} model \citep{wang2020minilm}:
+To construct training pairs, we match each post to relevant news articles using a 48-hour look-back window: for a post published on date $d$, we retrieve all articles published between $d-48h$ and $d$. Candidate pairs are scored by cosine similarity between sentence embeddings \citep{reimers2019sentence} of the article headline and the post, using the \texttt{all-MiniLM-L6-v2} model:
 
 \begin{equation}
     \text{sim}(h, t) = \frac{\mathbf{e}_h \cdot \mathbf{e}_t}{\|\mathbf{e}_h\| \|\mathbf{e}_t\|}
@@ -185,12 +171,13 @@ No Tax on Tips           & 0.104 & \textbf{0.176} & 0.023 & 0.063 \\
 \end{table}
 
 \subsection{Results}
+\label{sec:results-note}
 
 Table~\ref{tab:results} shows a clear two-tier structure: LLM-based methods (fine-tuning and RAG) substantially outperform statistical baselines, while the two LLM approaches are statistically comparable across all five examples. The N-gram model improves over Markov on ROUGE-1 (+0.033), reflecting the benefit of training data statistics but the absence of news-conditioned generation.
 
 The fine-tuned model and RAG achieve near-identical average ROUGE-1 (0.154 vs.\ 0.153) and BLEU-1 (0.055 vs.\ 0.056), differing instead in which topics they handle best. As shown in Table~\ref{tab:perexample} and Figure~\ref{fig:heatmap}, fine-tuned Llama outperforms RAG on 3 of 5 topics, particularly those requiring specific entity grounding (Hormuz / China: 0.188 vs.\ 0.150). RAG leads on the No Tax on Tips example (0.176 vs.\ 0.104), where retrieved examples closely match the rally/policy announcement format. When topics align well with training distribution, RAG's in-context examples provide a decisive advantage; for novel geopolitical entities, fine-tuning generalizes better.
 
-ROUGE-2 scores are near zero across \emph{all} models ($\leq$0.012). This is a meaningful finding: no model recovers Trump's specific bigrams (e.g., ``DESTROYING New York'', ``TAX, TAX, TAX'', ``AND FAST''). This indicates that surface n-gram metrics fundamentally underestimate the difficulty of stylistic generation and motivates the qualitative analysis below.
+ROUGE-2 scores are uniformly low across \emph{all} models ($\leq$0.012).\footnote{BLEU-1 and ROUGE-1 are exact values read from the evaluation console; the bigram-level metrics (BLEU-2, ROUGE-2, ROUGE-L) are approximate and should be read as order-of-magnitude indicators rather than precise point estimates. The qualitative conclusion below does not depend on their exact values.} While we caution against over-interpreting the precise magnitudes, the qualitative pattern is robust and visible directly in the model outputs: no model reliably reproduces Trump's signature bigrams (e.g., ``DESTROYING New York'', ``TAX, TAX, TAX'', ``AND FAST''). This suggests that surface n-gram overlap underestimates the difficulty of stylistic generation and motivates the qualitative analysis below.
 
 \subsection{Training Dynamics}
 
@@ -212,7 +199,7 @@ ROUGE-2 scores are near zero across \emph{all} models ($\leq$0.012). This is a m
 
 \subsection{Qualitative Analysis}
 
-Tables~\ref{tab:qual1}--\ref{tab:qual5} show model outputs for all five evaluation examples alongside verified ground-truth posts. All outputs are truncated to 220 characters for space; full outputs are available in the repository.
+Tables~\ref{tab:qual1}--\ref{tab:qual5} show model outputs for all five evaluation examples alongside verified ground-truth posts. Quotes are abridged for space, with omitted text marked by ``\ldots''; full outputs are available in the repository.
 
 % ── Example 1: NYC Tax ────────────────────────────────────────────────────────
 \begin{table}[H]
@@ -223,12 +210,12 @@ Tables~\ref{tab:qual1}--\ref{tab:qual5} show model outputs for all five evaluati
 \toprule
 \textbf{Model} & \textbf{Generated Post} \\
 \midrule
-Ground Truth  & ``Sadly, Mayor Mamdani is DESTROYING New York! It has no chance! The TAX, TAX, TAX Policies are SO WRONG. People are fleeing. They must change their ways, AND FAST. History has proven, THIS `STUFF' JUST DOESN'T WORK.'' \\
+Ground Truth  & ``Sadly, Mayor Mamdani is DESTROYING New York! It has no chance! \ldots{} The TAX, TAX, TAX Policies are SO WRONG. People are fleeing. They must change their ways, AND FAST. History has proven, THIS `STUFF' JUST DOES NOT WORK. \ldots'' \\
 \midrule
 Markov        & ``NO TAX ON OVERTIME, NO PLASTIC STRAWS, ONLY PAPER, IS LEADING US INTO WW3 IN 1 WEEK'' \\
 N-gram        & ``It is New York I was not broadcast negative ads was spent on a presidential candidate in this case. For the full extent of the New Year.'' \\
 Fine-tuned    & ``It's getting very hard for me to want to live in New York anymore, with this idiot Mayor, Zohran Mamdani. This will cause many people to leave.'' \\
-RAG           & ``Governor Kathy Hochul of New York has Endorsed the `Liddle' Communist,' Zohran Mamdani, running for Mayor. This is a very bad development for New York City. Washington will be watching very closely.'' \\
+RAG           & ``Governor Kathy Hochul of New York has Endorsed the `Liddle' Communist,' Zohran Mamdani, running for Mayor of New York. This is a rather shocking development, and a very bad one for New York City. \ldots{} Washington will be watching this situation very closely. \ldots'' \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -242,11 +229,11 @@ RAG           & ``Governor Kathy Hochul of New York has Endorsed the `Liddle' Co
 \toprule
 \textbf{Model} & \textbf{Generated Post} \\
 \midrule
-Ground Truth  & ``I just had excellent conversations with President Joseph Aoun of Lebanon and Prime Minister Netanyahu of Israel. They will begin a 10 Day CEASEFIRE at 5 P.M. EST. It has been my Honor to solve 9 Wars. GET IT DONE!'' \\
+Ground Truth  & ``I just had excellent conversations with \ldots{} President Joseph Aoun, of Lebanon, and Prime Minister Bibi Netanyahu, of Israel. \ldots{} they will formally begin a 10 Day CEASEFIRE at 5 P.M. EST. It has been my Honor to solve 9 Wars \ldots{} GET IT DONE!'' \\
 \midrule
 Markov        & ``ISRAEL AND THE US WILL ALWAYS STAND TOGETHER — 100\%! GREAT DEAL COMING!'' \\
 N-gram        & ``The United States is strongly committed to working with Israel and Lebanon and many others for a good solution to the very complex and difficult Middle East Conflict.'' \\
-Fine-tuned    & ``The United States and Israel are working closely together. One of the most important is the Peace Deal with the United Arab Emirates. This is a Major Breakthrough for Israel and the Middle East!'' \\
+Fine-tuned    & ``The United States and Israel are working closely together \ldots{} one of the most important is the Peace Deal with the United Arab Emirates. This is a Major Breakthrough for Israel and the Middle East!'' \\
 RAG           & ``HUGE breakthrough today! Historic Peace Agreement between our two GREAT friends, Israel and the United Arab Emirates!'' \\
 \bottomrule
 \end{tabular}
@@ -261,11 +248,11 @@ RAG           & ``HUGE breakthrough today! Historic Peace Agreement between our 
 \toprule
 \textbf{Model} & \textbf{Generated Post} \\
 \midrule
-Ground Truth  & ``China is very happy that I am permanently opening the Strait of Hormuz. They have agreed not to send weapons to Iran. President Xi will give me a big, fat, hug when I get there. BUT REMEMBER, we are very good at fighting!!!'' \\
+Ground Truth  & ``China is very happy that I am permanently opening the Strait of Hormuz. \ldots{} They have agreed not to send weapons to Iran. President Xi will give me a big, fat, hug when I get there \ldots{} BUT REMEMBER, we are very good at fighting, if we have to \ldots'' \\
 \midrule
 Markov        & ``IRAN IS THE NUMBER ONE TERROR STATE! THEY WANT TO DESTROY ISRAEL AND THE USA. VERY BAD DEAL!'' \\
 N-gram        & ``As I have said, Iran is a nation of great terror, and I support Israel in its efforts to protect itself.'' \\
-Fine-tuned    & ``The United States will continue to protect the free flow of oil and safety of the shipping lanes of the Strait of Hormuz. Iran has no reason to look at us in any other way than friendship, but we are very good at fighting if we have to.'' \\
+Fine-tuned    & ``The United States will continue to protect the free flow of oil and the safety \ldots{} of the shipping lanes of the Strait of Hormuz. \ldots{} there is no reason for Iran to look at us in any other way than friendship \ldots'' \\
 RAG           & ``I have instructed the United States Navy to shoot down and destroy any and all Iranian gunboats if they harass our ships at sea.'' \\
 \bottomrule
 \end{tabular}
@@ -280,12 +267,12 @@ RAG           & ``I have instructed the United States Navy to shoot down and des
 \toprule
 \textbf{Model} & \textbf{Generated Post} \\
 \midrule
-Ground Truth  & ``A Trump Hating Judge wants Congress to pay Hundreds of Millions for a Glorious Ballroom, instead of accepting Donations from Great American Companies. The Ballroom is FREE to our Country, A GIFT, vital for National Security.'' \\
+Ground Truth  & ``A Trump Hating Judge \ldots{} wants Congress to pay Hundreds of Millions of Dollars for a Glorious Ballroom, instead of accepting Donations from Great American Companies and Citizens. \ldots{} The Ballroom is FREE to our Country, A GIFT, and vital for our National Security. \ldots'' \\
 \midrule
 Markov        & ``THE RADICAL LEFT JUDGE IS TRYING TO STOP OUR GREAT COUNTRY FROM BEING GREAT. VERY UNFAIR!'' \\
 N-gram        & ``The Trump hating Federal Judge from Washington D.C. should be thrown off the bench for an illegal and totally unconstitutional ruling.'' \\
-Fine-tuned    & ``A Federal Judge in Washington has ruled that the Trump White House Ballroom will be built. This is a tremendous victory for the President and our Country. The cost of the restoration is being covered by private donation.'' \\
-RAG           & ``Trump Administration decision is being blocked by a radical left judge. This is a total disgrace. We will fight this all the way to the Supreme Court!'' \\
+Fine-tuned    & ``A Federal Judge in Washington has ruled that the Trump White House Ballroom will be built. This is a tremendous victory for the President, our Country, and the people. \ldots{} The cost of the restoration is being covered by \ldots'' \\
+RAG           & ``\,`Trump Administration Cancels \$400 Million in Grants to Columbia' \texttt{thefp.com/p/exclusive-trump-administration-cancels}'' \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -299,7 +286,7 @@ RAG           & ``Trump Administration decision is being blocked by a radical le
 \toprule
 \textbf{Model} & \textbf{Generated Post} \\
 \midrule
-Ground Truth  & ``I'm on Air Force One heading to Las Vegas on NO TAX ON TIPS, a WINDFALL for our Great American Citizens. ALL THE COUNTRY DOES IS WIN. President DJT'' \\
+Ground Truth  & ``I am on Air Force One heading to Las Vegas \ldots{} on NO TAX ON TIPS, a WINDFALL for our Great American Citizens. ALL THE COUNTRY DOES IS WIN. President DJT'' \\
 \midrule
 Markov        & ``NO TAX ON TIPS! NO TAX ON OVERTIME! THE WORKERS OF AMERICA WILL BE PROTECTED!'' \\
 N-gram        & ``We are going to Las Vegas to talk about our TAX CUTS for workers. The Democrats want to raise your taxes. We will not let that happen.'' \\
@@ -310,7 +297,7 @@ RAG           & ``NO TAX ON TIPS!'' \\
 \end{table}
 
 \paragraph{Cross-example analysis.}
-Several patterns emerge consistently across all five examples. Statistical models (Markov, N-gram) produce topically adjacent but contextually shallow outputs: correct domain (Middle East, taxes) without specific entities or event structure. The fine-tuned model consistently generates longer, more structured posts that capture Trump's specific rhetorical patterns (geographic specificity, first-person action framing, opponent naming) but occasionally hallucinates incorrect outcomes --- notably in Example~4, the fine-tune incorrectly states the ballroom ``will be built'' when the ground truth describes a blocking ruling. RAG excels when the retrieved training pairs closely match the input scenario (Examples~1 and 5: NYC tax, tip tax rally) but degrades for geopolitically novel headlines: in Example~2 (Lebanon ceasefire), both RAG and the fine-tune confuse the Lebanon--Israel deal with the 2020 UAE Abraham Accords, reflecting a retrieval distribution mismatch. Example~3 (Strait of Hormuz) shows the strongest fine-tune advantage: the model captures the nuanced ``cooperation with China + military threat'' duality of the ground truth, while RAG retrieves a militaristic Iran threat tweet that misses the diplomatic dimension entirely.
+Several patterns emerge consistently across all five examples. Statistical models (Markov, N-gram) produce topically adjacent but contextually shallow outputs: correct domain (Middle East, taxes) without specific entities or event structure. The fine-tuned model consistently generates longer, more structured posts that capture Trump's specific rhetorical patterns (geographic specificity, first-person action framing, opponent naming) but occasionally hallucinates incorrect outcomes --- notably in Example~4, the fine-tune incorrectly states the ballroom ``will be built'' when the ground truth describes a blocking ruling. RAG excels when the retrieved training pairs closely match the input scenario (Examples~1 and 5: NYC tax, tip tax rally) but degrades for geopolitically novel headlines: in Example~2 (Lebanon ceasefire), both RAG and the fine-tune confuse the Lebanon--Israel deal with the 2020 UAE Abraham Accords, reflecting a retrieval distribution mismatch. Example~3 (Strait of Hormuz) shows the strongest fine-tune advantage: the model captures the nuanced ``cooperation with China + military threat'' duality of the ground truth, while RAG retrieves a militaristic Iran threat tweet that misses the diplomatic dimension entirely. Example~4 (White House Ballroom) exposes a distinct RAG failure: rather than producing a stylistically coherent reaction, RAG copies a near-verbatim news headline and a retrieved URL fragment (\texttt{thefp.com/p/...}), illustrating that retrieval can leak source-document artifacts directly into the output when no close stylistic match is available.
 
 \section{Analysis of Failure Modes}
 \label{sec:failures}
@@ -319,15 +306,15 @@ Several patterns emerge consistently across all five examples. Statistical model
 URL hallucination is the most consistent failure mode of the fine-tuned model. Despite filtering URLs from training targets, the model generates URL-like patterns (e.g., ``\texttt{nypost.com/...}'') because URL patterns are present in the news context and in Trump's surrounding post text. We apply a post-processing step to strip these. The ``(cont.)'' artifact arises from old Twitter multi-part posts in the training data. Future work should add explicit filtering for these patterns during training.
 
 \paragraph{RAG specificity limitation.}
-RAG's retrieval quality degrades for rare or novel entities. When Mamdani (a relatively new political figure) appears in the query, the retrieved examples discuss generic tax protests rather than this specific figure, causing outputs to use placeholder phrases (``the Mayor'') rather than the actual name. A hybrid approach—fine-tuning for entity specificity, RAG for stylistic fluency—may address both failure modes.
+RAG's retrieval quality degrades for rare or novel entities. When Mamdani (a relatively new political figure) appears in the query, the retrieved examples discuss generic tax protests rather than this specific figure, causing outputs to use placeholder phrases (``the Mayor'') rather than the actual name. A related artifact appears in Example~4, where, absent a close stylistic match, RAG reproduces a retrieved news headline and an embedded URL fragment (\texttt{thefp.com/p/...}) almost verbatim instead of generating a Trump-style reaction --- showing that URL/source leakage is not unique to the fine-tuned model but can also surface through retrieval. A hybrid approach---fine-tuning for entity specificity, RAG for stylistic fluency---may address both failure modes.
 
-\paragraph{ROUGE-2 near zero across all models.}
-The near-zero ROUGE-2 for all models indicates that bigram-level phrase recovery is essentially impossible for this task with current approaches. Trump's specific rhetorical constructions (``DESTROYING New York'', ``TAX, TAX, TAX'', ``AND FAST'') appear to be highly idiosyncratic to specific contexts and are not recoverable from general training patterns. This suggests that word-overlap metrics are insufficient evaluators for stylistic generation, and that future work should incorporate style-aware metrics (e.g., capitalization rate, exclamation density, all-caps token ratio) alongside semantic similarity measures.
+\paragraph{Low ROUGE-2 across all models.}
+The consistently low ROUGE-2 across all models suggests that exact bigram-level phrase recovery is largely out of reach for this task with current approaches; we treat the specific values as approximate (see footnote in Section~\ref{sec:results-note}) and rest the claim on the qualitative outputs rather than the exact scores. Trump's specific rhetorical constructions (``DESTROYING New York'', ``TAX, TAX, TAX'', ``AND FAST'') appear to be highly idiosyncratic to specific contexts and are not consistently recovered by any model. This suggests that word-overlap metrics alone are insufficient evaluators for stylistic generation, and that future work should incorporate style-aware metrics (e.g., capitalization rate, exclamation density, all-caps token ratio) alongside semantic similarity measures.
 
 \section{Discussion}
 
-\paragraph{Comparison summary.}
-Our results establish a two-tier hierarchy: LLM-based methods (fine-tuning and RAG) $\gg$ statistical baselines for news-conditioned tweet generation. Within the LLM tier, fine-tuning and RAG perform equivalently on average (ROUGE-1: 0.154 vs.\ 0.153) but with topic-dependent advantages: fine-tuning generalizes better to novel geopolitical entities (e.g., Hormuz/China: +0.038 ROUGE-1), while RAG excels when retrieved examples closely match the input format (e.g., No Tax on Tips: +0.072 ROUGE-1). A single held-out example can be misleading — the NYC Tax headline alone suggested RAG $>$ fine-tuning, but five examples reveal near-parity.
+\paragraph{What the comparison shows.}
+The clearest split is between the two language models and the two statistical baselines: fine-tuning and RAG are in a different league for this task. Between those two, the averages are basically tied (ROUGE-1 0.154 vs.\ 0.153), and the interesting story is where each one pulls ahead. Fine-tuning does better on unfamiliar entities, such as the Hormuz/China example (+0.038 ROUGE-1); RAG does better when a past post closely matches the new one, as with No Tax on Tips (+0.072 ROUGE-1). It is worth stressing how easily one example can mislead: judged on the NYC tax headline alone, RAG looks like the winner, but across all five the two are even.
 
 \paragraph{Ethical considerations.}
 Generating realistic imitations of a real person's speech raises ethical questions. This work is conducted as academic research into political communication and natural language generation. All generated outputs are clearly labeled as synthetic and produced by AI models. We do not advocate for the use of such systems for impersonation, disinformation, or political manipulation. The dataset and models are intended for research purposes only.
@@ -337,7 +324,7 @@ Generating realistic imitations of a real person's speech raises ethical questio
 
 \section{Conclusion}
 
-We presented a systematic comparison of four approaches to news-conditioned presidential post generation, evaluated across five diverse held-out examples spanning political, diplomatic, and domestic policy topics. Our semantically-matched dataset of 65,733 pairs, combined with completion-only fine-tuning of Llama 3 8B and a FAISS-based RAG pipeline, represents the most comprehensive study of this task to date. Fine-tuned Llama 3 and RAG achieve statistically comparable average performance (ROUGE-1: 0.154 vs.\ 0.153), with complementary strengths: fine-tuning generalizes better to novel entities while RAG excels on topics well-represented in its retrieval index. Both substantially outperform statistical baselines, confirming that news-conditioning is learnable. The near-universal failure to recover specific rhetorical constructions (ROUGE-2 $\leq$ 0.012) across all models points to a fundamental gap between surface metrics and stylistic generation quality, motivating richer evaluation frameworks for future work.
+We set out to see whether a model could read the day's headlines and write the post Trump would have written, and compared four ways of doing it on the same five events. Fine-tuning Llama 3 and retrieval end up about even on average (ROUGE-1 0.154 vs.\ 0.153), but they get there differently: fine-tuning travels better to unfamiliar names and topics, while retrieval shines when a close precedent already exists. Both leave the statistical baselines well behind, so the basic premise --- that reactions to the news are learnable from past behavior --- holds up. What none of them manage is the part that actually makes a post sound like Trump: the signature phrasing barely shows up in any output. That gap, more than the headline scores, is what we think is worth chasing next, and it will take evaluation that looks at style directly rather than at word overlap.
 
 \section*{Acknowledgments}
 
@@ -349,21 +336,6 @@ Code, training scripts, evaluation pipeline, trained model weights, the cleaned 
 
 \bibliographystyle{plainnat}
 \begin{thebibliography}{20}
-
-\bibitem[Argyle et al.(2023)]{argyle2023out}
-Argyle, L.~P., Busby, E.~C., Fulda, N., Gubler, J.~R., Rytting, C., and Wingate, D. (2023).
-\newblock Out of one, many: Using language models to simulate human samples.
-\newblock \textit{Political Analysis}, 31(3):337--351.
-
-\bibitem[Bollen et al.(2011)]{bollen2011twitter}
-Bollen, J., Mao, H., and Zeng, X. (2011).
-\newblock Twitter mood predicts the stock market.
-\newblock \textit{Journal of Computational Science}, 2(1):1--8.
-
-\bibitem[Bovet \& Makse(2019)]{bovet2019influence}
-Bovet, A. and Makse, H.~A. (2019).
-\newblock Influence of fake news in Twitter during the 2016 US presidential election.
-\newblock \textit{Nature Communications}, 10(1):7.
 
 \bibitem[Dubey et al.(2024)]{dubey2024llama}
 Dubey, A., Jauhri, A., Pandey, A., et al. (2024).
@@ -380,55 +352,20 @@ Lewis, P., Perez, E., Piktus, A., et al. (2020).
 \newblock Retrieval-augmented generation for knowledge-intensive NLP tasks.
 \newblock \textit{Advances in Neural Information Processing Systems (NeurIPS)}, 33:9459--9474.
 
-\bibitem[Ouyang et al.(2022)]{ouyang2022instructgpt}
-Ouyang, L., Wu, J., Jiang, X., et al. (2022).
-\newblock Training language models to follow instructions with human feedback.
-\newblock \textit{Advances in Neural Information Processing Systems (NeurIPS)}, 35:27730--27744.
-
 \bibitem[Radford et al.(2019)]{gpt2trump}
 Radford, A., Wu, J., Child, R., Luan, D., Amodei, D., and Sutskever, I. (2019).
 \newblock Language models are unsupervised multitask learners.
 \newblock \textit{OpenAI Blog}, 1(8):9.
-
-\bibitem[Rashkin et al.(2019)]{rashkin2019towards}
-Rashkin, H., Choi, E., Jang, J.~Y., Volkova, S., and Choi, Y. (2019).
-\newblock Truth of varying shades: Analyzing language in fake news and political fact-checking.
-\newblock \textit{Proceedings of EMNLP}.
 
 \bibitem[Reimers \& Gurevych(2019)]{reimers2019sentence}
 Reimers, N. and Gurevych, I. (2019).
 \newblock Sentence-BERT: Sentence embeddings using Siamese BERT-networks.
 \newblock \textit{Proceedings of EMNLP-IJCNLP}.
 
-\bibitem[Wang et al.(2020)]{wang2020minilm}
-Wang, W., Wei, F., Dong, L., Bao, H., Yang, N., and Zhou, M. (2020).
-\newblock MiniLM: Deep self-attention distillation for task-agnostic compression of pre-trained transformers.
-\newblock \textit{Advances in Neural Information Processing Systems (NeurIPS)}, 33:5776--5788.
-
-\bibitem[Wang \& Liu(2017)]{wang2017sentiment}
-Wang, Y. and Liu, F. (2017).
-\newblock Sentiment analysis of Trump's tweets.
-\newblock \textit{Proceedings of the Workshop on NLP for Internet Freedom}.
-
 \bibitem[Wells et al.(2016)]{wells2016trump}
 Wells, C., Shah, D.~V., Lukito, J., Pelled, A., Pevehouse, J.~C., and Yang, J. (2016).
 \newblock How Trump drove coverage to the nomination: Hybrid media campaigning.
 \newblock \textit{Political Communication}, 33(4):669--676.
-
-\bibitem[Dettmers et al.(2024)]{dettmers2024qlora}
-Dettmers, T., Pagnoni, A., Holtzman, A., and Zettlemoyer, L. (2024).
-\newblock QLoRA: Efficient finetuning of quantized LLMs.
-\newblock \textit{Advances in Neural Information Processing Systems (NeurIPS)}, 36.
-
-\bibitem[Gao et al.(2024)]{gao2024retrievalaugmented}
-Gao, Y., Xiong, Y., Gao, X., Jia, K., Pan, J., Bi, Y., Dai, Y., Sun, J., Wang, M., and Wang, H. (2024).
-\newblock Retrieval-augmented generation for large language models: A survey.
-\newblock \textit{arXiv preprint arXiv:2312.10997}.
-
-\bibitem[Gupta et al.(2024)]{gupta2024ragsurvey}
-Gupta, S., Ranjan, R., and Singh, S.~N. (2024).
-\newblock A comprehensive survey of retrieval-augmented generation (RAG): Evolution, current landscape and future directions.
-\newblock \textit{arXiv preprint arXiv:2410.12837}.
 
 \bibitem[Herbold et al.(2024)]{herbold2024impersonate}
 Herbold, S., Trautsch, A., Kikteva, Z., and Hautli-Janisz, A. (2024).
@@ -439,16 +376,6 @@ Herbold, S., Trautsch, A., Kikteva, Z., and Hautli-Janisz, A. (2024).
 Jiang, S., Wei, L., and Zhang, C. (2024).
 \newblock Donald Trumps in the virtual polls: Simulating and predicting public opinions in surveys using large language models.
 \newblock \textit{arXiv preprint arXiv:2411.01582}.
-
-\bibitem[Schwager et al.(2026)]{schwager2026simulate}
-Schwager, N., M\"{u}nker, S., Plum, A., and Rettinger, A. (2026).
-\newblock Towards simulating social media users with LLMs: Evaluating the operational validity of conditioned comment prediction.
-\newblock \textit{arXiv preprint arXiv:2602.22752}.
-
-\bibitem[Zhang et al.(2016)]{zhang2016predicting}
-Zhang, X., Fuehres, H., and Gloor, P.~A. (2016).
-\newblock Predicting stock market indicators through Twitter.
-\newblock \textit{Procedia -- Social and Behavioral Sciences}, 26:55--62.
 
 \bibitem[Axios(2026)]{axios2026ceasefire}
 Axios. (2026, April 16).

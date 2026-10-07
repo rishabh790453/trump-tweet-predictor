@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Predicting Trump's Posts — Live Pipeline</title>
+<meta name="description" content="Live news-conditioned post prediction, with an event study on 86,170 posts (2009-2026) measuring how much of the corpus is actually predictable from news.">
+<style>
+  :root{
+    --bg:#0b0e14; --panel:#131720; --panel2:#1a1f2b; --line:#242b3a;
+    --text:#e6edf3; --dim:#9aa4b2; --dim2:#6b7280;
+    --accent:#5b9dff; --good:#3fb950; --warn:#d29922; --bad:#f85149;
+    --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0;background:var(--bg);color:var(--text);
+       font:15px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 20px 72px}
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline}
+
+  header{padding:46px 0 30px;border-bottom:1px solid var(--line);margin-bottom:32px}
+  h1{font-size:clamp(24px,4vw,34px);margin:0 0 10px;letter-spacing:-.4px;line-height:1.2}
+  .sub{color:var(--dim);font-size:16px;max-width:70ch;margin:0 0 18px}
+  .links{display:flex;gap:10px;flex-wrap:wrap}
+  .btn{font-size:13px;padding:7px 13px;border:1px solid var(--line);border-radius:7px;
+       background:var(--panel);color:var(--text)}
+  .btn:hover{border-color:var(--accent);text-decoration:none}
+  .btn.p{background:var(--accent);border-color:var(--accent);color:#04101f;font-weight:600}
+
+  h2{font-size:12px;text-transform:uppercase;letter-spacing:.9px;color:var(--dim);
+     margin:38px 0 14px;font-weight:650}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:11px}
+  .grid{display:grid;gap:16px}
+  .g3{grid-template-columns:repeat(3,1fr)}
+  .g2{grid-template-columns:1.1fr 1fr}
+  @media(max-width:880px){.g3,.g2{grid-template-columns:1fr}}
+
+  .finding{padding:18px 20px}
+  .finding .n{font:600 30px/1.15 var(--mono);letter-spacing:-1px;margin-bottom:5px}
+  .finding .n.null{color:var(--warn)}
+  .finding .n.ok{color:var(--accent)}
+  .finding .t{font-weight:600;font-size:14px;margin-bottom:6px}
+  .finding .d{color:var(--dim);font-size:13px;line-height:1.55}
+
+  .note{background:var(--panel2);border:1px solid var(--line);border-left:3px solid var(--accent);
+        border-radius:7px;padding:13px 16px;color:var(--dim);font-size:13.5px;margin:16px 0}
+  .note b{color:var(--text)}
+
+  .head{display:flex;justify-content:space-between;align-items:center;gap:10px;
+        padding:12px 16px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+  .head h3{margin:0;font-size:13px;font-weight:650;letter-spacing:.2px}
+  .head .meta{font:11px var(--mono);color:var(--dim2)}
+  .body{padding:6px 16px 14px;max-height:520px;overflow-y:auto}
+
+  .item{padding:11px 0;border-bottom:1px solid var(--line)}
+  .item:last-child{border-bottom:0}
+  .m{font:10.5px var(--mono);color:var(--dim2);display:flex;gap:8px;align-items:center;
+     flex-wrap:wrap;margin-bottom:5px}
+  .tag{padding:1px 6px;border-radius:4px;background:var(--panel2);border:1px solid var(--line);color:var(--dim)}
+  .tag.pos{color:var(--good);border-color:#1d572b}
+  .tag.neg{color:var(--bad);border-color:#5c2626}
+  .txt{font-size:13.5px;white-space:pre-wrap;word-break:break-word}
+  .muted{color:var(--dim2);font-style:italic}
+
+  .bar{display:flex;align-items:center;gap:9px;margin:4px 0;font:11.5px var(--mono)}
+  .bar .l{width:64px;color:var(--dim);text-align:right;flex:none}
+  .bar .tr{flex:1;height:14px;background:var(--panel2);border-radius:3px;overflow:hidden}
+  .bar .fi{height:100%;background:linear-gradient(90deg,#2563eb,#5b9dff);border-radius:3px}
+  .bar .fi.top{background:linear-gradient(90deg,#1a7f37,#3fb950)}
+  .bar .p{width:42px;color:var(--dim);flex:none}
+
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th,td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--line)}
+  th{color:var(--dim2);font:10.5px var(--mono);text-transform:uppercase;letter-spacing:.5px}
+  td.num{font:12.5px var(--mono);text-align:right}
+
+  /* prediction blocks: headlines on top, each model's generated post beneath */
+  .blk{margin-bottom:16px;overflow:hidden}
+  .blk .when{display:flex;justify-content:space-between;align-items:center;gap:10px;
+             padding:10px 16px;border-bottom:1px solid var(--line);flex-wrap:wrap;
+             font:11px var(--mono);color:var(--dim2)}
+  .blk .when b{color:var(--dim);font-weight:600}
+  .news-in{padding:13px 16px;background:var(--panel2);border-bottom:1px solid var(--line)}
+  .news-in .lbl{font:10px var(--mono);text-transform:uppercase;letter-spacing:.8px;
+                color:var(--dim2);margin-bottom:7px}
+  .news-in ul{margin:0;padding-left:17px}
+  .news-in li{font-size:13px;color:var(--text);margin:3px 0;line-height:1.45}
+  .news-in .more{color:var(--dim2);font-size:12px;margin-top:5px;list-style:none;margin-left:-17px}
+  .outs{padding:4px 16px 12px}
+  .outs .lbl{font:10px var(--mono);text-transform:uppercase;letter-spacing:.8px;
+             color:var(--dim2);margin:11px 0 8px}
+  .out{display:grid;grid-template-columns:118px 1fr auto;gap:11px;align-items:start;
+       padding:9px 0;border-bottom:1px solid var(--line)}
+  .out:last-child{border-bottom:0}
+  .out .mdl{font:11px var(--mono);color:var(--accent);padding-top:2px}
+  .out .gen{font-size:13.5px;line-height:1.5;word-break:break-word}
+  .out .sig{display:flex;gap:5px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+  @media(max-width:700px){
+    .out{grid-template-columns:1fr;gap:5px}
+    .out .sig{justify-content:flex-start}
+  }
+
+  .dot{width:7px;height:7px;border-radius:50%;background:var(--dim2);display:inline-block}
+  .dot.on{background:var(--good);box-shadow:0 0 7px #3fb950}
+  .dot.err{background:var(--bad)}
+  .empty{color:var(--dim2);text-align:center;padding:26px;font-size:13px}
+  footer{margin-top:52px;padding-top:22px;border-top:1px solid var(--line);
+         color:var(--dim2);font-size:12.5px;line-height:1.75}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>Predicting Trump's Posts from News Headlines</h1>
+  <p class="sub">
+    A live news-conditioned prediction pipeline, plus an event study over
+    <b>86,170 posts (2009&ndash;2026)</b> asking a question the modelling usually skips:
+    how much of this is predictable from news at all?
+  </p>
+  <div class="links">
+    <a class="btn p" href="https://github.com/rishabh790453/trump_tweets_combined" target="_blank" rel="noopener">GitHub</a>
+    <a class="btn" href="#predictions">Predictions</a>
+    <a class="btn" href="#live">Live feed</a>
+    <a class="btn" href="#market">Kalshi forecast</a>
+  </div>
+</header>
+
+<h2>Headline findings</h2>
+<div class="grid g3">
+  <div class="card finding">
+    <div class="n ok">10&ndash;16%</div>
+    <div class="t">of posts are news-reactive</div>
+    <div class="d">Max similarity to headlines in the prior 48h, against a 180-day
+      placebo (15.6%) and a 14-day placebo (9.5%). The rest originate with him &mdash;
+      golf, the ballroom, promotion &mdash; and <b>no headline-conditioned model can
+      predict them.</b> This is a ceiling on the task, not a model failure.</div>
+  </div>
+  <div class="card finding">
+    <div class="n null">0 / 25</div>
+    <div class="t">post categories that move markets</div>
+    <div class="d">Event study on 5,624 (session, ticker) events, 2009&ndash;2026.
+      Zero of 25 groups &mdash; topic, era, ticker &mdash; survive correction, against
+      ~1.2 expected by chance. Both the session and overnight-gap windows are null.</div>
+  </div>
+  <div class="card finding">
+    <div class="n">0.056</div>
+    <div class="t">best BLEU-1 (RAG vs LoRA Llama 3 8B)</div>
+    <div class="d">Four models benchmarked: Markov, trigram, LoRA fine-tuned
+      Llama 3 8B, and RAG. They tie within noise. Read against the 10&ndash;16%
+      ceiling, that is closer to the task limit than it first appears.</div>
+  </div>
+</div>
+
+<div class="note">
+  <b>Two traps this corrects for.</b> One post opens correlated positions across
+  SPY/QQQ/DIA/IWM, so counting each as an independent observation inflated n from
+  38&nbsp;&rarr;&nbsp;99 and moved p from 0.053&nbsp;&rarr;&nbsp;0.0105 &mdash; every
+  result here is clustered by event. And a single coin-flip is not a control at small
+  n, so the null is averaged over 2,000 random-direction draws.
+</div>
+
+<h2 id="predictions">Predictions &mdash; what the models expect next</h2>
+<div class="head" style="border:0;padding:0 0 10px">
+  <span class="meta" id="metaPr">loading…</span>
+</div>
+<div id="predBlocks"><div class="card"><div class="empty">loading…</div></div></div>
+<div class="note">
+  Each row was written <b>before</b> the outcome existed and is never revised &mdash;
+  that is what makes the scoring honest. A prediction is only scored once its full
+  horizon has elapsed, so recent rows read <i>pending</i>; scoring one early would
+  count posts he had not yet had the chance to write as misses.
+</div>
+
+<h2 id="live">Live &mdash; fetched on page load</h2>
+<div class="grid g2">
+  <div class="card">
+    <div class="head">
+      <h3><span class="dot" id="dotP"></span> Truth Social</h3>
+      <span class="meta" id="metaP">loading…</span>
+    </div>
+    <div class="body" id="posts"><div class="empty">loading…</div></div>
+  </div>
+  <div class="card">
+    <div class="head">
+      <h3><span class="dot" id="dotN"></span> News</h3>
+      <span class="meta" id="metaN">loading…</span>
+    </div>
+    <div class="body" id="news"><div class="empty">loading…</div></div>
+  </div>
+</div>
+
+<h2 id="market">Kalshi &mdash; weekly post-count market</h2>
+<div class="grid g2">
+  <div class="card">
+    <div class="head">
+      <h3><span class="dot" id="dotK"></span> Bracket forecast</h3>
+      <span class="meta" id="metaK">loading…</span>
+    </div>
+    <div class="body" id="brackets"><div class="empty">loading…</div></div>
+  </div>
+  <div class="card">
+    <div class="head"><h3>Recently settled</h3><span class="meta">KXTRUTHSOCIAL</span></div>
+    <div class="body"><table id="settled"><tbody><tr><td class="empty">loading…</td></tr></tbody></table></div>
+  </div>
+</div>
+
+<div class="note">
+  <b>How this page gets its data.</b> News and the Kalshi market are fetched live
+  on every request. Posts cannot be: Truth Social sits behind Cloudflare and
+  returns <code>403</code> to datacenter IPs, so a serverless function can never
+  reach it. They arrive instead from a collector running on a residential IP,
+  which also keeps a single owner of the rate limit. Serverless functions are
+  stateless, so this page accumulates no history of its own.
+  The prior above comes from Kalshi's own settled weeks, without the partial-week
+  conditioning that is the actual edge &mdash; that needs continuous collection,
+  which runs separately. One number worth knowing: the weekly posting rate roughly
+  <b>doubled after February 2026</b> (~98 &rarr; ~198), so a model fitted on the
+  corpus alone would confidently bet the wrong brackets.
+</div>
+
+<footer>
+  Rishabh Gulecha &middot; corpus 86,170 posts (Twitter 2009&ndash;2021, Truth Social 2022&ndash;2026)
+  &middot; news 1.3M NYT/Guardian articles &middot; all market figures from real price data.<br>
+  Live sources: Truth Social API, NYT/Guardian/CNBC/Fox/Axios RSS, Kalshi public API.
+  &nbsp;<span id="gen"></span>
+</footer>
+
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+const esc=s=>(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+function ago(iso){
+  if(!iso) return "—";
+  const s=(Date.now()-new Date(iso).getTime())/1000;
+  if(s<60) return Math.max(0,Math.round(s))+"s ago";
+  if(s<3600) return Math.round(s/60)+"m ago";
+  if(s<86400) return (s/3600).toFixed(1)+"h ago";
+  return (s/86400).toFixed(1)+"d ago";
+}
+const pol=p=>p==null||Math.abs(p)<0.02?"":`<span class="tag ${p>0?"pos":"neg"}">${p>0?"+":""}${p.toFixed(2)}</span>`;
+
+function setDot(el,ok){ el.className = "dot " + (ok?"on":"err"); }
+
+fetch("/api/live").then(r=>r.json()).then(d=>{
+  $("gen").textContent = "Updated " + ago(d.generated_at);
+
+  // ── posts ──
+  const P=d.posts||{}, list=P.posts||[];
+  setDot($("dotP"), P.ok);
+  const s=d.summary||{};
+  // Say plainly where the posts came from. Truth Social blocks datacenter IPs
+  // (Cloudflare 403), so in production these arrive via the collector snapshot.
+  const via = d.via === "snapshot"
+    ? `via collector · ${ago(d.snapshot_at)}`
+    : "direct from Truth Social";
+  $("metaP").textContent = P.ok
+    ? `${s.n_posts} posts · ${s.n_with_text} with text · ${via}`
+    : "unavailable";
+  $("posts").innerHTML = list.length ? list.map(p=>{
+    const body = p.text && p.text.trim()
+      ? `<div class="txt">${esc(p.text.slice(0,340))}</div>`
+      : `<div class="txt muted">${p.has_media?"media only — no text":"(empty)"}</div>`;
+    return `<div class="item"><div class="m">
+        <span>${ago(p.created_at)}</span>
+        ${p.topic&&p.topic!=="other"?`<span class="tag">${esc(p.topic)}</span>`:""}
+        ${pol(p.polarity)}
+        ${p.is_reblog?'<span class="tag">reblog</span>':""}
+        ${p.url?`<a href="${esc(p.url)}" target="_blank" rel="noopener">open</a>`:""}
+      </div>${body}</div>`;
+  }).join("") : '<div class="empty">Truth Social unavailable right now</div>';
+
+  // ── news ──
+  const N=d.news||{}, nl=N.news||[];
+  setDot($("dotN"), N.ok);
+  $("metaN").textContent = nl.length ? `${nl.length} headlines` : "unavailable";
+  $("news").innerHTML = nl.length ? nl.map(n=>`<div class="item"><div class="m">
+        <span class="tag">${esc(n.source)}</span><span>relevance ${n.relevance.toFixed(2)}</span>
+      </div><div class="txt">${n.url?`<a href="${esc(n.url)}" target="_blank" rel="noopener">${esc(n.title)}</a>`:esc(n.title)}</div></div>`
+  ).join("") : '<div class="empty">no headlines</div>';
+
+  // ── predictions, grouped by run ──
+  // Every model in a run saw the SAME headline set, so grouping by run_id is
+  // what turns a flat list into the actual comparison: one news window, four
+  // models' attempts at the post it would produce.
+  const pr = d.predictions || [];
+  $("metaPr").textContent = pr.length
+    ? `${pr.length} recent · ${d.totals && d.totals.predictions || pr.length} total`
+    : "no predictions in snapshot";
+  const runs = new Map();
+  pr.forEach(p => {
+    const k = p.run_id || p.predicted_at;
+    if (!runs.has(k)) runs.set(k, { at: p.predicted_at, headlines: p.headlines || [], rows: [] });
+    runs.get(k).rows.push(p);
+  });
+  // Stable model ordering so blocks are comparable down the page.
+  const ORDER = ["markov", "ngram", "rag_retrieve", "rag_llm", "finetuned_llama"];
+  const NICE = { markov: "Markov", ngram: "N-gram (trigram)", rag_retrieve: "RAG retrieval",
+                 rag_llm: "RAG + Llama 3", finetuned_llama: "LoRA Llama 3 8B" };
+
+  $("predBlocks").innerHTML = runs.size
+    ? [...runs.values()].map(r => {
+        const hl = r.headlines.slice(0, 4).map(h => `<li>${esc(h)}</li>`).join("");
+        const extra = r.headlines.length > 4
+          ? `<li class="more">+ ${r.headlines.length - 4} more headlines in the window</li>` : "";
+        const rows = r.rows
+          .sort((a, b) => ORDER.indexOf(a.model) - ORDER.indexOf(b.model))
+          .map(p => {
+            let out = '<span class="tag">pending</span>';
+            if (p.matched === 1) out = `<span class="tag pos">matched ${(p.similarity ?? 0).toFixed(2)}</span>`;
+            else if (p.matched === 0) out = '<span class="tag neg">no match</span>';
+            const txt = p.text && p.text.trim()
+              ? esc(p.text.slice(0, 260))
+              : '<span class="muted">(empty generation)</span>';
+            return `<div class="out">
+              <div class="mdl">${esc(NICE[p.model] || p.model)}</div>
+              <div class="gen">${txt}</div>
+              <div class="sig">${p.topic && p.topic !== "other" ? `<span class="tag">${esc(p.topic)}</span>` : ""}${pol(p.polarity)}${out}</div>
+            </div>`;
+          }).join("");
+        return `<div class="card blk">
+          <div class="when"><b>${ago(r.at)}</b>
+            <span>${r.headlines.length} headlines &rarr; ${r.rows.length} model${r.rows.length===1?"":"s"}</span></div>
+          <div class="news-in">
+            <div class="lbl">News in the window</div>
+            <ul>${hl}${extra}</ul>
+          </div>
+          <div class="outs">
+            <div class="lbl">Predicted posts</div>
+            ${rows}
+          </div>
+        </div>`;
+      }).join("")
+    : `<div class="card"><div class="empty">No predictions yet — these come from the collector, not this page.</div></div>`;
+
+  // ── kalshi ──
+  const K=d.kalshi||{}, bs=K.brackets||[];
+  setDot($("dotK"), K.ok);
+  $("metaK").textContent = K.open_event ? `${K.open_event} · prior mean ${K.prior_mean}` : "unavailable";
+  if(bs.length){
+    const mx=Math.max(...bs.map(b=>b.prob),.0001);
+    const top=bs.reduce((a,b)=>b.prob>a.prob?b:a,bs[0]);
+    $("brackets").innerHTML = bs.map(b=>`<div class="bar">
+        <span class="l">${esc(b.label)}</span>
+        <span class="tr"><span class="fi${b.label===top.label?" top":""}" style="width:${(b.prob/mx*100).toFixed(1)}%"></span></span>
+        <span class="p">${(b.prob*100).toFixed(1)}%</span></div>`).join("");
+  } else $("brackets").innerHTML='<div class="empty">market data unavailable</div>';
+
+  const st=K.settled||[];
+  $("settled").innerHTML = st.length
+    ? "<thead><tr><th>Week</th><th>Settled</th></tr></thead><tbody>" +
+      st.slice().reverse().map(x=>`<tr><td>${esc(x.event.replace("KXTRUTHSOCIAL-",""))}</td><td class="num">${esc(x.label)}</td></tr>`).join("") +
+      "</tbody>"
+    : "<tbody><tr><td class='empty'>none</td></tr></tbody>";
+}).catch(e=>{
+  console.error(e);
+  ["dotP","dotN","dotK"].forEach(i=>setDot($(i),false));
+  ["posts","news","brackets"].forEach(i=>$(i).innerHTML='<div class="empty">could not reach the live endpoint</div>');
+});
+</script>
+</body>
+</html>

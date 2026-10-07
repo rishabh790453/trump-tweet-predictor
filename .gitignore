@@ -43,3 +43,19 @@ live_pipeline.db-wal
 live_pipeline.db-shm
 logs/pipeline.log
 logs/pipeline.err
+
+# GDELT volume cache — regenerable, GDELT's archive is permanent
+gdelt_volume.db
+
+# Snapshot gist pointer is machine-local
+.snapshot_gist_id
+
+# June 2026 one-off report artifacts
+*_for_review_*.json
+news_input_enhanced_*.json
+FRESH_API_NEWS_*.json
+real_news_past_*.json
+real_recent_news_from_db.json
+prediction_run.log
+Trump_Predictions_Report.html
+predictions/*.pdf
