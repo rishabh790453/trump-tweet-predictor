@@ -1,0 +1,163 @@
+{
+  "generated_at": "2026-06-16T17:43:42.604881",
+  "source_file": "news_input_enhanced_20260616_173639.json",
+  "total_headlines": 76,
+  "results": {
+    "Foreign Policy & Geopolitics": {
+      "headlines": [
+        "Israel and Lebanon Hold First Direct Talks in 34 Years in Washington",
+        "Netanyahu and Lebanese President Aoun Meet with Rubio at State Department",
+        "US Brokers Deal as Israel-Lebanon Border Tensions Escalate",
+        "Hezbollah Warns of Retaliation as IDF Operations Continue in South Lebanon",
+        "Trump Administration Brokered Israel-Lebanon Ceasefire Deal",
+        "China's Xi Jinping Signals Willingness to Meet Trump Next Month",
+        "Xi to Visit Washington for First Summit of Trump's Second Term",
+        "Trade Negotiations with China Expected to Be Key Topic of Xi Visit",
+        "Ukraine Launches Counteroffensive, Gains Ground Using New NATO Weapons",
+        "Russian Military Increases Air Strikes on Ukrainian Civilian Infrastructure",
+        "NATO Conducts 'Steadfast Defender' Exercise With 50,000 Troops Near Russian Border",
+        "Moscow Condemns NATO Drills as Provocative, Mobilizes Additional Forces",
+        "Trump Administration Pushes for Ukraine Peace Talks",
+        "UN-Brokered Middle East Peace Summit Convenes in Geneva",
+        "Saudi Arabia, Egypt, and UAE Join Palestinian Statehood Negotiations",
+        "Trump Administration Supports Middle East Peace Efforts"
+      ],
+      "predictions": {
+        "markov": [
+          "America First Conservative, and your future First Lady giving Christmas salutations at the biggest plants anywhere, or idea.",
+          "Talks with Russia, which would be a Trump middle class folks YELL at their lowest worst numbers in Iowa VS."
+        ],
+        "ngram": [
+          "No surprise Direct Donald Trump and most embarrassing, barely four weeks, at the highly recommended TrumpSoHo realDonaldTrump Amazing building and fixing the country, than just a few months will be adopting policies similar to the Senate now that America is known for a massive",
+          "normancom1: Hold. The Democrats are working tirelessly to Protect our Communities. nTim is fighting against a Crazy Nancy Pelosi Democrats have wanted to make the TRANSITION as difficult as possible, without censorship! Thank you, I am honored to nominate William W. Bush led a"
+        ],
+        "finetune": [],
+        "rag": []
+      }
+    },
+    "Economy & Markets": {
+      "headlines": [
+        "Federal Reserve Signals Pause in Interest Rate Hikes as Inflation Cools to 2.8%",
+        "Fed Chair Powell: Economy Shows 'Remarkable Resilience' Despite Challenges",
+        "Stock Market Rallies on Strong Q2 GDP Growth at 3.2%",
+        "S&P 500 Reaches All-Time High on Better-Than-Expected Economic Data",
+        "Trump Administration Takes Credit for Economic Growth",
+        "Unemployment Falls to 3.7%, Adding 280,000 Jobs in Latest Report",
+        "Wage Growth Moderates to 3.1%, Easing Inflation Concerns",
+        "Employment Numbers Show Strong Job Creation Under Trump",
+        "Tech Sector Leads Stock Gains as AI Investment Continues to Surge",
+        "Nvidia, Tesla, and Microsoft Reach Record Valuations on AI Optimism",
+        "Trump Administration Supports Tech Industry Growth",
+        "Oil Prices Decline 8% as OPEC+ Maintains Current Production Levels",
+        "US Gasoline Prices Fall to $3.12 Per Gallon, Providing Consumer Relief",
+        "Trump Administration: Energy Policy Lowering Gas Prices",
+        "Stock Market Breaks Records Under Trump Administration",
+        "Dow Jones Reaches New All-Time High"
+      ],
+      "predictions": {
+        "markov": [
+          "The rate of 112 its adult population The entire village of Blackdog. AlexSalmond s compassionate treatment of former President Donald J.",
+          "Nevada 1 More Hour! Polls are really strong show tonight at 9: 00 P. M. See more at: https: t. co. uk news 2025 08 declaring a crime to run against Donald Trump to try and steal a landslide, and I look forward to working with you, we were able to enforce Federal Law Enforcement"
+        ],
+        "ngram": [
+          "https: Reserve must FINALLY lower the Rate. We don t take a dr gina the uniparty needs you!!!",
+          "Democrats are Pause for a man with an outcome reflective of this long ago!, NEVER, NEVER DID! THE PATIENT LIVED, AND IT S NOT GOING TO IMPLEMENT THE TRUMP ECONOMIC MIRACLE, by far, than give Republicans a tremendous job thousands of votes."
+        ],
+        "finetune": [],
+        "rag": []
+      }
+    },
+    "Politics & Congress": {
+      "headlines": [
+        "Senate Republicans Advance $1.5 Trillion Tax Reform Package",
+        "Corporate Tax Rates Reduced from 21% to 18% in GOP Proposal",
+        "House to Vote Next Week on Sweeping Tax Cut Legislation",
+        "Trump Administration Pushes Major Tax Cut Bill Through Congress",
+        "Democrats Criticize Tax Bill as Benefiting Wealthy Corporations",
+        "Republicans Defend Tax Reform as Pro-Growth Economic Policy",
+        "Congress Convenes Bipartisan Summit on $2 Trillion Infrastructure Plan",
+        "Senate Democrats Propose Increased Corporate Taxes to Fund Roads and Bridges",
+        "White House Proposes Infrastructure Investment Plan",
+        "House Approves Border Security Legislation with Bipartisan Support",
+        "Immigration Reform Bill Passes with 312 Votes, Includes $40 Billion Funding",
+        "Trump Administration: Border Security Legislation a Major Win",
+        "White House Proposes Energy Independence Initiative",
+        "Trump Administration: New Energy Policy Reduces Reliance on Foreign Oil",
+        "Congress Debates Energy Independence vs. Climate Concerns"
+      ],
+      "predictions": {
+        "markov": [
+          "More Republicans Have Very Favorable View of Trump ties shirts Macys. The American people have enjoyed a friendship like few people showed up last night! http: dailycaller.",
+          "RT DOJ_Reform_Needed This Democrat excuse for losing an Election. NO NEW WARS WHEN I WILL KEEP ALL OF THE FINANCIAL STATEMENTS. 2, 600, 700 child predators, gang members in future?"
+        ],
+        "ngram": [
+          "Congressman MarkwayneMullin Tax On Tips! nFor too long. You said Iran was a has been brought in to testify. He s lying about senate immigration plan deportations 64c522dd statuses 115459665531112888.",
+          "RogerJStoneJr: Advance Election Integrity, protect, most handsome man in America, and it s just sinking!"
+        ],
+        "finetune": [],
+        "rag": []
+      }
+    },
+    "Trump Administration Actions": {
+      "headlines": [
+        "Trump Touts No-Tax-on-Tips Policy at Las Vegas Rally",
+        "President Highlights Potential $2,000-$4,000 Annual Tax Savings for Service Workers",
+        "Trump Rally: No-Tax-on-Tips Gets Standing Ovation",
+        "Service Industry Workers Support Trump's Tax Policy",
+        "White House Announces Historic Trade Deal with European Union",
+        "Trump Celebrates EU Agreement Reducing Steel and Aluminum Tariffs",
+        "Trump: Europe Finally Agreeing to Fair Trade Deals",
+        "European Leaders Praise Trump Trade Agreement",
+        "Justice Department Expands Investigation into Previous Administration",
+        "Three Former Officials Charged in Probe of Transition Period Conduct",
+        "Trump Administration: Previous Officials Abused Power",
+        "Trump Administration Implements 25% Tariffs on Chinese Electronics",
+        "Beijing Threatens Retaliatory Tariffs on US Agricultural Products",
+        "Trump: China Must Play Fair on Trade",
+        "President Signs Executive Order on Border Management and Immigration Enforcement",
+        "Trump Directs ICE to Increase Deportations of Undocumented Immigrants",
+        "Trump: Enforcing Immigration Laws Protecting American Jobs"
+      ],
+      "predictions": {
+        "markov": [
+          "NoTaxOnTips MAGA2024 https: www. axios. com v5i6rh9 live presid ent donald j trump in lancaster pennsylvania",
+          "Oh no, no retribution toward these heinous criminals, to expel u s in their massive failures, said, How to win."
+        ],
+        "ngram": [
+          "RT mw_canterbury Touts twitter. com 28X28gxFtV s been since the election produced an outcome designed for one of the News correctly.",
+          "RT newtgingrich Trump Campaign and Russia can t make it, or form was there and patrolling.. we are looking good!!"
+        ],
+        "finetune": [],
+        "rag": []
+      }
+    },
+    "Media Criticism": {
+      "headlines": [
+        "New York Times Reports on Trump's Second Term Policy Agenda",
+        "CNN Covers Ongoing Political Debate Over Tax and Immigration Reform",
+        "CNBC: Markets React Positively to Economic Policy Announcements",
+        "Fox News: Trump Rallies Support for Republican Midterm Candidates",
+        "ABC News Analyzes Political Implications of New Legislation",
+        "Bloomberg Reports on Trade Negotiations Between US and Major Economies",
+        "Reuters: Market Sentiment Shifts on Federal Reserve Announcements",
+        "AP Reports on Bipartisan Negotiations Over Infrastructure Spending",
+        "Washington Post Criticizes Trump Administration Energy Policy",
+        "The Hill: Congress Debates Energy Independence vs. Climate Concerns",
+        "Liberal Media Attacks Trump Economic Record",
+        "Fake News Outlets Ignore Strong Trump Economy"
+      ],
+      "predictions": {
+        "markov": [
+          "RT washtimes Biden is without question, the ridiculous decision. The lesson that we can stay strong and very ugly skin.",
+          "RT SecondLady: Congratulations to Kristi Noem, Attorney General Letitia James is out on top of America agrees with you You re a total sham and mockery of our Nation."
+        ],
+        "ngram": [
+          "Welcome to Second Amendment. n nMike Davis: Shenna Bellows, the more I love our Country than even the Sunday morning.",
+          ".. New York from mediocrity. Donald Trump for colluding with Cohen on Wolf Blitzer, Fox News Channel Bill OReilly 2015 01 24 in iowa i will cancel August recess and long before Tariffs were allowed to happen. It was our Country through the Fake News Media is inventing stories"
+        ],
+        "finetune": [],
+        "rag": []
+      }
+    }
+  }
+}
